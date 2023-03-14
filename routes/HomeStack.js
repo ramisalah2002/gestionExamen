@@ -10,6 +10,7 @@ import Home from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import SubjectChoiceScreen from "../screens/SubjectChoice";
+import deptChoiceScreen from "../screens/deptChoice";
 import FirstScreen from "../screens/FirstScreen";
 import SecondScreen from "../screens/SecondScreen";
 
@@ -22,18 +23,6 @@ const screens = {
             header: null,
         },
     },
-    FirstScreen : {
-        screen: FirstScreen,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    SecondScreen : {
-        screen: SecondScreen,
-        navigationOptions: {
-            header: null,
-        },
-    },
     LoginScreen : {
         screen: LoginScreen,
         navigationOptions: {
@@ -42,6 +31,12 @@ const screens = {
     },
     SignupScreen : {
         screen: SignupScreen,
+        navigationOptions: {
+            header: null,
+        },
+    },
+    deptChoiceScreen : {
+        screen: deptChoiceScreen,
         navigationOptions: {
             header: null,
         },

@@ -17,15 +17,7 @@ const LoginScreen = ({navigation}) => {
 
     const isDisabled = !(email.length > 0 && password.length > 0);
 
-    const handlePressTeacher = () => {
-      setUserType('teacher');
-      setActiveButton(1);
-    };
-  
-    const handlePressStudent = () => {
-      setUserType('student');
-      setActiveButton(2);
-    };
+    
 
     const handlePressSignup = () => {
       navigation.navigate('SignupScreen');
@@ -44,43 +36,20 @@ const LoginScreen = ({navigation}) => {
     <View style={styles.container}>
         <View style={styles.titleContainer}>
             <Text style={styles.titleText}>
-                Welcome
+                Bienvenue
             </Text>
-            <Text style={styles.titleText}>
-                back
-            </Text>
+
         </View>
-        <View style={styles.choiceContainer}>
-                  <TouchableOpacity
-            activeOpacity={1}
-            style={[styles.buttonTouch, activeButton === 1 ? styles.active : null]}
-            onPress={handlePressTeacher}
-          >
-            <View style={styles.choiceImage}>
-                <Image source={require('../images/profImg.png')} style={styles.image} />
-                <Text style={styles.choiceText}>Teacher</Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={1}
-            style={[styles.buttonTouch, activeButton === 2 ? styles.active : null]}
-            onPress={handlePressStudent}
-          >
-            <View style={styles.choiceImage}>
-                <Image source={require('../images/studentImg.png')} style={styles.image} />
-                <Text style={styles.choiceText}>Student</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        
         <View style={styles.loginContainer}>
             
             <View style={styles.emailField}>
                 <Icon style={styles.icon} size={20} color='#bbbcc0' name='envelope'/>
-                <TextInput selectionColor='#000' placeholder="Email Address" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
+                <TextInput selectionColor='#000' placeholder="nom_prenom@exemple.ma" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
             </View>
             <View style={styles.passwordField}>
                 <Icon style={styles.icon} size={30} color='#bbbcc0' name='lock'/>
-                <TextInput selectionColor='#000' placeholder="Password" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
+                <TextInput selectionColor='#000' placeholder="mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#bbbcc0' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
             </View>
             <TouchableOpacity onPress={handleLogin} style={styles.button}
@@ -90,12 +59,12 @@ const LoginScreen = ({navigation}) => {
               onTouchEnd={() => setIsHovering(false)}
               disabled={isDisabled}
             >
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={styles.buttonText}>Se connecter</Text>
             </TouchableOpacity>
             <View style={styles.divisionLine}></View>
             <TouchableOpacity style={styles.signup} onPress={handlePressSignup}>
                 <Text style={styles.signupText}>
-                Don't have an account yet? 
+                Vous n'avez pas encore de compte?
                 </Text>
             </TouchableOpacity>
         </View>
