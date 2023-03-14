@@ -11,8 +11,6 @@ import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import SubjectChoiceScreen from "../screens/SubjectChoice";
 import deptChoiceScreen from "../screens/deptChoice";
-import FirstScreen from "../screens/FirstScreen";
-import SecondScreen from "../screens/SecondScreen";
 
 
 

@@ -36,6 +36,60 @@ const SignupScreen = ({navigation}) => {
       navigation.navigate('LoginScreen');
     };
 
+    const checkPasswordStrength = password => {
+      let strengthLevel = 0;
+      if (password.length === 0) {
+        return strengthLevel;
+      }
+      const containsUppercase = /[A-Z]/.test(password);
+      const containsLowercase = /[a-z]/.test(password);
+      const containsNumber = /[0-9]/.test(password);
+      const containsSpecial = /[!@#$%^&*)(+=._-]/.test(password);
+      if (containsUppercase) {
+        strengthLevel++;
+      }
+      if (containsLowercase) {
+        strengthLevel++;
+      }
+      if (containsNumber) {
+        strengthLevel++;
+      }
+      if (containsSpecial) {
+        strengthLevel++;
+      }
+      return strengthLevel;
+    };
+    
+    const getPasswordStrengthViews = strengthLevel => {
+      const views = [];
+      for (let i = 0; i < 4; i++) {
+        let backgroundColor = '#edeff2';
+        if (i < strengthLevel) {
+          switch (i) {
+            case 0:
+              backgroundColor = 'red';
+              break;
+            case 1:
+              backgroundColor = 'orange';
+              break;
+            case 2:
+              backgroundColor = 'yellow';
+              break;
+            case 3:
+              backgroundColor = 'green';
+              break;
+          }
+        }
+        views.push(
+          <View key={i} style={[styles.passwordStrengthView, { backgroundColor }]} />
+        );
+      }
+      return views;
+    };
+
+    const strengthLevel = checkPasswordStrength(password);
+    const passwordStrengthViews = getPasswordStrengthViews(strengthLevel);
+
   return (
     <ScrollView>
     <View style={styles.container}>
@@ -59,8 +113,11 @@ const SignupScreen = ({navigation}) => {
             </View>
             <View style={styles.passwordField}>
                 <Icon style={styles.icon} size={30} color='#bbbcc0' name='lock'/>
-                <TextInput selectionColor='#000' placeholder="mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
+                <TextInput selectionColor='#000' placeholder="au moins 8 caractères" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#bbbcc0' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
+            </View>
+            <View style={styles.passwordStrengthContainer}>
+                {passwordStrengthViews}
             </View>
             <TouchableOpacity onPress={handleSignup} style={styles.button}
               onMouseEnter={() => setIsHovering(true)}
