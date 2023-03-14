@@ -1,67 +1,163 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import {Picker} from '@react-native-picker/picker';
 
-const deptChoiceScreen = () => {
-  const [selectedDepartment, setSelectedDepartment] = useState('');
+const departments = [
+  {
+    id: 1,
+    name: 'Informatique',
+    classes: [
+      { id: 1, name: 'Génie Logiciel' },
+      { id: 2, name: 'Réseau informatique' },
+    ],
+  },
+  {
+    id: 2,
+    name: 'industriel',
+    classes: [
+      { id: 1, name: 'Génie civil' },
+      { id: 2, name: 'Génie bio industriel' },
+    ],
+  },
+];
 
-  const handleDepartmentPress = (department) => {
+export default function deptChoiceScreen() {
+  const [selectedDepartment, setSelectedDepartment] = useState(departments[0]);
+  const [selectedClass, setSelectedClass] = useState(selectedDepartment.classes[0]);
+
+  const handleDepartmentChange = (value) => {
+    const department = departments.find((d) => d.id === parseInt(value));
     setSelectedDepartment(department);
-  }
+    setSelectedClass(department.classes[0]);
+  };
+
+  const handleClassChange = (value) => {
+    const classObj = selectedDepartment.classes.find((c) => c.id === parseInt(value));
+    setSelectedClass(classObj);
+  };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={[styles.departmentButton, selectedDepartment === 'Informatique' && styles.selectedButton]} 
-        onPress={() => handleDepartmentPress('Informatique')}>
-        <Text style={[styles.departmentText, selectedDepartment === 'Informatique' && styles.selectedText]}>Informatique</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.departmentButton, selectedDepartment === 'Urbain' && styles.selectedButton]} 
-        onPress={() => handleDepartmentPress('Urbain')}>
-        <Text style={[styles.departmentText, selectedDepartment === 'Urbain' && styles.selectedText]}>Urbain</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.departmentButton, selectedDepartment === 'Maintenance' && styles.selectedButton]} 
-        onPress={() => handleDepartmentPress('Maintenance')}>
-        <Text style={[styles.departmentText, selectedDepartment === 'Maintenance' && styles.selectedText]}>Maintenance</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity 
-        style={[styles.departmentButton, selectedDepartment === 'Technique' && styles.selectedButton]} 
-        onPress={() => handleDepartmentPress('Technique')}>
-        <Text style={[styles.departmentText, selectedDepartment === 'Technique' && styles.selectedText]}>Technique</Text>
+    <View style={styles.titleContainer}>
+            <Text style={styles.titleText}>
+            Choisir votre Département et Filière
+            </Text>
+        </View>
+      <View style={styles.pickerContainer}>
+        <Text style={styles.pickerTitle}>
+          Choisir votre Département
+        </Text>
+        <Picker
+          style={styles.picker}
+          selectedValue={selectedDepartment.id}
+          onValueChange={handleDepartmentChange}
+        >
+          {departments.map((department) => (
+            <Picker.Item key={department.id} label={department.name} value={department.id} />
+          ))}
+        </Picker>
+        <Text style={styles.pickerTitle}>
+          Choisir votre Filière
+        </Text>
+        <Picker
+          style={styles.picker}
+          selectedValue={selectedClass.id}
+          onValueChange={handleClassChange}
+        >
+          {selectedDepartment.classes.map((classObj) => (
+            <Picker.Item key={classObj.id} label={classObj.name} value={classObj.id} />
+          ))}
+        </Picker>
+      </View>
+      <View style={styles.selection}>
+        <Text style={styles.selectionText}>Vous avez choisi:</Text>
+        <Text style={styles.selected}>Département : {selectedDepartment.name}</Text>
+        <Text style={styles.selected}>Filière : {selectedClass.name}</Text>
+      </View>
+      <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>S'inscrire</Text>
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop:70,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    padding: 20,
+    backgroundColor: '#f8f8f8'
   },
-  departmentButton: {
-    borderWidth: 1,
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    color: '#333'
+  },
+  pickerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1982C4',
+    marginBottom:5,
+  },
+  titleText: {
+    fontSize:36,
+    fontWeight:'bold',
+    color:"#48bee6",
+  },
+  button: {
+    marginTop: 30,
+    backgroundColor: '#48bee6',
+    padding: 13,
     borderRadius: 5,
-    borderColor: 'gray',
-    padding: 10,
-    margin: 10,
-    width:'90%',
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 10,
+    height: 55,
   },
-  departmentText: {
+  buttonText: {
+    color: 'white',
+    fontWeight: 'bold',
     fontSize: 20,
-    color: 'gray',
   },
-  selectedButton: {
-    borderColor: '#2aa2c8',
-    backgroundColor:'#cfeef0',
+  titleContainer: {
+    alignItems: 'flex-start',
+    width: '100%',
+    marginBottom:20,
   },
-  selectedText: {
-    color: 'black',
+  pickerContainer: {
+    flexDirection: 'column',
+    width: '100%',
+    justifyContent: 'space-between',
+    marginBottom: 40,
+  },
+  picker: {
+    height: 50,
+    width:'100%',
+    color:'#000',
+    fontWeight:'900',
+    fontSize:28,
+    backgroundColor: '#90E0EF',
+    marginBottom:10,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 5,
+  },
+  selection: {
+    alignItems: 'flex-start',
+    flexDirection:'column',
+  },
+  selectionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#2AA2C8'
+  },
+  selected: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#555'
   },
 });
-
-export default deptChoiceScreen;

@@ -3,7 +3,7 @@ import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const SignupScreen = ({navigation}) => {
+export default function SignupScreen({navigation}){
     const [activeButton, setActiveButton] = useState(null);
     const [selectedButton, setSelectedButton] = useState(null);
 
@@ -306,5 +306,3 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   }
 });
-
-export default SignupScreen;

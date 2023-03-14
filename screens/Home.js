@@ -2,7 +2,7 @@ import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleShe
 import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-const Home = ({navigation}) => {
+export default function Home({navigation}) {
   const pressHandler = () =>{
     navigation.navigate('LoginScreen');
   }
@@ -60,7 +60,6 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
 
 // // import React, { useState, useEffect } from 'react';
 // // import { View, Text } from 'react-native';

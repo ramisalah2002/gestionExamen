@@ -3,7 +3,7 @@ import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const LoginScreen = ({navigation}) => {
+export default function LoginScreen({navigation}) {
     const [activeButton, setActiveButton] = useState(null);
     const [selectedButton, setSelectedButton] = useState(null);
 
@@ -249,4 +249,3 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LoginScreen;
