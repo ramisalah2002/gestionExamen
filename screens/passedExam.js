@@ -11,13 +11,18 @@ export default function passedExamScreen({navigation}) {
   ]);
 
   const actualdate = moment().format('Do MMMM YYYY');
-// Display the current date in alphabets
+  // Display the current date in alphabets
   const today = new Date();
   const currentDate = new Date();
+  
 
   const formattedDate = currentDate.toLocaleDateString();
-const formatDate = (date) => {
+  const formatDate = (date) => {
     return date.toLocaleDateString('fr-FR', { month: 'alphabetic', day: 'numeric', year: 'numeric' });
+  };
+
+  const handlePressSeeMore = () => {
+    navigation.navigate('ExamCorrectionScreen');
   };
 
   const renderExam = ({ item }) => (
@@ -27,7 +32,7 @@ const formatDate = (date) => {
         <Text style={styles.examMark}>{item.mark}/20</Text>
         <Text style={styles.examDate}>{item.date}</Text>
       </View>
-      <TouchableOpacity style={styles.seeMoreButton}>
+      <TouchableOpacity onPress={handlePressSeeMore} style={styles.seeMoreButton}>
         <Text style={styles.seeMoreButtonText}>See More</Text>
       </TouchableOpacity>
     </View>
