@@ -3,7 +3,7 @@ import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const SignupScreen = ({navigation}) => {
+export default function SignupScreen({navigation}){
     const [activeButton, setActiveButton] = useState(null);
     const [selectedButton, setSelectedButton] = useState(null);
 
@@ -16,6 +16,7 @@ const SignupScreen = ({navigation}) => {
     const [isHovering, setIsHovering] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
+    // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
     const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0);
 
     const handlePressTeacher = () => {
@@ -306,5 +307,3 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   }
 });
-
-export default SignupScreen;

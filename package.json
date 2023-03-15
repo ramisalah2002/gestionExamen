@@ -14,8 +14,11 @@
     "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-native-camera-roll/camera-roll": "^5.3.1",
     "@react-native-community/checkbox": "^0.5.14",
+<<<<<<< HEAD
     "@react-native-community/segmented-control": "^2.2.2",
     "@react-native-community/slider": "^4.4.2",
+=======
+>>>>>>> 68ac20e339f85d09d9448d4fd931a245526ef60e
     "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",

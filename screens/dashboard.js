@@ -4,10 +4,11 @@ import { View, Text,Image, ImageBackground, StyleSheet, ScrollView, TouchableOpa
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { IconFill, IconOutline } from "@ant-design/icons-react-native";
 import { AntDesign } from '@expo/vector-icons';
+import passedExamScreen from './passedExam';
 
-const dashboardScreen = () => {
+export default function dashboardScreen({navigation}) {
 // Get current date and format it in alphabets using moment.js
-const actualdate = moment().format('Do MMMM YYYY');
+  const actualdate = moment().format('Do MMMM YYYY');
 // Display the current date in alphabets
   const today = new Date();
   const currentDate = new Date();
@@ -33,7 +34,11 @@ const actualdate = moment().format('Do MMMM YYYY');
     return date.toLocaleDateString('fr-FR', { month: 'alphabetic', day: 'numeric', year: 'numeric' });
   };
 
-  
+  const handlePressPassed = () => {
+    navigation.navigate('passedExamScreen');
+  };
+
+ 
  
   return (
     <View style={styles.container}>
@@ -57,7 +62,7 @@ const actualdate = moment().format('Do MMMM YYYY');
           </View>
           <View style={styles.divisionLine}></View>
           <TouchableOpacity style={styles.seeMore}>
-            <Text style={styles.seeMoreTitle}>Vois Plus</Text>
+            <Text style={styles.seeMoreTitle}>Voir Plus</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
@@ -71,7 +76,7 @@ const actualdate = moment().format('Do MMMM YYYY');
           </View>
           <View style={styles.divisionLine}></View>
           <TouchableOpacity style={styles.seeMore}>
-            <Text style={styles.seeMoreTitle}>Vois Plus</Text>
+            <Text style={styles.seeMoreTitle}>Voir Plus</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
@@ -84,8 +89,8 @@ const actualdate = moment().format('Do MMMM YYYY');
               <Image source={ require('../images/passedExams.png') } style={styles.passedImage}/>
           </View>
           <View style={styles.divisionLine}></View>
-          <TouchableOpacity style={styles.seeMore}>
-            <Text style={styles.seeMoreTitle}>Vois Plus</Text>
+          <TouchableOpacity onPress={handlePressPassed} style={styles.seeMore}>
+            <Text style={styles.seeMoreTitle}>Voir Plus</Text>
             <AntDesign name="right" size={24} color="gray" />
           </TouchableOpacity>
         </View>
@@ -256,4 +261,3 @@ passedNumber: {
 },
 });
 
-export default dashboardScreen;
