@@ -1,28 +1,23 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { NativeWindStyleSheet } from 'nativewind';
-import TestScreen from "../screens/TestScreen";
-import LoginProf from "../screens/LoginProf"
-import LoginStudent from "../screens/LoginStudent";
-import ProfSign from "../screens/ProfSign";
-import StudentSign from "../screens/StudentSign";
 import Home from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
-import SubjectChoiceScreen from "../screens/SubjectChoice";
 import deptChoiceScreen from "../screens/deptChoice";
-
+import dashboard from "../screens/dashboard";
+import ExamCorrection from "../screens/ExamCorrection";
 
 
 const screens = {
     Home : {
-        screen: Home,
+        screen: LoginScreen,
         navigationOptions: {
             header: null,
         },
     },
     LoginScreen : {
-        screen: LoginScreen,
+        screen: dashboard,
         navigationOptions: {
             header: null,
         },
@@ -39,44 +34,6 @@ const screens = {
             header: null,
         },
     },
-    SubjectChoiceScreen : {
-        screen: SubjectChoiceScreen,
-        
-    },
-
-    TestScreen : {
-        screen: TestScreen,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    LoginProf : {
-        screen: LoginProf,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    LoginStudent : {
-        screen: LoginStudent,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    ProfSign : {
-        screen: ProfSign,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    StudentSign : {
-        screen: StudentSign,
-        navigationOptions: {
-            header: null,
-        },
-    },
-    
-    
-    
 }
 
 

@@ -20,7 +20,7 @@ const LoginScreen = ({navigation}) => {
     
 
     const handlePressSignup = () => {
-      navigation.navigate('SignupScreen');
+      navigation.navigate('ExamCorrection');
     };
 
     const handleLogin = () => {
