@@ -2,162 +2,152 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
-import { AntDesign } from '@expo/vector-icons';
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-} from "react-native";
+import { AntDesign } from "@expo/vector-icons";
+import Item from "@ant-design/react-native/lib/list/ListItem";
+import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-
+const DATA = [
+  {
+    id: "1",
+    numero: "1",
+    reponse: "a",
+    correct: "a",
+  },
+  {
+    id: "2",
+    numero: "2",
+    reponse: "b",
+    correct: "a",
+  },
+  {
+    id: "3",
+    numero: "3",
+    reponse: "c",
+    correct: "c",
+  },
+];
 
 export default function ExamCorrectionScreen({ navigation }) {
-  
+  const [data, setData] = useState(DATA);
+
+let answerStyle = data.reponse === data.correct ? styles.answerTrue : styles.answerFalse;
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <AntDesign style={styles.icon} name="close" size={30} color="white" />
-          <AntDesign style={styles.icon} name="arrowright" size={30} color="white" />
+          <AntDesign
+            style={styles.icon}
+            name="arrowright"
+            size={30}
+            color="white"
+          />
         </View>
         <View style={styles.infoBox}>
           <View style={styles.note}>
             <Text style={styles.noteText}>17</Text>
           </View>
           <View style={styles.leftBox}>
-            <Text style={styles.leftTextFirst}>Programmation Java (13-03-2022)</Text>
+            <Text style={styles.leftTextFirst}>
+              Programmation Java (13-03-2022)
+            </Text>
             <Text style={styles.espace}> </Text>
             <Text style={styles.leftTextSecond}>
               Ecole Supérieur de technologis Salé - UM5
             </Text>
           </View>
         </View>
-        
       </View>
       <View style={styles.body} resizeMode="cover">
         <View style={styles.bodyLeft}>
           <Text style={styles.bodyFirstText}>Correct</Text>
           <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>
-            17/20
-          </Text>
+          <Text style={styles.bodySecondText}>17/20</Text>
         </View>
         <View style={styles.verticalLine} />
         <View style={styles.bodyRight}>
           <Text style={styles.bodyFirstText}>Wrong</Text>
-             <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>
-            3/20
-          </Text>
+          <Text style={styles.espace}> </Text>
+          <Text style={styles.bodySecondText}>3/20</Text>
         </View>
       </View>
       <ScrollView>
-   
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Liste des Questions</Text>
-        <Text style={styles.espace}> </Text>
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
+        <View style={styles.innerContainer}>
+          <Text style={styles.title}>Liste des Questions</Text>
+          <Text style={styles.espace}> </Text>
+          {
           
-          <View style={styles.correction}>
+          data.map((item) => (
+            <>
+            <View key={item.id} style={styles.questionContainer}>
+              <TouchableOpacity>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Question {item.numero}</Text>
+                <Text style={styles.espace}> </Text>
+                <Text style={answerStyle}> {item.reponse === item.correct ? 'Correct Answer' : 'Wrong Answer'}</Text>
+              </View>
+            </View>
+            <View style={styles.horizontaleLine} />  
+            </>  
+          ))}
+          <View style={styles.questionContainer}>
+            <TouchableOpacity>
+              <AntDesign
+                style={styles.icon}
+                name="right"
+                size={35}
+                color="black"
+              />
+            </TouchableOpacity>
+            <View style={styles.correction}>
               <Text style={styles.question}>Question 1</Text>
               <Text style={styles.espace}> </Text>
-              <Text style={styles.answerTrue}>Correct Answer</Text>
-          </View>
-        </View>
-        <View style={styles.horizontaleLine} />
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
-          <View style={styles.correction}>
-              <Text style={styles.question}>Question 2</Text>
-              <Text style={styles.espace}> </Text>
-              <Text style={styles.answerTrue}>Correct Answer</Text>
-          </View>
-        </View>
-        <View style={styles.horizontaleLine} />
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
-          <View style={styles.correction}>
-              <Text style={styles.question}>Question 3</Text>
-              <Text style={styles.espace}> </Text>
-              <Text style={styles.answerTrue}>Correct Answer</Text>
-          </View>
-        </View>
-        <View style={styles.horizontaleLine} />
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
-          <View style={styles.correction}>
-              <Text style={styles.question}>Question 4</Text>
-              <Text style={styles.espace}> </Text>
               <Text style={styles.answerFalse}>Correct Answer</Text>
+            </View>
           </View>
+          <View style={styles.horizontaleLine} />          
         </View>
-        <View style={styles.horizontaleLine} />
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
-          <View style={styles.correction}>
-              <Text style={styles.question}>Question 5</Text>
-              <Text style={styles.espace}> </Text>
-              <Text style={styles.answerTrue}>Correct Answer</Text>
-          </View>
-        </View>
-        <View style={styles.horizontaleLine} />
-        <View style={styles.questionContainer}>
-          <TouchableOpacity>
-            <AntDesign style={styles.icon} name="right" size={35} color="black" />
-          </TouchableOpacity>
-          <View style={styles.correction}>
-              <Text style={styles.question}>Question 6</Text>
-              <Text style={styles.espace}> </Text>
-              <Text style={styles.answerFalse}>Correct Answer</Text>
-          </View>
-        </View>
-        <View style={styles.horizontaleLine} />
-      </View>  
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container : {
-    backgroundColor:'white',
+  container: {
+    backgroundColor: "white",
     flex: 1,
   },
-  questionContainer:{
-    width:'100%',
-    flexDirection:'row-reverse',
-    alignItems:'center',
-    justifyContent:'space-between',
+  questionContainer: {
+    width: "100%",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   infoBox: {
-    flexDirection:'row',
-    paddingVertical:20
-   //marginTop:10,
+    flexDirection: "row",
+    paddingVertical: 20,
+    //marginTop:10,
   },
   topIcons: {
-    marginTop:50,
-    flexDirection:'row',
-    alignItems:'center',
-    marginLeft:'4%',
-    width:'92%',
-    justifyContent:'space-between',
+    marginTop: 50,
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "4%",
+    width: "92%",
+    justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#3281ff",
+    backgroundColor: "#46bee6",
     width: "100%",
     flexDirection: "column",
   },
@@ -203,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     flexDirection: "row",
-    shadowColor: 'grey',
+    shadowColor: "grey",
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.2,
     elevation: 2, // for Android only
@@ -211,59 +201,59 @@ const styles = StyleSheet.create({
   bodyLeft: {
     justifyContent: "center", // center vertically
     alignItems: "center", // center horizontally
-    marginLeft:'20%',
+    marginLeft: "20%",
   },
   bodyRight: {
     justifyContent: "center", // center vertically
     alignItems: "center", // center horizontally
-    marginRight:'20%',
+    marginRight: "20%",
   },
-  bodyFirstText:{
+  bodyFirstText: {
     color: "#1a1c20",
   },
-  bodySecondText:{
+  bodySecondText: {
     fontSize: 20,
     color: "#59626f",
   },
   verticalLine: {
     borderLeftWidth: 1.5,
-    borderLeftColor: '#eeeeee',
+    borderLeftColor: "#eeeeee",
     height: 50,
   },
-  espace:{
+  espace: {
     height: 10,
   },
   innerContainer: {
-    backgroundColor:'transparent',
-    paddingTop:25,
-    paddingLeft:25,
-    paddingRight:25,
+    backgroundColor: "transparent",
+    paddingTop: 25,
+    paddingLeft: 25,
+    paddingRight: 25,
   },
-  title:{
+  title: {
     fontSize: 15,
     fontWeight: "bold",
     color: "#66707c",
   },
-  correction:{
-    paddingBottom:20,
-    paddingTop:20,
+  correction: {
+    paddingBottom: 20,
+    paddingTop: 20,
   },
-  question:{
+  question: {
     fontSize: 15,
     fontWeight: "bold",
   },
-  answerTrue:{
+  answerTrue: {
     fontSize: 12,
-    color:'#5ee093',
+    color: "#5ee093",
     fontWeight: "bold",
   },
-  answerFalse:{
+  answerFalse: {
     fontSize: 12,
-    color:'#f14746',
+    color: "#f14746",
     fontWeight: "bold",
   },
-  horizontaleLine:{
+  horizontaleLine: {
     borderBottomWidth: 1.7,
-    borderBottomColor: '#eeee',
-  }
+    borderBottomColor: "#eeee",
+  },
 });
