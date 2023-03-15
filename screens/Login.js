@@ -15,21 +15,18 @@ export default function LoginScreen({navigation}) {
     const [isHovering, setIsHovering] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
-    const isDisabled = !(email.length > 0 && password.length > 0);
+    //const isDisabled = !(email.length > 0 && password.length > 0); l ASLYA HYA HADI
+    const isDisabled = (email.length > 0 && password.length > 0);
 
     
 
     const handlePressSignup = () => {
       navigation.navigate('SignupScreen');
     };
-
-    const handleLogin = () => {
-      if (userType === 'teacher') {
-        console.log(`Teacher: ${email}, ${password}`);
-      } else if (userType === 'student') {
-        console.log(`Student: ${email}, ${password}`);
-      }
+    const handlePressPassed = () => {
+      navigation.navigate('dashboardScreen');
     };
+
 
   return (
     <ScrollView>
@@ -52,7 +49,7 @@ export default function LoginScreen({navigation}) {
                 <TextInput selectionColor='#000' placeholder="mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
                 <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#bbbcc0' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
             </View>
-            <TouchableOpacity onPress={handleLogin} style={styles.button}
+            <TouchableOpacity onPress={handlePressPassed} style={styles.button}
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               onTouchStart={() => setIsHovering(true)}
@@ -75,7 +72,7 @@ export default function LoginScreen({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex:1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',

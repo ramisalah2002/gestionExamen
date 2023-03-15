@@ -1,3 +1,43 @@
+// import * as React from 'react';
+// import { View, Text } from 'react-native';
+// import { NavigationContainer } from '@react-navigation/native';
+// import { createDrawerNavigator } from '@react-navigation/drawer';
+
+// function Dashboard() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Dashboard Screen</Text>
+//     </View>
+//   );
+// }
+
+// function Exams() {
+//   return (
+//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//       <Text>Exams Screen</Text>
+//     </View>
+//   );
+// }
+
+// const Drawer = createDrawerNavigator();
+
+// function MyDrawer() {
+//   return (
+//     <Drawer.Navigator useLegacyImplementation>
+//       <Drawer.Screen name="Dashboard" component={Dashboard} />
+//       <Drawer.Screen name="Exams" component={Exams} />
+//     </Drawer.Navigator>
+//   );
+// }
+
+// export default function Home() {
+//   return (
+//     <NavigationContainer>
+//       <MyDrawer />
+//     </NavigationContainer>
+//   );
+// }
+
 import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
@@ -6,6 +46,7 @@ export default function Home({navigation}) {
   const pressHandler = () =>{
     navigation.navigate('LoginScreen');
   }
+  
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
     <View style={styles.container}>
@@ -28,6 +69,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    
   },
   image: {
     width: '90%',

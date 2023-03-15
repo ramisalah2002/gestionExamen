@@ -16,6 +16,7 @@ export default function SignupScreen({navigation}){
     const [isHovering, setIsHovering] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
+    // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
     const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0);
 
     const handlePressTeacher = () => {
