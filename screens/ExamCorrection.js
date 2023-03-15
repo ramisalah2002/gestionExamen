@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import {
-  Image,
   StyleSheet,
   View,
   Text,
