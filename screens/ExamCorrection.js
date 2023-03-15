@@ -1,12 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer } from "@react-navigation/native";
+import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import Item from "@ant-design/react-native/lib/list/ListItem";
 import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 const DATA = [
   {
@@ -18,8 +14,8 @@ const DATA = [
   {
     id: "2",
     numero: "2",
-    reponse: "b",
-    correct: "a",
+    reponse: "a",
+    correct: "b",
   },
   {
     id: "3",
@@ -29,11 +25,30 @@ const DATA = [
   },
 ];
 
+// const user =[
+//   {
+//         id: "1",
+//         numero: "9",
+//         reponse: "b",
+//         correct: "a",
+//       }
+// ]; 
+// const [user, setUser] = useState([]);
+
+// useEffect(() => {
+//   getUser();
+// }, []);
+
+// const getUser = () => {
+//   fetch("https://reqres.in/api/users?page=2").then(function(response) {
+//     return response.json(); 
+//   }).then(function(response) {
+//     setUser(response.data) ;
+//   })
+// }
+
 export default function ExamCorrectionScreen({ navigation }) {
   const [data, setData] = useState(DATA);
-
-  let answerStyle =
-    data.reponse === data.correct ? styles.answerTrue : styles.answerFalse;
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -113,7 +128,6 @@ export default function ExamCorrectionScreen({ navigation }) {
               </>
             );
           })}
-          <View style={styles.horizontaleLine} />
         </View>
       </ScrollView>
     </View>
