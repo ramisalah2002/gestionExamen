@@ -1,66 +1,54 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  TextInput,
+} from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import ExamCorrectionList from "./ExamCorrectionList" ;
-const DATA = [
-  {
-    id: "1",
-    numero: "1",
-    reponse: "a",
-    correct: "a",
-  },
-  {
-    id: "2",
-    numero: "2",
-    reponse: "a",
-    correct: "b",
-  },
-  {
-    id: "3",
-    numero: "3",
-    reponse: "c",
-    correct: "c",
-  },
-];
-
-// const user =[
-//   {
-//         id: "1",
-//         numero: "9",
-//         reponse: "b",
-//         correct: "a",
-//       }
-// ]; 
-// const [user, setUser] = useState([]);
-
-// useEffect(() => {
-//   getUser();
-// }, []);
-
-// const getUser = () => {
-//   fetch("https://reqres.in/api/users?page=2").then(function(response) {
-//     return response.json(); 
-//   }).then(function(response) {
-//     setUser(response.data) ;
-//   })
-// }
 
 export default function ExamCorrectionScreen({ navigation }) {
-  const [data, setData] = useState(DATA);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    // Do your search logic here
+  };
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
+          <AntDesign
+            style={styles.icon}
+            name="menuunfold"
+            size={30}
+            color="white"
+          />
           <AntDesign
             style={styles.icon}
             name="arrowright"
             size={30}
             color="white"
           />
+        </View>
+        <Text style={styles.titleTop}>Hi, Anass</Text>
+        <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
+
+        <View style={styles.containerSearch}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search"
+            value={searchTerm}
+            onChangeText={handleSearch}
+          />
+          <TouchableOpacity style={styles.filterButton}>
+            <AntDesign name="filter" size={20} color="black" />
+          </TouchableOpacity>
         </View>
         <View style={styles.infoBox}>
           <View style={styles.note}>
@@ -90,13 +78,7 @@ export default function ExamCorrectionScreen({ navigation }) {
           <Text style={styles.bodySecondText}>3/20</Text>
         </View>
       </View>
-      <ScrollView>
-        <View style={styles.innerContainer}>
-          <Text style={styles.title}>Liste des Questions</Text>
-          <Text style={styles.espace}> </Text>
-          <ExamCorrectionList />
-        </View>
-      </ScrollView>
+      <ScrollView></ScrollView>
     </View>
   );
 }
@@ -105,6 +87,20 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
+  },
+  titleTop: {
+    marginTop: 65,
+    marginLeft: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#FFFF",
+  },
+  textTop: {
+    marginTop: 10,
+    marginLeft: 20,
+    fontSize: 17,
+
+    color: "#c8ceed",
   },
   questionContainer: {
     width: "100%",
@@ -117,6 +113,24 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     //marginTop:10,
   },
+  containerSearch: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5554b7",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginTop: 20,
+    marginRight: 20,
+  },
+  input: {
+    flex: 1,
+    padding: 10,
+    fontSize: 18,
+    color: "#ffff",
+  },
+  filterButton: {
+    padding: 10,
+  },
   topIcons: {
     marginTop: 50,
     flexDirection: "row",
@@ -126,7 +140,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#46bee6",
+    borderRadius: 25,
+    backgroundColor: "#302ea6",
     width: "100%",
     flexDirection: "column",
   },

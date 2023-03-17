@@ -1,106 +1,70 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import ExamCorrectionList from "./ExamCorrectionList" ;
-const DATA = [
-  {
-    id: "1",
-    numero: "1",
-    reponse: "a",
-    correct: "a",
-  },
-  {
-    id: "2",
-    numero: "2",
-    reponse: "a",
-    correct: "b",
-  },
-  {
-    id: "3",
-    numero: "3",
-    reponse: "c",
-    correct: "c",
-  },
-];
+import { AntDesign } from "@expo/vector-icons";
+import axios from "axios";
+import ExamCorrectionScreen from "./ExamCorrection";
 
-// const user =[
-//   {
-//         id: "1",
-//         numero: "9",
-//         reponse: "b",
-//         correct: "a",
-//       }
-// ]; 
-// const [user, setUser] = useState([]);
+const ExamCorrectionList = () => {
+  const [data, setData] = useState([]);
 
-// useEffect(() => {
-//   getUser();
-// }, []);
+  useEffect(() => {
+    axios
+      .get("https://reqres.in/api/users?page=2")
+      .then((response) => {
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
-// const getUser = () => {
-//   fetch("https://reqres.in/api/users?page=2").then(function(response) {
-//     return response.json(); 
-//   }).then(function(response) {
-//     setUser(response.data) ;
-//   })
-// }
+  // Changes that I need to do
+  // first-name à changé par reponse
+  // last-name à changé par correction
+  // first-name à changé par reponse
+  // id à changé par numéro seulement dans <Text style={styles.question}>Question {item.id}</Text>
+  // Quelque nom de variable pour que le code soit plus clair
 
-export default function ExamCorrectionScreen({ navigation }) {
-  const [data, setData] = useState(DATA);
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <View style={styles.header} resizeMode="cover">
-        <View style={styles.topIcons}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
-          <AntDesign
-            style={styles.icon}
-            name="arrowright"
-            size={30}
-            color="white"
-          />
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.note}>
-            <Text style={styles.noteText}>17</Text>
-          </View>
-          <View style={styles.leftBox}>
-            <Text style={styles.leftTextFirst}>
-              Programmation Java (13-03-2022)
-            </Text>
-            <Text style={styles.espace}> </Text>
-            <Text style={styles.leftTextSecond}>
-              Ecole Supérieur de technologis Salé - UM5
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.body} resizeMode="cover">
-        <View style={styles.bodyLeft}>
-          <Text style={styles.bodyFirstText}>Correct</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>17/20</Text>
-        </View>
-        <View style={styles.verticalLine} />
-        <View style={styles.bodyRight}>
-          <Text style={styles.bodyFirstText}>Wrong</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>3/20</Text>
-        </View>
-      </View>
-      <ScrollView>
-        <View style={styles.innerContainer}>
-          <Text style={styles.title}>Liste des Questions</Text>
-          <Text style={styles.espace}> </Text>
-          <ExamCorrectionList />
-        </View>
-      </ScrollView>
+    <View>
+      {data.map((item) => {
+        const isCorrect = item.first_name === item.last_name;
+        return (
+          <>
+            <View key={item.id} style={styles.questionContainer}>
+              <TouchableOpacity>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Question {item.id}</Text>
+                <Text style={styles.espace}> </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    color: isCorrect ? "#5ee093" : "#f14746",
+                  }}
+                >
+                  {" "}
+                  {item.first_name === item.last_name
+                    ? "Correct Answer"
+                    : "Wrong Answer"}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.horizontaleLine} />
+          </>
+        );
+      })}
     </View>
   );
-}
-
+};
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -226,3 +190,4 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eeee",
   },
 });
+export default ExamCorrectionList;
