@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
-import ExamCorrectionScreen from "./ExamCorrection";
+
 
 const ExamCorrectionList = () => {
   const [data, setData] = useState([]);
@@ -31,7 +31,7 @@ const ExamCorrectionList = () => {
       {data.map((item) => {
         const isCorrect = item.first_name === item.last_name;
         return (
-          <>
+          <View key={item.id}>
             <View key={item.id} style={styles.questionContainer}>
               <TouchableOpacity>
                 <AntDesign
@@ -59,7 +59,7 @@ const ExamCorrectionList = () => {
               </View>
             </View>
             <View style={styles.horizontaleLine} />
-          </>
+          </View>
         );
       })}
     </View>

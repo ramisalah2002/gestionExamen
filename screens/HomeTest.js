@@ -40,13 +40,17 @@ export default function ExamCorrectionScreen({ navigation }) {
         <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
 
         <View style={styles.containerSearch}>
+          <AntDesign name="search1" size={20} color="#cdcde9"/>
           <TextInput
             style={styles.input}
-            placeholder="Search"
+            placeholderTextColor="#cdcde9"
+            placeholder="Cherchez votre Exam"
             value={searchTerm}
             onChangeText={handleSearch}
           />
-          <TouchableOpacity style={styles.filterButton}>
+        </View>
+        <View style={styles.containerSearch}>
+        <TouchableOpacity style={styles.filterButton}>
             <AntDesign name="filter" size={20} color="black" />
           </TouchableOpacity>
         </View>
@@ -93,7 +97,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 30,
     fontWeight: "bold",
-    color: "#FFFF",
+    color: "#e5f3ff",
   },
   textTop: {
     marginTop: 10,
@@ -114,6 +118,8 @@ const styles = StyleSheet.create({
     //marginTop:10,
   },
   containerSearch: {
+    padding:7,
+    paddingLeft:15,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#5554b7",
