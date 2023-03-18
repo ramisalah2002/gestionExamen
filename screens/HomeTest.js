@@ -18,9 +18,13 @@ export default function ExamCorrectionScreen({ navigation }) {
     setSearchTerm(text);
     // Do your search logic here
   };
+
+  // l icon li lfo9 3la limn n9dro nbdloha b logout
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
+
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <AntDesign
@@ -38,51 +42,41 @@ export default function ExamCorrectionScreen({ navigation }) {
         </View>
         <Text style={styles.titleTop}>Hi, Anass</Text>
         <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
-
-        <View style={styles.containerSearch}>
-          <AntDesign name="search1" size={20} color="#cdcde9"/>
-          <TextInput
-            style={styles.input}
-            placeholderTextColor="#cdcde9"
-            placeholder="Cherchez votre Exam"
-            value={searchTerm}
-            onChangeText={handleSearch}
-          />
-        </View>
-        <View style={styles.containerSearch}>
-        <TouchableOpacity style={styles.filterButton}>
-            <AntDesign name="filter" size={20} color="black" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.infoBox}>
-          <View style={styles.note}>
-            <Text style={styles.noteText}>17</Text>
+        <View style={{ flexDirection: "row" }}>
+          <View style={styles.containerSearch}>
+            <AntDesign name="search1" size={20} color="#cdcde9" />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#cdcde9"
+              placeholder="Cherchez votre Exam"
+              value={searchTerm}
+              onChangeText={handleSearch}
+            />
           </View>
-          <View style={styles.leftBox}>
-            <Text style={styles.leftTextFirst}>
-              Programmation Java (13-03-2022)
-            </Text>
-            <Text style={styles.espace}> </Text>
-            <Text style={styles.leftTextSecond}>
-              Ecole Supérieur de technologis Salé - UM5
-            </Text>
+          <View style={styles.containerFilter}>
+            <TouchableOpacity style={styles.filterButton}>
+              <AntDesign name="filter" size={20} color="#cdcde9" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>
-      <View style={styles.body} resizeMode="cover">
-        <View style={styles.bodyLeft}>
-          <Text style={styles.bodyFirstText}>Correct</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>17/20</Text>
+      <ScrollView>
+        <View style={styles.body} resizeMode="cover">
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.bodyFirstText}>Examens Recents</Text>
+            <View style={styles.seeAllBox}>
+              <TouchableOpacity>
+                <Text style={styles.seeAll}>voir tout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row" }}>
+            <View style={styles.seeAllBox}>
+             
+            </View>
+          </View>
         </View>
-        <View style={styles.verticalLine} />
-        <View style={styles.bodyRight}>
-          <Text style={styles.bodyFirstText}>Wrong</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>3/20</Text>
-        </View>
-      </View>
-      <ScrollView></ScrollView>
+      </ScrollView>
     </View>
   );
 }
@@ -93,7 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleTop: {
-    marginTop: 65,
+    marginTop: 50,
     marginLeft: 20,
     fontSize: 30,
     fontWeight: "bold",
@@ -118,15 +112,28 @@ const styles = StyleSheet.create({
     //marginTop:10,
   },
   containerSearch: {
-    padding:7,
-    paddingLeft:15,
+    padding: 7,
+    paddingLeft: 15,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#5554b7",
     borderRadius: 10,
     marginLeft: 20,
     marginTop: 20,
+    marginRight: 15,
+    width: "72%",
+    marginBottom: 30,
+  },
+  containerFilter: {
+    padding: 7,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5554b7",
+    borderRadius: 10,
+    marginTop: 20,
     marginRight: 20,
+    width: "14%",
+    marginBottom: 30,
   },
   input: {
     flex: 1,
@@ -149,39 +156,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     backgroundColor: "#302ea6",
     width: "100%",
-    flexDirection: "column",
-  },
-  note: {
-    backgroundColor: "#5ee093",
-    color: "#FFFF",
-    height: 75,
-    width: 75,
-    borderRadius: 10,
-    marginLeft: "4%",
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-  },
-  leftTextFirst: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#FFFF",
-  },
-  leftTextSecond: {
-    fontSize: 12,
-    color: "#FFFF",
-  },
-  noteText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#FFFF",
-  },
-  leftBox: {
-    height: 75,
-    borderRadius: 10,
-    marginLeft: "2%",
-    paddingRight: "22%",
-    justifyContent: "center", // center vertically
-    alignItems: "flex-start", // center horizontally
   },
   body: {
     backgroundColor: "#FFFF",
@@ -189,31 +163,30 @@ const styles = StyleSheet.create({
     height: "12%",
     width: "100%",
     minWidth: "100%",
-    alignSelf: "center",
-    alignItems: "center",
     justifyContent: "space-between",
-    flexDirection: "row",
-    shadowColor: "grey",
-    shadowOffset: { width: 0, height: 7 },
-    shadowOpacity: 0.2,
-    elevation: 2, // for Android only
-  },
-  bodyLeft: {
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-    marginLeft: "20%",
-  },
-  bodyRight: {
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-    marginRight: "20%",
   },
   bodyFirstText: {
-    color: "#1a1c20",
-  },
-  bodySecondText: {
+    marginTop: 30,
+    marginLeft: 20,
     fontSize: 20,
-    color: "#59626f",
+    fontWeight: "bold",
+    color: "#13129e",
+  },
+  seeAllBox: {
+    padding: 7,
+    alignItems: "center",
+    backgroundColor: "#eaeaf6",
+    borderRadius: 10,
+    marginTop: 27,
+    marginLeft: "27%",
+    marginRight: 20,
+    width: "20%",
+    height: 33,
+    marginBottom: 30,
+  },
+  seeAll: {
+    fontSize: 15,
+    color: "#13129e",
   },
   verticalLine: {
     borderLeftWidth: 1.5,
