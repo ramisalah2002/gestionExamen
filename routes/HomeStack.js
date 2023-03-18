@@ -51,7 +51,7 @@ const screens = {
     ExamCorrectionScreen : {
         screen: ExamCorrectionScreen,
         navigationOptions: {
-            header: null,
+            headerShown: false,
         },
     },
     
