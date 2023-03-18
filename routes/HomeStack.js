@@ -5,27 +5,21 @@ import Home from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import deptChoiceScreen from "../screens/deptChoice";
-import ExamCorrectionScreen from "../screens/ExamCorrection";
-import passedExamScreen from "../screens/passedExam";
 import dashboardScreen from "../screens/dashboard";
-
-
+import passedExamScreen from "../screens/passedExam";
+import ExamCorrectionScreen from "../screens/ExamCorrection" ; 
+import HomeTestScreen from "../screens/HomeTest" ;
+import MyScreen from "../screens/MyScrenn" ;
 
 const screens = {
     Home : {
-        screen: Home,
+        screen: HomeTestScreen,
         navigationOptions: {
             headerShown: false
         },
     },
     LoginScreen : {
         screen: LoginScreen,
-        navigationOptions: {
-            headerShown: false
-        },
-    },
-    dashboardScreen : {
-        screen: dashboardScreen,
         navigationOptions: {
             headerShown: false
         },
@@ -48,14 +42,13 @@ const screens = {
             headerShown: false,
         },
     },
-    ExamCorrectionScreen : {
-        screen: ExamCorrectionScreen,
+    
+    dashboardScreen : {
+        screen: dashboardScreen,
         navigationOptions: {
-            header: null,
+            headerShown: false
         },
     },
-    
-    
     
 }
 
