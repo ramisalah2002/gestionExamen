@@ -21,7 +21,7 @@ export default function LoginScreen({navigation}) {
     
 
     const handlePressSignup = () => {
-      navigation.navigate('ExamCorrection');
+      navigation.navigate('SignupScreen');
     };
     const handlePressPassed = () => {
       navigation.navigate('dashboardScreen');
