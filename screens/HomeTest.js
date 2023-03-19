@@ -42,13 +42,13 @@ export default function ExamCorrectionScreen({ navigation }) {
         </View>
         <Text style={styles.titleTop}>Hi, Anass</Text>
         <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={styles.containerSearch}>
             <AntDesign name="search1" size={20} color="#cdcde9" />
             <TextInput
               style={styles.input}
               placeholderTextColor="#cdcde9"
-              placeholder="Cherchez votre Exam"
+              placeholder="Cherchez votre Examen"
               value={searchTerm}
               onChangeText={handleSearch}
             />
@@ -62,17 +62,97 @@ export default function ExamCorrectionScreen({ navigation }) {
       </View>
       <ScrollView>
         <View style={styles.body} resizeMode="cover">
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.bodyFirstText}>Examens Recents</Text>
-            <View style={styles.seeAllBox}>
-              <TouchableOpacity>
-                <Text style={styles.seeAll}>voir tout</Text>
-              </TouchableOpacity>
+          <View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.bodyFirstText}>Examens Recents</Text>
+              <View style={styles.seeAllBox}>
+                <TouchableOpacity>
+                  <Text style={styles.seeAll}>voir plus</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row" }}>
+              <View style={styles.examPrevious}>
+                <TouchableOpacity>
+                  <View style={styles.languageBox}>
+                    <Text style={styles.language}>PHP MYSQL</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.noteBox}>
+                  <Text style={styles.note}>17/20</Text>
+                </View>
+              </View>
+              <View style={styles.examPrevious}>
+                <TouchableOpacity>
+                  <View style={styles.languageBox}>
+                    <Text style={styles.language}>SQL ORACLE</Text>
+                  </View>
+                </TouchableOpacity>
+                <View style={styles.noteBox}>
+                  <Text style={styles.note}>14/20</Text>
+                </View>
+              </View>
             </View>
           </View>
-          <View style={{ flexDirection: "row" }}>
-            <View style={styles.seeAllBox}>
-             
+          <View>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.bodyFirstText}>Examens d'aujourd'hui</Text>
+            </View>
+
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <ScrollView horizontal>
+                <View style={styles.todayExam}>
+                  <TouchableOpacity>
+                    <View style={styles.languageBox}>
+                      <Text style={styles.language}> Java</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.todayExamInformation}>
+                    <Text style={styles.todayExamInformationText1}>
+                      Programmation Java
+                    </Text>
+                    <Text style={styles.todayExamInformationText2}>
+                      commence : 16:30
+                    </Text>
+                    <Text style={styles.todayExamInformationText3}>
+                      reste : 10h 30min
+                    </Text>
+                  </View>
+                  <View style={styles.verticalLine} />
+                </View>
+                <View style={styles.todayExam}>
+                  <TouchableOpacity>
+                    <View style={styles.languageBox}>
+                      <Text style={styles.language}>Français</Text>
+                    </View>
+                  </TouchableOpacity>
+                  <View style={styles.todayExamInformation}>
+                    <Text style={styles.todayExamInformationText1}>
+                      La langue Française
+                    </Text>
+                    <Text style={styles.todayExamInformationText2}>
+                      commence : 12:30
+                    </Text>
+                    <Text style={styles.todayExamInformationText3}>
+                      reste : 6h 30min
+                    </Text>
+                  </View>
+                  <View style={styles.verticalLine} />
+                </View>
+              </ScrollView>
+            </View>
+          </View >
+          <View  style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.bodyFirstText}>Vos Informations Personnelles</Text>
             </View>
           </View>
         </View>
@@ -171,6 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#13129e",
+    height: 33,
   },
   seeAllBox: {
     padding: 7,
@@ -180,13 +261,86 @@ const styles = StyleSheet.create({
     marginTop: 27,
     marginLeft: "27%",
     marginRight: 20,
-    width: "20%",
     height: 33,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   seeAll: {
     fontSize: 15,
     color: "#13129e",
+  },
+  examPrevious: {
+    padding: 7,
+    alignItems: "center",
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 10,
+    width: "40%",
+    height: 160,
+    marginBottom: 0,
+  },
+  language: {
+    fontSize: 15,
+    color: "#ffff",
+  },
+  languageBox: {
+    padding: 7,
+    alignItems: "center",
+    backgroundColor: "#8282c9",
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 0,
+    width: "100%",
+    minWidth: 70,
+    height: 33,
+  },
+  noteBox: {
+    padding: 15,
+    paddingTop: 18,
+    alignItems: "center",
+    backgroundColor: "#8282c9",
+    borderRadius: 10,
+    marginTop: "20%",
+    marginLeft: 0,
+    borderRadius: "100%",
+    height: 50,
+  },
+  note: {
+    fontSize: 14,
+    color: "#ffff",
+  },
+  todayExam: {
+    padding: 7,
+    paddingTop: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 200,
+    width: 85,
+    height: 85,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  todayExamInformation: {
+    paddingTop: 15,
+    marginLeft: 20,
+    marginRight: -30,
+    flexDirection: "column",
+    width: 200,
+  },
+  todayExamInformationText1: {
+    fontWeight: "bold",
+    marginBottom: 7,
+  },
+  todayExamInformationText2: {
+    marginBottom: 7,
+  },
+  todayExamInformationText3: {
+    color: "orange",
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   verticalLine: {
     borderLeftWidth: 1.5,
@@ -195,28 +349,5 @@ const styles = StyleSheet.create({
   },
   espace: {
     height: 10,
-  },
-  innerContainer: {
-    backgroundColor: "transparent",
-    paddingTop: 25,
-    paddingLeft: 25,
-    paddingRight: 25,
-  },
-  title: {
-    fontSize: 15,
-    fontWeight: "bold",
-    color: "#66707c",
-  },
-  correction: {
-    paddingBottom: 20,
-    paddingTop: 20,
-  },
-  question: {
-    fontSize: 15,
-    fontWeight: "bold",
-  },
-  horizontaleLine: {
-    borderBottomWidth: 1.7,
-    borderBottomColor: "#eeee",
   },
 });
