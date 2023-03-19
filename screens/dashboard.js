@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import { View, Text,Image, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -7,17 +7,22 @@ import { AntDesign } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
+//import CountdownTimer from './CountdownTimer';
+
 const passedExams = [
   { id: 1, subject: 'Abd', date: '12/12/2022 à 12:00', mark: 10/20 },
   { id: 2, subject: 'Plsql', date: '12/12/2022 à 14:00', mark: 17/20 },
   { id: 3, subject: 'Orga', date: '12/12/2022 à 16:00', mark: 14/20 },
 ];
 
-const todayExams = [
-  { id: 1, subject: 'Abd', date: '12/12/2022 à 12:00', mark: 10/20 },
-  { id: 2, subject: 'Plsql', date: '12/12/2022 à 14:00', mark: 17/20 },
-  { id: 3, subject: 'Orga', date: '12/12/2022 à 16:00', mark: 14/20 },
-];
+  const date = new Date();
+  const currentDate = new Date().toLocaleDateString('fr-FR');
+
+  const todayExams = [
+    { id: 1, subject: 'Abd', time: 180, date: "18/03/2023", examTime: "00:54" },
+    { id: 2, subject: 'Plsql', time: 200, date: "18/03/2023", examTime: "22:45" },
+    { id: 3, subject: 'Orga', time: 120, date: "18/03/2023", examTime: "17:30" },
+  ];
 
 const getColorForMark = (mark) => {
   if (mark*20 >= 16) {
@@ -45,34 +50,87 @@ const renderPassedExamsRows = () => (
   ))
 );
 
-// Get current date and format it in alphabets using moment.js
-const actualdate = moment().format('Do MMMM YYYY');
-// Display the current date in alphabets
-const today = new Date();
-const currentDate = new Date();
-
-const formattedDate = currentDate.toLocaleDateString();
 
 
-const formatDate = (date) => {
-  return date.toLocaleDateString('fr-FR', { month: 'alphabetic', day: 'numeric', year: 'numeric' });
-};
+
+//The countdownTimer that allows to display the remaining time for the exam/////
+        const formatTime = (timeInSeconds) => {
+          const pad = (num, size) => `0${num}`.slice(size * -1);
+          const time = parseFloat(timeInSeconds).toFixed(3);
+          const hours = Math.floor(time / 60 / 60);
+          const minutes = Math.floor(time / 60) % 60;
+          const seconds = Math.floor(time - minutes * 60);
+          return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
+        };
+
+        const CountdownTimer = ({ time }) => {
+          const [currentTime, setCurrentTime] = useState(time);
+        
+          useEffect(() => {
+            const intervalId = setInterval(() => {
+              setCurrentTime((prevTime) => {
+                if (prevTime <= 0) {
+                  clearInterval(intervalId);
+                  return 0;
+                }
+                return prevTime - 1;
+              });
+            }, 1000);
+            return () => clearInterval(intervalId);
+          }, [time]);
+        
+          return (
+            <Text>{formatTime(currentTime)}</Text>
+          );
+        };
+
+        const getCurrentTimeInSeconds = () => {
+          const now = new Date();
+          return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+        };
+//////////////////////////////////////////////////////////////////////////
+
+
+
+
 
 
 const renderTodayExamsRows = () => (
-  todayExams.map(item => (
-    <TouchableOpacity style={styles.row} key={item.id}>
-      <View style={styles.subjectContainer}>
-        <Text style={styles.name}>
-          <Text style={styles.subject}>{item.subject}</Text>
-        </Text>
-        <Text style={styles.date}>{item.date}</Text>
-      </View>
-      <View style={[styles.circle, { backgroundColor: getColorForMark(item.mark) }]}>
-        <Text style={styles.markText}>{item.mark*20}</Text>
-      </View>
-    </TouchableOpacity>
-  ))
+  todayExams.map((exam, index) => {
+    const examTimeInSeconds = parseInt(exam.examTime.split(':')[0],10)*3600 + parseInt(exam.examTime.split(':')[1],10)*60;
+    const timeDiffInSeconds = examTimeInSeconds - getCurrentTimeInSeconds();
+    const remainingTimeInSeconds = timeDiffInSeconds > 0 ? timeDiffInSeconds : 0;
+
+    let backgroundColor;
+    if (remainingTimeInSeconds <= 0) {
+      backgroundColor = 'blue';
+    }else if (remainingTimeInSeconds < 3600) {
+      backgroundColor = 'lightcoral';
+    } else if (remainingTimeInSeconds < 10800) {
+      backgroundColor = 'orange';
+    } else {
+      backgroundColor = 'lightgreen';
+    }
+    return (
+      <TouchableOpacity style={styles.row} key={index}>
+        <View style={styles.subjectContainer}>
+          <Text style={styles.name}>
+            <Text style={styles.subject}>{exam.subject}</Text>
+          </Text>
+          <Text style={styles.date}>{exam.date}</Text>
+        </View>
+        {remainingTimeInSeconds > 0 ? (
+          <View style={[styles.todayCircle, { backgroundColor }]}>
+            <CountdownTimer time={remainingTimeInSeconds} />
+          </View>
+        ) : (
+          <TouchableOpacity style={[styles.todayCircle, { backgroundColor: '#48bee6' }]} onPress={() => console.log('Passed Exam:', exam)}>
+            <Text style={styles.passerText}>Passer</Text>
+          </TouchableOpacity>
+        )}
+      </TouchableOpacity>
+    );
+  })
 );
 
 function PassedScreen() {
@@ -268,6 +326,13 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 50,
     height:50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  todayCircle: {
+    borderRadius: 10,
+    width: 100,
+    height:40,
     justifyContent: 'center',
     alignItems: 'center'
   },
