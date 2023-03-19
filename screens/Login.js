@@ -26,19 +26,19 @@ export default function LoginScreen({ navigation }) {
   const [isHovering, setIsHovering] = useState(false);
   const [iconName, setIconName] = useState("eye");
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
   //const isDisabled = !(email.length > 0 && password.length > 0); l ASLYA HYA HADI
   const isDisabled = email.length > 0 && password.length > 0;
-=======
+// =======
     
 
-    const handlePressSignup = () => {
-      navigation.navigate('SignupScreen');
-    };
-    const handlePressPassed = () => {
-      navigation.navigate('dashboardScreen');
-    };
->>>>>>> 15cb663c4285c3b02dc1509db9ee2114153b17d0
+//     const handlePressSignup = () => {
+//       navigation.navigate('SignupScreen');
+//     };
+//     const handlePressPassed = () => {
+//       navigation.navigate('dashboardScreen');
+//     };
+// >>>>>>> 15cb663c4285c3b02dc1509db9ee2114153b17d0
 
   const handlePressSignup = () => {
     navigation.navigate("ExamCorrection");
