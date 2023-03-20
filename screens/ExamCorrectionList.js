@@ -4,13 +4,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 
-
 const ExamCorrectionList = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get("https://reqres.in/api/users?page=2")
+      .get("https://reqres.in/api/users?page=")
       .then((response) => {
         setData(response.data.data);
       })

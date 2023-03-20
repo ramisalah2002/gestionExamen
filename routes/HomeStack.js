@@ -12,7 +12,7 @@ import HomeTestScreen from "../screens/HomeTest" ;
 
 const screens = {
     Home : {
-        screen: HomeTestScreen,
+        screen: ExamCorrectionScreen,
         navigationOptions: {
             headerShown: false
         },

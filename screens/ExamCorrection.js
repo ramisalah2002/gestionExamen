@@ -1,57 +1,10 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import Item from "@ant-design/react-native/lib/list/ListItem";
 import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import ExamCorrectionList from "./ExamCorrectionList" ;
-const DATA = [
-  {
-    id: "1",
-    numero: "1",
-    reponse: "a",
-    correct: "a",
-  },
-  {
-    id: "2",
-    numero: "2",
-    reponse: "a",
-    correct: "b",
-  },
-  {
-    id: "3",
-    numero: "3",
-    reponse: "c",
-    correct: "c",
-  },
-];
-
-// const user =[
-//   {
-//         id: "1",
-//         numero: "9",
-//         reponse: "b",
-//         correct: "a",
-//       }
-// ]; 
-// const [user, setUser] = useState([]);
-
-// useEffect(() => {
-//   getUser();
-// }, []);
-
-// const getUser = () => {
-//   fetch("https://reqres.in/api/users?page=2").then(function(response) {
-//     return response.json(); 
-//   }).then(function(response) {
-//     setUser(response.data) ;
-//   })
-// }
+import ExamCorrectionList from "./ExamCorrectionList";
 
 export default function ExamCorrectionScreen({ navigation }) {
-  const [data, setData] = useState(DATA);
-
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -97,44 +50,6 @@ export default function ExamCorrectionScreen({ navigation }) {
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Liste des Questions</Text>
           <Text style={styles.espace}> </Text>
-          {
-          
-          data.map((item) => (
-            <>
-            <View key={item.id} style={styles.questionContainer}>
-              <TouchableOpacity>
-                <AntDesign
-                  style={styles.icon}
-                  name="right"
-                  size={35}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <View style={styles.correction}>
-                <Text style={styles.question}>Question {item.numero}</Text>
-                <Text style={styles.espace}> </Text>
-                <Text style={answerStyle}> {item.reponse === item.correct ? 'Correct Answer' : 'Wrong Answer'}</Text>
-              </View>
-            </View>
-            <View style={styles.horizontaleLine} />  
-            </>  
-          ))}
-          <View style={styles.questionContainer}>
-            <TouchableOpacity>
-              <AntDesign
-                style={styles.icon}
-                name="right"
-                size={35}
-                color="black"
-              />
-            </TouchableOpacity>
-            <View style={styles.correction}>
-              <Text style={styles.question}>Question 1</Text>
-              <Text style={styles.espace}> </Text>
-              <Text style={styles.answerFalse}>Correct Answer</Text>
-            </View>
-          </View>
-          <View style={styles.horizontaleLine} />          
           <ExamCorrectionList />
         </View>
       </ScrollView>
