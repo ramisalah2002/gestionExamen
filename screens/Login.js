@@ -3,6 +3,7 @@ import {
   Switch,
   TextInput,
   Button,
+  Image,
   TouchableOpacity,
   StyleSheet,
   View,

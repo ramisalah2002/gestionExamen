@@ -147,6 +147,8 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-between',
+    backgroundColor:'#f3f4f6',
+    paddingBottom:'54%',
   },
   loginContainer: {
     marginTop: 40,
