@@ -9,7 +9,6 @@ import dashboardScreen from "../screens/dashboard";
 import passedExamScreen from "../screens/passedExam";
 import ExamCorrectionScreen from "../screens/ExamCorrection" ; 
 import HomeTestScreen from "../screens/HomeTest" ;
-import MyScreen from "../screens/MyScrenn" ;
 
 const screens = {
     Home : {
