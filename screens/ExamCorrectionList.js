@@ -9,7 +9,7 @@ const ExamCorrectionList = () => {
 
   useEffect(() => {
     axios
-      .get("https://reqres.in/api/users?page=")
+      .get("https://reqres.in/api/users?page=2")
       .then((response) => {
         setData(response.data.data);
       })

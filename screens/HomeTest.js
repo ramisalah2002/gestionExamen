@@ -299,10 +299,9 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     alignItems: "center",
     backgroundColor: "#8282c9",
-    borderRadius: 10,
+    borderRadius: 50,
     marginTop: "20%",
     marginLeft: 0,
-    borderRadius: "100%",
     height: 50,
   },
   note: {
