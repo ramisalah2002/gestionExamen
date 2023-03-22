@@ -26,20 +26,35 @@ export default function LoginScreen({ navigation }) {
   const [isHovering, setIsHovering] = useState(false);
   const [iconName, setIconName] = useState("eye");
 
-// <<<<<<< HEAD
-  //const isDisabled = !(email.length > 0 && password.length > 0); l ASLYA HYA HADI
-  const isDisabled = email.length > 0 && password.length > 0;
-// =======
-    
-
-//     const handlePressSignup = () => {
-//       navigation.navigate('SignupScreen');
-//     };
-//     const handlePressPassed = () => {
-//       navigation.navigate('dashboardScreen');
-//     };
-// >>>>>>> 15cb663c4285c3b02dc1509db9ee2114153b17d0
-
+  
+  const handleLogin = () => {
+    fetch("http://10.0.2.2:8000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token) {
+          // Save the token in state or storage
+          const token = data.token;
+          let userInfo = data;
+          console.log(userInfo);
+          navigation.navigate("dashboardScreen", { token: token });
+        } else {
+          setError("Invalid email or password");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setError("Something went wrong");
+      });
+  };
   const handlePressSignup = () => {
     navigation.navigate("ExamCorrection");
   };
@@ -67,7 +82,7 @@ export default function LoginScreen({ navigation }) {
               placeholder="nom_prenom@exemple.ma"
               placeholderTextColor="#bbbcc0"
               value={email}
-              onChangeText={setEmail}
+              onChangeText={(text) => setEmail(text)}
               style={styles.input}
             />
           </View>
@@ -95,13 +110,13 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
-            onPress={handlePressPassed}
+            //onPress={handlePressPassed}
+            onPress={handleLogin}
             style={styles.button}
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
             onTouchStart={() => setIsHovering(true)}
             onTouchEnd={() => setIsHovering(false)}
-            disabled={isDisabled}
           >
             <Text style={styles.buttonText}>Se connecter</Text>
           </TouchableOpacity>

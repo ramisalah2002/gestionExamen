@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
+import { AuthContext } from "../src/context/AuthContext";
+import axios from "axios";
 import {
   StyleSheet,
   View,
