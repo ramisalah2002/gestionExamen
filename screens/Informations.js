@@ -9,12 +9,12 @@ import {
   StyleSheet,
   View,
   Text,
-  Picker,
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
+import { Picker } from "@react-native-picker/picker";
 
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");
@@ -124,6 +124,48 @@ export default function InformationsScreen({ navigation }) {
                     } else {
                       alert("L'ancien mot de passe est incorrect.");
                     }
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Sauvegarder</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }
+        if (label === "Filiere") {
+          return (
+            <View>
+              <Text style={styles.editingTitle}>Filiere</Text>
+              <Picker
+                style={styles.editingTextInput}
+                selectedValue={editingValue}
+                onValueChange={(itemValue, itemIndex) =>
+                  setEditingValue(itemValue)
+                }
+              >
+                <Picker.Item label="Génie Logiciel" value="Génie Logiciel" />
+                <Picker.Item label="Informatique" value="Informatique" />
+                <Picker.Item
+                  label="Réseaux et Télécommunications"
+                  value="Réseaux et Télécommunications"
+                />
+                <Picker.Item label="Génie Civil" value="Génie Civil" />
+                {/* Ajoutez d'autres filières si nécessaire */}
+              </Picker>
+              <View style={styles.editingButtonsContainer}>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Annuler</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                    setFiliere(editingValue);
                   }}
                 >
                   <Text style={styles.editingButtonText}>Sauvegarder</Text>

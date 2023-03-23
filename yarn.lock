@@ -2149,9 +2149,9 @@
   resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-4.2.4.tgz"
   integrity sha512-uY51UoipQW4ELnFWMU6rTHRc4EUYaW+Z1O9Teijej6NYVYdUcUKq+t7WeBGjMAEc1ipyooMeBqRXToWO5zAU2Q==
 
-"@react-native-picker/picker@^2.4.8":
+"@react-native-picker/picker@^2.4.9":
   version "2.4.9"
-  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.4.9.tgz"
+  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.9.tgz#a07b01a03aee5675beac3e2c4fdb7b5707d42019"
   integrity sha512-Bo1yIliSxDuCp42Q1CXNo+DAk8NfqTp/eQI/6kkzsTit/k1LWYYYDhiZd7AO9113IuXbHb7PyJwyqprFMPSB/A==
 
 "@react-native/assets@1.0.0":

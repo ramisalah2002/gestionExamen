@@ -21,7 +21,7 @@
     "@react-native-community/checkbox": "^0.5.14",
     "@react-native-community/segmented-control": "^2.2.2",
     "@react-native-community/slider": "4.2.4",
-    "@react-native-picker/picker": "^2.4.8",
+    "@react-native-picker/picker": "^2.4.9",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/drawer": "^6.6.2",
     "@react-navigation/material-top-tabs": "^6.6.2",
