@@ -15,7 +15,7 @@ const LoginTest = ({ navigation }) => {
   const val = useContext(AuthContext);
 
   const handleLogin = () => {
-    fetch("http://10.0.2.2:8000/api/login", {
+    fetch("https://bit.ly/3LHHr24", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

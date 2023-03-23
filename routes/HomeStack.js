@@ -11,10 +11,11 @@ import ExamCorrectionScreen from "../screens/ExamCorrection";
 import HomeTestScreen from "../screens/HomeTest";
 import LoginTestScreen from "../screens/LoginTest";
 import RegisterTestScreen from "../screens/RegisterTest";
+import passerExamScreen from "../screens/passerExam";
 
 const screens = {
   LoginScreen: {
-    screen: LoginScreen,
+    screen: passerExamScreen,
     navigationOptions: {
       headerShown: false,
     },
