@@ -6,24 +6,208 @@ import axios from "axios";
 import {CheckBox} from "react-native-elements";
 import {
   StyleSheet,
+  Modal,
   View,
   Text,
   ScrollView,
+  Alert,
   FlatList,
   TextInput,
+  TouchableOpacity
 } from "react-native";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
+const questions = [
+  {
+    id: 1,
+    question: 'What is the capital of France?',
+    options: [
+      { id: 1, label: 'Paris', selected: false },
+      { id: 2, label: 'Madrid', selected: false },
+      { id: 3, label: 'Rome', selected: false },
+      { id: 4, label: 'Berlin', selected: false },
+    ],
+  },
+  {
+    id: 2,
+    question: 'What is the largest country by area?',
+    options: [
+      { id: 1, label: 'Russia', selected: false },
+      { id: 2, label: 'China', selected: false },
+      { id: 3, label: 'United States', selected: false },
+      { id: 4, label: 'Canada', selected: false },
+    ],
+  },
+  {
+    id: 3,
+    question: 'What is the capital of France?',
+    options: [
+      { id: 1, label: 'Paris', selected: false },
+      { id: 2, label: 'Madrid', selected: false },
+      { id: 3, label: 'Rome', selected: false },
+      { id: 4, label: 'Berlin', selected: false },
+    ],
+  },
+  {
+    id: 4,
+    question: 'What is the largest country by area?',
+    options: [
+      { id: 1, label: 'Russia', selected: false },
+      { id: 2, label: 'China', selected: false },
+      { id: 3, label: 'United States', selected: false },
+      { id: 4, label: 'Canada', selected: false },
+    ],
+  },
+  {
+    id: 5,
+    question: 'What is the capital of France?',
+    options: [
+      { id: 1, label: 'Paris', selected: false },
+      { id: 2, label: 'Madrid', selected: false },
+      { id: 3, label: 'Rome', selected: false },
+      { id: 4, label: 'Berlin', selected: false },
+    ],
+  },
+  {
+    id: 6,
+    question: 'What is the largest country by area?',
+    options: [
+      { id: 1, label: 'Russia', selected: false },
+      { id: 2, label: 'China', selected: false },
+      { id: 3, label: 'United States', selected: false },
+      { id: 4, label: 'Canada', selected: false },
+    ],
+  },
+  {
+    id: 7,
+    question: 'What is the capital of France?',
+    options: [
+      { id: 1, label: 'Paris', selected: false },
+      { id: 2, label: 'Madrid', selected: false },
+      { id: 3, label: 'Rome', selected: false },
+      { id: 4, label: 'Berlin', selected: false },
+    ],
+  },
+  {
+    id: 8,
+    question: 'What is the largest country by area?',
+    options: [
+      { id: 1, label: 'Russia', selected: false },
+      { id: 2, label: 'China', selected: false },
+      { id: 3, label: 'United States', selected: false },
+      { id: 4, label: 'Canada', selected: false },
+    ],
+  },
+];
+
+const EXAM_DURATION = 2 * 60 * 60 * 1000; // Exam duration is 2 hours in milliseconds
 
 export default function passerExamScreen({ navigation }) {
-    const [coloredCheckBoxValue, setColoredCheckBoxValue] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (text) => {
-    setSearchTerm(text);
-    // Do your search logic here
+  const [selectedAnswers, setSelectedAnswers] = useState([]);
+  const [isActive, setIsActive] = useState(true);
+  
+  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRemainingTime(prevTime => prevTime - 60 * 1000); // Decrease remaining time by 1 minute
+    }, 60 * 1000); // Update every minute
+
+    return () => clearInterval(timer); // Clean up the timer on unmount
+  }, []);
+
+  const hourNumber = Math.floor(remainingTime / (60 * 60 * 1000));
+  const minuteNumber = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+  const [numAnswered, setNumAnswered] = useState(0);
+  let zero = "";
+  if(minuteNumber<10){
+    zero = "0";
+  }else{
+    zero = "";
+  }
+
+  
+  const handleSelectAnswer = (questionId, optionId) => {
+    const question = questions.find((q) => q.id === questionId);
+    const option = question.options.find((o) => o.id === optionId);
+
+    // If the option is already selected, deselect it
+    if (option.selected) {
+      option.selected = false;
+      setSelectedAnswers((prevSelectedAnswers) =>
+        prevSelectedAnswers.filter(
+          (answer) => answer.questionId !== questionId
+        )
+      );
+    } else {
+      // Otherwise, select the new option and deselect the others
+      question.options.forEach((o) => {
+        if (o.id !== optionId) {
+          o.selected = false;
+        } else {
+          o.selected = true;
+        }
+      });
+      setSelectedAnswers((prevSelectedAnswers) => [
+        ...prevSelectedAnswers,
+        { questionId, optionId },
+      ]);
+    }
   };
 
-  // l icon li lfo9 3la limn n9dro nbdloha b logout
+  const handleSubmit = () => {
+    console.log(selectedAnswers);
+    setModalVisible(true)
+    // Do something with the selected answers, such as grade the exam
+  };
+
+  const handleClear = () => {
+    questions.forEach((q) => {
+      q.options.forEach((o) => {
+        o.selected = false;
+      });
+    });
+    setSelectedAnswers([]);
+  };
+
+  // Count the number of answered questions
+  useEffect(() => {
+    const count = questions.reduce((total, question) => {
+      const answer = selectedAnswers.find((a) => a.questionId === question.id);
+      return answer ? total + 1 : total;
+    }, 0);
+    setNumAnswered(count);
+  }, [selectedAnswers]);
+
+  const handlePressFinish = () => {
+    Alert.alert(
+      "Finish The Exam",
+      "Are you sure you want to finish the Exam?",
+      [
+        {
+          text: "NO",
+          style: "cancel"
+        },
+        {
+          text: "YES",
+          onPress: () => console.log("OK Pressed")
+        }
+      ]
+    );
+  };
+
+
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const handleConfirm = () => {
+    // Handle confirm action
+    setModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    // Handle cancel action
+    setModalVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -45,29 +229,29 @@ export default function passerExamScreen({ navigation }) {
             <View style={styles.headerScore}>
                 <Text style={styles.itemTitle}>Score</Text>
                 <View style={styles.itemScoreContainer}>
-                  <Text style={styles.scoreNumber}>10</Text>
+                  <Text style={styles.scoreNumber}>{numAnswered}</Text>
                 </View>
             </View>
             <View style={styles.headerCountdown}>
                 <Text style={styles.itemTitle}>Temps restant</Text>
                 <View style={styles.countdownTime}>
                     <View style={styles.itemHourContainer}>
-                        <Text style={styles.HourNumber}>06</Text>
+                      <Text style={styles.HourNumber}>0{hourNumber}</Text>
                     </View>
                     <View style={styles.itemMinuteContainer}>
-                      <Text style={styles.MinuteNumber}>16</Text>
+                      <Text style={styles.MinuteNumber}>{zero}{minuteNumber}</Text>
                     </View>
                 </View>
             </View>
         </View>
     </View>
-        <ScrollView>
-            <View style={[styles.infoContainer,{marginTop:40,paddingHorizontal: 20,}]}>
+        
+            <View style={[styles.infoContainer,{marginTop:10,paddingHorizontal: 20,}]}>
                 <Text style={styles.bodyFirstText}>Informations sur l'examen</Text>
                 <View style={[styles.info,{flexDirection:'row',alignItems:'center',}]}>
                     <View style={styles.itemQuestionsContainer}>
                         <Text style={styles.questionsNumber}>Questions</Text>
-                        <Text style={styles.itemTitle}>16</Text>
+                        <Text style={styles.itemTitle}>{questions.length}</Text>
                     </View>
                     <View style={styles.itemTimeContainer}>
                         <Text style={styles.questionsNumber}>Temps d'examen</Text>
@@ -75,55 +259,68 @@ export default function passerExamScreen({ navigation }) {
                     </View>
                 </View>
             </View>
-            <View style={[styles.questionsContainer,{marginTop:20,paddingHorizontal: 20,}]}>
-                <View style={styles.questContainer}>
-                    <View style={[styles.questionTitle,{flexDirection:'column',alignItems:'center',}]}>
-                        <View style={{flexDirection:'row',alignItems:'center',}}>
-                            <View style={styles.questionNumberContainer}>
-                              <Text style={styles.questionNumber}>Q 01</Text>
-                            </View>
-                            <Text style={styles.questionText}>what what what what what what what what what what what whgfgd ufdgdfg ?</Text>
-                        </View>
-                        <View style={[styles.propositionsContainer,{flexDirection:'column',width:'100%',alignItems:'flex-start'}]}>
+            <ScrollView>
+              <View style={[styles.questionsContainer,{marginTop:20,paddingHorizontal: 20,}]}>
+              {questions.map((question) => (
+                  <View key={question.id} style={styles.questContainer}>
+                      <View style={[styles.questionTitle,{flexDirection:'column',alignItems:'flex-start',}]}>
+                          <View style={{flexDirection:'row',alignItems:'center',}}>
+                              <View style={styles.questionNumberContainer}>
+                                <Text style={styles.questionNumber}>Q {question.id}</Text>
+                              </View>
+                              <Text style={styles.questionText}>{question.question}?</Text>
+                          </View>
+                          <View style={[styles.propositionsContainer,{flexDirection:'column',width:'100%',alignItems:'flex-start'}]}>
+                          {question.options.map((option) => (
                             <CheckBox
-                                containerStyle={{backgroundColor:'#f3f4f6',borderWidth:0,alignItems:'flex-start',marginBottom:-15}}
-                                title={'test test test test test test test test test test'}
-                                checked={coloredCheckBoxValue}
-                                textStyle={{color:'#302f34'}}
-                                checkedColor='#1dd1a1'
-                                onPress={()=>setColoredCheckBoxValue(!coloredCheckBoxValue)}
+                              key={option.id}
+                              containerStyle={{ backgroundColor: "#f3f4f6", borderWidth: 0, padding: 0 }}
+                              checked={option.selected}
+                              checkedColor='#1dd1a1'
+                              title={option.label}
+                              textStyle={{ fontSize: 14 }}
+                              onPress={() => handleSelectAnswer(question.id, option.id)}
                             />
-                            <CheckBox
-                                containerStyle={{backgroundColor:'#f3f4f6',borderWidth:0,alignItems:'flex-start',marginBottom:-15}}
-                                title={'test test test test test test test test test test'}
-                                checked={coloredCheckBoxValue}
-                                textStyle={{color:'#302f34'}}
-                                checkedColor='#1dd1a1'
-                                onPress={()=>setColoredCheckBoxValue(!coloredCheckBoxValue)}
-                            />
-                            <CheckBox
-                                containerStyle={{backgroundColor:'#f3f4f6',borderWidth:0,alignItems:'flex-start',marginBottom:-15}}
-                                title={'test test test test test test test test test test'}
-                                checked={coloredCheckBoxValue}
-                                textStyle={{color:'#302f34'}}
-                                checkedColor='#1dd1a1'
-                                onPress={()=>setColoredCheckBoxValue(!coloredCheckBoxValue)}
-                            />
-                            <CheckBox
-                                containerStyle={{backgroundColor:'#f3f4f6',borderWidth:0,alignItems:'flex-start',marginBottom:-15}}
-                                title={'test test test test test test test test test test'}
-                                checked={coloredCheckBoxValue}
-                                textStyle={{color:'#302f34'}}
-                                checkedColor='#1dd1a1'
-                                onPress={()=>setColoredCheckBoxValue(!coloredCheckBoxValue)}
-                            />
-                            
-                            
-                        </View>
-                    </View>
-                </View>
+                          ))}
+                          </View>
+                      </View>
+                  </View>
+                  ))}
+                  <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+                    <Text style={styles.submitButtonText}>Finish The Exam</Text>
+                  </TouchableOpacity>
+              </View>
+            </ScrollView>
+            <Modal
+        visible={modalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modal}>
+            <Text style={styles.modalTitle}>Confirmer la soumission</Text>
+            <Text style={styles.modalText}>
+            Êtes-vous sûr de vouloir soumettre vos réponses?
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalCancelButton]}
+                onPress={handleCancel}
+              >
+                <Text style={styles.modalButtonText}>Annuler</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.modalConfirmButton]}
+                onPress={handleConfirm}
+              >
+                <Text style={styles.modalButtonText}>Confirmer</Text>
+              </TouchableOpacity>
             </View>
-        </ScrollView>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -135,7 +332,7 @@ const styles = StyleSheet.create({
   },
   titleTop: {
     marginLeft: 20,
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "bold",
     color: "#e5f3ff",
   },
@@ -160,12 +357,12 @@ const styles = StyleSheet.create({
     marginBottom:5
   },
   scoreNumber: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "900",
     color: "#2b2780",
   },
   HourNumber: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "900",
     color: "#2b2780",
   },
@@ -175,12 +372,12 @@ const styles = StyleSheet.create({
     color: "#121123",
   },
   MinuteNumber: {
-    fontSize: 30,
+    fontSize: 26,
     fontWeight: "900",
     color: "#ff8645",
   },
   headerText: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     color: "#e5f3ff",
   },
@@ -190,8 +387,8 @@ const styles = StyleSheet.create({
   itemScoreContainer: {
     backgroundColor: '#f6f5fa',
     borderRadius: 5,
-    width:80,
-    height:60,
+    width:70,
+    height:50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -207,7 +404,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f5fa',
     borderRadius: 5,
     width:50,
-    height:60,
+    height:50,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight:10
@@ -216,23 +413,23 @@ const styles = StyleSheet.create({
     backgroundColor: '#f6f5fa',
     borderRadius: 5,
     width:50,
-    height:60,
+    height:50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   itemTimeContainer: {
     backgroundColor: '#f6f5fa',
     borderRadius: 5,
-    width:'45%',
-    height:60,
+    width:'40%',
+    height:50,
     alignItems: 'center',
     justifyContent: 'center',
   },
   itemQuestionsContainer: {
     backgroundColor: '#f6f5fa',
     borderRadius: 5,
-    width:'45%',
-    height:60,
+    width:'40%',
+    height:50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -243,9 +440,9 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'space-between',
     padding:20,
-    height:'60%',
+    height:'50%',
     borderRadius:15,
-    padding:25,
+    padding:20,
     width:'65%',
     shadowColor: '#aaa',
     shadowOffset: {
@@ -263,7 +460,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     borderRadius:10,
     justifyContent:'space-around',
-    padding:20,
+    padding:10,
     
   },
   textTop: {
@@ -289,7 +486,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   topIcons: {
-    marginTop: 90,
+    marginTop: 80,
     marginBottom:20,
     flexDirection: "row",
     alignItems: "center",
@@ -322,5 +519,58 @@ const styles = StyleSheet.create({
     color: "#13129e",
     height: 33,
   },
-
+  submitButton: {
+    backgroundColor: '#302ea6',
+    borderRadius: 5,
+    alignItems: 'center',
+    paddingVertical: 15,
+    width:'100%',
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modal: {
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 16,
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  modalButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 4,
+    marginLeft: 8,
+  },
+  modalConfirmButton: {
+    backgroundColor: '#302ea6',
+  },
+  modalCancelButton: {
+    backgroundColor: '#aaa',
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
 });

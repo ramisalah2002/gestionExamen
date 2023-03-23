@@ -12,6 +12,7 @@ import HomeTestScreen from "../screens/HomeTest";
 import LoginTestScreen from "../screens/LoginTest";
 import RegisterTestScreen from "../screens/RegisterTest";
 import passerExamScreen from "../screens/passerExam";
+import qcmTest from "../screens/qcmTest";
 
 const screens = {
   LoginScreen: {
