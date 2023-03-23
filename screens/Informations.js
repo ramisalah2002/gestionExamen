@@ -15,7 +15,7 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
 
-export default function LoginScreen({ navigation }) {
+export default function InformationsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 35,
     fontWeight: "bold",
-    color: "#48bee6",
+    color: "#302ea6",
   },
   secondText: {
     marginTop: 10,
