@@ -41,7 +41,7 @@ export default function deptChoiceScreen({navigation}) {
   };
 
   const handleSignup = () => {
-    navigation.navigate('HomeDrawerScreen');
+    navigation.navigate('HomeTestScreen');
   };
 
   return (

@@ -11,6 +11,7 @@ import {
   Text,
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
@@ -248,6 +249,16 @@ export default function InformationsScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
+        <View style={styles.topIcons}>
+          <TouchableOpacity onPress={() => navigation.openDrawer()}  >
+            <AntDesign
+              style={styles.icon}
+              name="menuunfold"
+              size={30}
+              color="#302ea6"
+            />
+          </TouchableOpacity>
+        </View>
           <Text style={styles.titleText}>Vos Informations</Text>
           <Text style={styles.secondText}>
             Vous trouverez dans cette page vos informations personnelles{" "}
@@ -306,10 +317,10 @@ const styles = StyleSheet.create({
   },
   informationsContainer: {
     flexDirection: "column",
-    margin: 10,
+    margin: 5,
     marginTop: 0,
     backgroundColor: "#ffff",
-    borderRadius: 15,
+    borderRadius: 10,
     shadowColor: "#111952",
     shadowOffset: {
       width: 0,
@@ -317,8 +328,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
-    elevation: 7,
-    padding: 15,
+    elevation: 5,
+    padding: 10,
   },
   informationContainer: {
     padding: 10,

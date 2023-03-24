@@ -1,7 +1,7 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { NativeWindStyleSheet } from "nativewind";
-import Home from "../screens/Home";
+import HomeScreen from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import deptChoiceScreen from "../screens/deptChoice";
@@ -14,11 +14,10 @@ import RegisterTestScreen from "../screens/RegisterTest";
 import InformationsScreen from "../screens/Informations";
 import passerExamScreen from "../screens/passerExam";
 import qcmTest from "../screens/qcmTest";
-import HomeDrawerScreen from "../screens/HomeDrawer";
 
 const screens = {
   HomeScreen: {
-    screen: Home,
+    screen: HomeScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -47,12 +46,7 @@ const screens = {
       headerShown: false,
     },
   },
-  HomeDrawerScreen: {
-    screen: HomeDrawerScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
+
   passedExamScreen: {
     screen: passedExamScreen,
     navigationOptions: {

@@ -44,7 +44,7 @@ import { StatusBar } from "expo-status-bar";
 
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
-export default function Home({navigation}) {
+export default function HomeScreen({navigation}) {
   const pressHandlerLogin = () =>{
     navigation.navigate('LoginScreen');
   }
