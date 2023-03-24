@@ -1,5 +1,7 @@
 import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
+import { StatusBar } from "expo-status-bar";
+
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { AntDesign } from "@expo/vector-icons";
@@ -94,7 +96,8 @@ export default function SignupScreen({navigation}){
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.content}>
+    <StatusBar style="light" />
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           <View style={styles.loginContainer}>
           <View style={{width:'100%',}}>
             <TouchableOpacity onPress={()=>navigation.goBack()}>
@@ -110,8 +113,8 @@ export default function SignupScreen({navigation}){
                   source={require('../images/signup.jpg')}
                   style={styles.image}
                 />
-                <View style={{width:'100%',marginBottom:20}}>
-                  <Text style={{fontSize:30,fontWeight:'900'}}>Sign Up</Text>
+                <View style={{width:'100%',marginBottom:15}}>
+                  <Text style={{fontSize:30,fontWeight:'900'}}>Inscription</Text>
                 </View>
               <View style={styles.emailField}>
                   <AntDesign
@@ -154,11 +157,14 @@ export default function SignupScreen({navigation}){
                 <Text style={styles.buttonText}>Continuer</Text>
               </TouchableOpacity>
               <View style={styles.divisionLine}></View>
-              <TouchableOpacity onPress={handlePressLogin} style={styles.signup}>
+              <View style={styles.signup}>
                   <Text style={styles.signupText}>
                   Vous avez déjà un compte? 
                   </Text>
-              </TouchableOpacity>
+                  <TouchableOpacity onPress={handlePressLogin} >
+                    <Text style={{fontSize:18,fontWeight:'900',color:'#302ea6'}}> Se connecter</Text>
+                  </TouchableOpacity>
+              </View>
           </View>
       </ScrollView>
     </View>
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 15,
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 15,
   },
   loginContainer: {
     marginTop: 10,
@@ -200,12 +206,7 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     color:"#48bee6",
   },
-  choiceContainer: {
-    marginTop:30,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
+
   buttonTouch: {
     borderWidth: 1,
     borderColor: '#e8e8e8',
@@ -251,7 +252,6 @@ const styles = StyleSheet.create({
       fontSize: 18,
       fontWeight: '600',
       color: '#999999',
-      paddingBottom:40,
   },
   miniTitle :{
       fontSize: 16,
@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
       color: '#000',
   },
   divisionLine: {
-    marginTop: 15,
+    marginTop: 5,
     backgroundColor:'#bbbcc0', 
     width: '100%',
     borderRadius: 10,
@@ -292,8 +292,8 @@ const styles = StyleSheet.create({
     height: 55,
   },
   signup: {
-      marginTop: 10,
-      flexDirection: 'column',
+      marginTop: 5,
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
   },
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
       borderRadius: 5,
       paddingLeft: 10,
       borderColor: '#000',
-      marginBottom:15,
+      marginBottom:10,
   },
 
   passwordField: {

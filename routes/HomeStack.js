@@ -14,16 +14,17 @@ import RegisterTestScreen from "../screens/RegisterTest";
 import InformationsScreen from "../screens/Informations";
 import passerExamScreen from "../screens/passerExam";
 import qcmTest from "../screens/qcmTest";
+import HomeDrawerScreen from "../screens/HomeDrawer";
 
 const screens = {
-  LoginScreen: {
+  HomeScreen: {
     screen: Home,
     navigationOptions: {
       headerShown: false,
     },
   },
-  Home: {
-    screen: HomeTestScreen,
+  LoginScreen: {
+    screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -34,14 +35,26 @@ const screens = {
       headerShown: false,
     },
   },
-  passedExamScreen: {
-    screen: passedExamScreen,
+  deptChoiceScreen: {
+    screen: deptChoiceScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  deptChoiceScreen: {
-    screen: deptChoiceScreen,
+  HomeTestScreen: {
+    screen: HomeTestScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  HomeDrawerScreen: {
+    screen: HomeDrawerScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  passedExamScreen: {
+    screen: passedExamScreen,
     navigationOptions: {
       headerShown: false,
     },

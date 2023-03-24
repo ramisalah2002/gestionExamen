@@ -25,16 +25,17 @@ export default function ExamCorrectionScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar style="light" />
-
+      {/* <StatusBar style="light" /> */}
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
-          <AntDesign
-            style={styles.icon}
-            name="menuunfold"
-            size={30}
-            color="white"
-          />
+          <TouchableOpacity onPress={() => navigation.openDrawer()}  >
+            <AntDesign
+              style={styles.icon}
+              name="menuunfold"
+              size={30}
+              color="white"
+            />
+          </TouchableOpacity>
           <AntDesign
             style={styles.icon}
             name="arrowright"
@@ -149,7 +150,7 @@ export default function ExamCorrectionScreen({ navigation }) {
                 </View>
               </ScrollView>
             </View>
-          </View >
+          </View>
           <View  style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
             <View
               style={{ flexDirection: "row", justifyContent: "space-between" }}
@@ -236,6 +237,8 @@ const styles = StyleSheet.create({
   },
   header: {
     borderRadius: 25,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
     backgroundColor: "#302ea6",
     width: "100%",
   },

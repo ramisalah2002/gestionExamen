@@ -40,6 +40,8 @@
 
 import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
+import { StatusBar } from "expo-status-bar";
+
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export default function Home({navigation}) {
@@ -53,6 +55,7 @@ export default function Home({navigation}) {
   return (
     
     <View style={styles.container}>
+    <StatusBar style="light" />
       <ScrollView style={styles.content}>
         <Image
           source={require('../images/testLogo.jpg')}
@@ -62,6 +65,7 @@ export default function Home({navigation}) {
           <Text style={styles.title}>L'examen en ligne n'a jamais été aussi simple</Text>
         </View>
         {/* <Text style={styles.paragraph}>Small paragraph</Text> */}
+        </ScrollView>
         <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={pressHandlerSign} style={styles.buttonSign}>
             <Text style={styles.buttonText}>s'inscrire</Text>
@@ -70,7 +74,7 @@ export default function Home({navigation}) {
             <Text style={styles.buttonText}>se connecter</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      
     </View>
   );
 };
@@ -80,6 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems:'center',
     backgroundColor: '#dde6f2',
+    paddingBottom:30
   },
   content: {
     width:'95%',
@@ -99,13 +104,14 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: '900',
     textAlign:'center',
-    color:'#363349'
+    color:'#363349',
+    marginTop:50
   },
   paragraph: {
     fontSize: 18,
   },
   buttonsContainer: {
-    width:'100%',
+    width:'95%',
     alignItems:'center',
     justifyContent:'space-between',
     flexDirection:'row',

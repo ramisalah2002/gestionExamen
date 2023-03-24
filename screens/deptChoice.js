@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { NativeWindStyleSheet } from 'nativewind';
 import {Picker} from '@react-native-picker/picker';
+import { ScrollView } from 'react-native-gesture-handler';
+import { AntDesign } from "@expo/vector-icons";
+
 
 const departments = [
   {
@@ -21,7 +25,7 @@ const departments = [
   },
 ];
 
-export default function deptChoiceScreen() {
+export default function deptChoiceScreen({navigation}) {
   const [selectedDepartment, setSelectedDepartment] = useState(departments[0]);
   const [selectedClass, setSelectedClass] = useState(selectedDepartment.classes[0]);
 
@@ -36,58 +40,75 @@ export default function deptChoiceScreen() {
     setSelectedClass(classObj);
   };
 
+  const handleSignup = () => {
+    navigation.navigate('HomeDrawerScreen');
+  };
+
   return (
     <View style={styles.container}>
-    <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>
-            Choisir votre Département et Filière
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+          <View style={{width:'100%',}}>
+            <TouchableOpacity onPress={()=>navigation.goBack()}>
+              <AntDesign
+                style={styles.iconBack}
+                name="arrowleft"
+                size={30}
+                color="#3d394e"
+              />
+            </TouchableOpacity>
+          </View>
+          <Image
+            source={require('../images/choice.jpg')}
+            style={styles.image}
+          />
+          <View style={{width:'100%',marginBottom:15}}>
+            <Text style={{fontSize:30,fontWeight:'900'}}>Choix de filière</Text>
+          </View>
+          <View style={styles.pickerContainer}>
+            <Text style={styles.pickerTitle}>
+              Département
             </Text>
-        </View>
-      <View style={styles.pickerContainer}>
-        <Text style={styles.pickerTitle}>
-          Choisir votre Département
-        </Text>
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedDepartment.id}
-          onValueChange={handleDepartmentChange}
-        >
-          {departments.map((department) => (
-            <Picker.Item key={department.id} label={department.name} value={department.id} />
-          ))}
-        </Picker>
-        <Text style={styles.pickerTitle}>
-          Choisir votre Filière
-        </Text>
-        <Picker
-          style={styles.picker}
-          selectedValue={selectedClass.id}
-          onValueChange={handleClassChange}
-        >
-          {selectedDepartment.classes.map((classObj) => (
-            <Picker.Item key={classObj.id} label={classObj.name} value={classObj.id} />
-          ))}
-        </Picker>
-      </View>
-      <View style={styles.selection}>
-        <Text style={styles.selectionText}>Vous avez choisi:</Text>
-        <Text style={styles.selected}>Département : {selectedDepartment.name}</Text>
-        <Text style={styles.selected}>Filière : {selectedClass.name}</Text>
-      </View>
-      <TouchableOpacity style={styles.button}>
-              <Text style={styles.buttonText}>S'inscrire</Text>
-      </TouchableOpacity>
+            <Picker
+              style={styles.picker}
+              selectedValue={selectedDepartment.id}
+              onValueChange={handleDepartmentChange}
+            >
+              {departments.map((department) => (
+                <Picker.Item key={department.id} label={department.name} value={department.id} />
+              ))}
+            </Picker>
+            <Text style={styles.pickerTitle}>
+              Filière
+            </Text>
+            <Picker
+              style={styles.picker}
+              selectedValue={selectedClass.id}
+              onValueChange={handleClassChange}
+            >
+              {selectedDepartment.classes.map((classObj) => (
+                <Picker.Item key={classObj.id} label={classObj.name} value={classObj.id} />
+              ))}
+            </Picker>
+          </View>
+      </ScrollView>
+          <TouchableOpacity onPress={handleSignup} style={styles.button}>
+                  <Text style={styles.buttonText}>S'inscrire</Text>
+          </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop:70,
     flex: 1,
-    alignItems: 'flex-start',
-    padding: 20,
-    backgroundColor:'#F6FEFF',
+    alignItems:'center',
+    backgroundColor: '#dde6f2',
+  },
+  content: {
+    width:'95%',
+  },
+  iconBack: {
+    marginTop:30,
   },
   title: {
     fontSize: 22,
@@ -98,7 +119,7 @@ const styles = StyleSheet.create({
   pickerTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#1982C4',
+    color: '#448dfd',
     marginBottom:5,
   },
   titleText: {
@@ -106,12 +127,19 @@ const styles = StyleSheet.create({
     fontWeight:'bold',
     color:"#48bee6",
   },
+  image: {
+    width: '100%',
+    height: 300,
+    borderRadius: 15,
+    marginTop: 10,
+    marginBottom: 15,
+  },
   button: {
     marginTop: 30,
-    backgroundColor: '#48bee6',
+    backgroundColor: '#302ea6',
     padding: 13,
     borderRadius: 5,
-    width: '100%',
+    width: '95%',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
@@ -139,7 +167,7 @@ const styles = StyleSheet.create({
     color:'#000',
     fontWeight:'900',
     fontSize:28,
-    backgroundColor: '#90E0EF',
+    backgroundColor: '#fefefe',
     marginBottom:10,
     borderWidth: 1,
     borderColor: '#000',
