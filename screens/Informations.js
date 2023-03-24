@@ -19,7 +19,7 @@ import { Picker } from "@react-native-picker/picker";
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");
   const [editingValue, setEditingValue] = useState("");
-  const [name, setName] = useState("Laawamir Anass");
+  const [name, setName] = useState("L3wamir Anass");
   const [firstName, setFirstName] = useState("Laawamir");
   const [lastName, setLastName] = useState("Anass");
   const [email, setEmail] = useState("Dasisko@gmail.com");

@@ -9,15 +9,15 @@ import dashboardScreen from "../screens/dashboard";
 import passedExamScreen from "../screens/passedExam";
 import ExamCorrectionScreen from "../screens/ExamCorrection";
 import HomeTestScreen from "../screens/HomeTest";
-import LoginTestScreen from "../screens/LoginTest";
 import RegisterTestScreen from "../screens/RegisterTest";
 import InformationsScreen from "../screens/Informations";
 import passerExamScreen from "../screens/passerExam";
+import InformationsExamenScreen from "../screens/InformationsExamen";
 import qcmTest from "../screens/qcmTest";
 
 const screens = {
   LoginScreen: {
-    screen: InformationsScreen,
+    screen: InformationsExamenScreen,
     navigationOptions: {
       headerShown: false,
     },
