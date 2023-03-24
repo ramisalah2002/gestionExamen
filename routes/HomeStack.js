@@ -17,7 +17,7 @@ import qcmTest from "../screens/qcmTest";
 
 const screens = {
   LoginScreen: {
-    screen: InformationsScreen,
+    screen: Home,
     navigationOptions: {
       headerShown: false,
     },

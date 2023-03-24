@@ -179,29 +179,15 @@ export default function passerExamScreen({ navigation }) {
     setNumAnswered(count);
   }, [selectedAnswers]);
 
-  const handlePressFinish = () => {
-    Alert.alert(
-      "Finish The Exam",
-      "Are you sure you want to finish the Exam?",
-      [
-        {
-          text: "NO",
-          style: "cancel"
-        },
-        {
-          text: "YES",
-          onPress: () => console.log("OK Pressed")
-        }
-      ]
-    );
-  };
+  
 
 
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleConfirm = () => {
-    // Handle confirm action
+    // here we should save the submitted answers and go back to the precedent screen
     setModalVisible(false);
+    navigation.goBack();
   };
 
   const handleCancel = () => {
@@ -563,10 +549,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   modalConfirmButton: {
-    backgroundColor: '#302ea6',
+    backgroundColor: '#2196F3',
   },
   modalCancelButton: {
-    backgroundColor: '#aaa',
+    backgroundColor: '#E91E63',
   },
   modalButtonText: {
     color: 'white',

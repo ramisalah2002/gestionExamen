@@ -43,63 +43,101 @@ import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 export default function Home({navigation}) {
-  const pressHandler = () =>{
+  const pressHandlerLogin = () =>{
     navigation.navigate('LoginScreen');
+  }
+  const pressHandlerSign = () =>{
+    navigation.navigate('SignupScreen');
   }
   
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    
     <View style={styles.container}>
-      <Image
-        source={require('../images/bigLogo.jpg')}
-        style={styles.image}
-      />
-      <Text style={styles.title}>votre chemin vers</Text>
-      <Text style={styles.title}>l'avenir</Text>
-      {/* <Text style={styles.paragraph}>Small paragraph</Text> */}
-      <TouchableOpacity onPress={pressHandler} style={styles.button}>
-        <Text style={styles.buttonText}>Commencer</Text>
-      </TouchableOpacity>
+      <ScrollView style={styles.content}>
+        <Image
+          source={require('../images/testLogo.jpg')}
+          style={styles.image}
+        />
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>L'examen en ligne n'a jamais été aussi simple</Text>
+        </View>
+        {/* <Text style={styles.paragraph}>Small paragraph</Text> */}
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity onPress={pressHandlerSign} style={styles.buttonSign}>
+            <Text style={styles.buttonText}>s'inscrire</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={pressHandlerLogin} style={styles.buttonLogin}>
+            <Text style={styles.buttonText}>se connecter</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
-    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    backgroundColor:'#f3f4f6',
-    paddingBottom:'100%',
-    
+    alignItems:'center',
+    backgroundColor: '#dde6f2',
+  },
+  content: {
+    width:'95%',
   },
   image: {
-    width: '90%',
+    width: '100%',
     height: 400,
-    borderRadius: 10,
-    marginTop: 50,
-    marginBottom:30,
+    borderRadius: 15,
+    marginTop: 40,
+    marginBottom: 30,
+  },
+  titleContainer: {
+    width:'100%',
+    alignItems:'center',
   },
   title: {
-    fontSize: 40,
+    fontSize: 26,
     fontWeight: '900',
+    textAlign:'center',
+    color:'#363349'
   },
   paragraph: {
     fontSize: 18,
   },
-  button: {
-    marginTop:40,
-    backgroundColor: '#48bee6',
-    width: '90%',
-    borderRadius: 10,
+  buttonsContainer: {
+    width:'100%',
+    alignItems:'center',
+    justifyContent:'space-between',
+    flexDirection:'row',
+    marginTop:100,
+  },
+  buttonSign: {
+    borderColor:"#fefeff",
+    borderWidth:1,
+    borderBottomLeftRadius:10,
+    borderTopLeftRadius:10,
+    backgroundColor: '#fff',
+    width: '50%',
     alignItems: 'center',
-    justifyContent:'center',
-    textAlign:'center',
-    padding:10,
+    justifyContent: 'center',
+    textAlign: 'center',
+    paddingVertical: 15,
+  },
+  buttonLogin: {
+    borderColor:"#fefeff",
+    borderWidth:1,
+    backgroundColor: '#eaecf6',
+    borderBottomRightRadius:10,
+    borderTopRightRadius:10,
+    width: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    paddingVertical: 15,
   },
   buttonText: {
-    color: 'white',
-    fontSize: 24,
+    color: 'black',
+    fontSize: 20,
     fontWeight: 'bold',
   },
 });

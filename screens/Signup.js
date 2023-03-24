@@ -2,6 +2,7 @@ import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleShe
 import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AntDesign } from "@expo/vector-icons";
 
 export default function SignupScreen({navigation}){
     const [activeButton, setActiveButton] = useState(null);
@@ -92,70 +93,101 @@ export default function SignupScreen({navigation}){
     const passwordStrengthViews = getPasswordStrengthViews(strengthLevel);
 
   return (
-    <ScrollView>
     <View style={styles.container}>
-        <View style={styles.titleContainer}>
-            <Text style={styles.titleText}>
-                Salut!
-            </Text>
-            <Text style={styles.titleText}>
-            inscrivez-vous pour commencer
-            </Text>
-        </View>
-        
-        <View style={styles.loginContainer}>
-            <View style={styles.emailField}>
-                <Icon style={styles.icon} size={26} color='#bbbcc0' name='user'/>
-                <TextInput selectionColor='#000' placeholder="nom prenom" placeholderTextColor="#bbbcc0" value={name} onChangeText={setName} style={styles.input}/>
-            </View>
-            <View style={styles.emailField}>
-                <Icon style={styles.icon} size={20} color='#bbbcc0' name='envelope'/>
-                <TextInput selectionColor='#000' placeholder="nom_prenom@exemple.ma" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
-            </View>
-            <View style={styles.passwordField}>
-                <Icon style={styles.icon} size={30} color='#bbbcc0' name='lock'/>
-                <TextInput selectionColor='#000' placeholder="au moins 8 caractères" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
-                <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#bbbcc0' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
-            </View>
-            <View style={styles.passwordStrengthContainer}>
-                {passwordStrengthViews}
-            </View>
-            <TouchableOpacity onPress={handleSignup} style={styles.button}
-              onMouseEnter={() => setIsHovering(true)}
-              onMouseLeave={() => setIsHovering(false)}
-              onTouchStart={() => setIsHovering(true)}
-              onTouchEnd={() => setIsHovering(false)}
-              disabled={isDisabled}
-            >
-              <Text style={styles.buttonText}>Continuer</Text>
+      <ScrollView style={styles.content}>
+          <View style={styles.loginContainer}>
+          <View style={{width:'100%',}}>
+            <TouchableOpacity onPress={()=>navigation.goBack()}>
+              <AntDesign
+                style={styles.iconBack}
+                name="arrowleft"
+                size={30}
+                color="#3d394e"
+              />
             </TouchableOpacity>
-            <View style={styles.divisionLine}></View>
-            <TouchableOpacity onPress={handlePressLogin} style={styles.signup}>
-                <Text style={styles.signupText}>
-                Vous avez déjà un compte? 
-                </Text>
-            </TouchableOpacity>
-        </View>
+          </View>
+                <Image
+                  source={require('../images/signup.jpg')}
+                  style={styles.image}
+                />
+                <View style={{width:'100%',marginBottom:20}}>
+                  <Text style={{fontSize:30,fontWeight:'900'}}>Sign Up</Text>
+                </View>
+              <View style={styles.emailField}>
+                  <AntDesign
+                    style={styles.icon}
+                    name="user"
+                    size={24}
+                    color="#3d394e"
+                  />
+                  <TextInput selectionColor='#000' placeholder="Nom complet" placeholderTextColor="#bbbcc0" value={name} onChangeText={setName} style={styles.input}/>
+              </View>
+              <View style={styles.emailField}>
+                  <AntDesign
+                    style={styles.icon}
+                    name="mail"
+                    size={24}
+                    color="#3d394e"
+                  />
+                  <TextInput selectionColor='#000' placeholder="Email" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
+              </View>
+              <View style={styles.passwordField}>
+                  <AntDesign
+                    style={styles.icon}
+                    name="lock1"
+                    size={26}
+                    color="#3d394e"
+                  />
+                  <TextInput selectionColor='#000' placeholder="Mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
+                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#000' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
+              </View>
+              <View style={styles.passwordStrengthContainer}>
+                  {passwordStrengthViews}
+              </View>
+              <TouchableOpacity onPress={handleSignup} style={styles.button}
+                onMouseEnter={() => setIsHovering(true)}
+                onMouseLeave={() => setIsHovering(false)}
+                onTouchStart={() => setIsHovering(true)}
+                onTouchEnd={() => setIsHovering(false)}
+                disabled={isDisabled}
+              >
+                <Text style={styles.buttonText}>Continuer</Text>
+              </TouchableOpacity>
+              <View style={styles.divisionLine}></View>
+              <TouchableOpacity onPress={handlePressLogin} style={styles.signup}>
+                  <Text style={styles.signupText}>
+                  Vous avez déjà un compte? 
+                  </Text>
+              </TouchableOpacity>
+          </View>
+      </ScrollView>
     </View>
-    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor:'#f3f4f6',
-    paddingBottom:'54%',
+    alignItems:'center',
+    backgroundColor: '#dde6f2',
+  },
+  content: {
+    width:'95%',
+  },
+  iconBack: {
+    marginTop:30,
+  },
+  image: {
+    width: '100%',
+    height: 300,
+    borderRadius: 15,
+    marginTop: 10,
+    marginBottom: 20,
   },
   loginContainer: {
-    marginTop: 40,
+    marginTop: 10,
     alignItems: 'center',
-    width: '90%',
   },
-  
   choiceImage: {
     alignItems:'center',
   },
@@ -174,10 +206,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
   },
-  image: {
-    width:100,
-    height:100,
-  },
   buttonTouch: {
     borderWidth: 1,
     borderColor: '#e8e8e8',
@@ -191,7 +219,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   passwordStrengthContainer: {
-    width: '90%',
+    width: '100%',
     height: 7,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -213,12 +241,11 @@ const styles = StyleSheet.create({
     justifyContent:'space-between',
     flexDirection: 'row',
     height: 5,
-    marginTop: 10,
+    marginTop: 5,
   },
   titleContainer: {
     marginTop:50,
     alignItems: 'flex-start',
-    width: '95%',
   },
   signupText :{
       fontSize: 18,
@@ -255,7 +282,7 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 10,
-    backgroundColor: '#48bee6',
+    backgroundColor: '#302ea6',
     padding: 13,
     borderRadius: 5,
     width: '100%',
@@ -282,30 +309,23 @@ const styles = StyleSheet.create({
       position: 'relative',
   },
   emailField: {
-      backgroundColor: '#edeff2',
+      backgroundColor: '#fefefe',
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 5,
       paddingLeft: 10,
       borderColor: '#000',
-      borderWidth: 1,
       marginBottom:15,
   },
 
   passwordField: {
-      backgroundColor: '#edeff2',
+      backgroundColor: '#fefefe',
       width: '100%',
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 5,
       paddingLeft: 10,
       borderColor: '#000',
-      borderWidth: 1,
   },
-  title: {
-    fontSize: 28,
-    marginBottom: 15,
-    fontWeight: '800',
-  }
 });
