@@ -15,9 +15,10 @@ import InformationsExamenScreen from "../screens/InformationsExamen";
 import ExamCorrectionScreen from "../screens/ExamCorrection";
 import qcmTest from "../screens/qcmTest";
 import RecentExamsScreen from "../screens/recentExams";
+import UserList from "../screens/UserList";
 
 const screens = {
-  LoginScreen: {
+  HomeScreen: {
     screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
