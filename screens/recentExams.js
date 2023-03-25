@@ -2,27 +2,28 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { StyleSheet, View, Text, ScrollView, FlatList, Touchable } from "react-native";
-import QuestionsList from "../screens/QuestionsList";
+import ExamsList from "./ExamsList";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function ExamCorrectionScreen({ navigation }) {
+export default function RecentExamsScreen({ navigation }) {
   const pressHandlerClose = () =>{
-    navigation.goBack();
+    navigation.navigate("ExamCorrectionScreen");
   }
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
-        <TouchableOpacity onPress={pressHandlerClose} style={styles.topIcons}>
+      <View style={styles.topIcons}>
+          <TouchableOpacity onPress={pressHandlerClose}>
           <AntDesign style={styles.icon} name="close" size={30} color="white" />
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <Text style={{fontSize:24,color:'#fff'}}>Boulaajoul Anass</Text>
+        </View>
         <View style={styles.infoBox}>
-          <View style={styles.note}>
-            <Text style={styles.noteText}>17</Text>
-          </View>
           <View style={styles.leftBox}>
             <Text style={styles.leftTextFirst}>
-              Programmation Java (13-03-2022)
+              Examens passés ( 6 )
             </Text>
             <Text style={styles.espace}> </Text>
             <Text style={styles.leftTextSecond}>
@@ -31,24 +32,12 @@ export default function ExamCorrectionScreen({ navigation }) {
           </View>
         </View>
       </View>
-      <View style={styles.body} resizeMode="cover">
-        <View style={styles.bodyLeft}>
-          <Text style={styles.bodyFirstText}>Correct</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>17/20</Text>
-        </View>
-        <View style={styles.verticalLine} />
-        <View style={styles.bodyRight}>
-          <Text style={styles.bodyFirstText}>Wrong</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>3/20</Text>
-        </View>
-      </View>
+      
       <ScrollView>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>Liste des Questions</Text>
+          <Text style={styles.title}>Liste des examens passés</Text>
           <Text style={styles.espace}> </Text>
-          <QuestionsList />
+          <ExamsList />
         </View>
       </ScrollView>
     </View>
@@ -69,7 +58,7 @@ const styles = StyleSheet.create({
   infoBox: {
     flexDirection: "row",
     paddingVertical: 20,
-    //marginTop:10,
+    marginLeft: "4%",
   },
   topIcons: {
     marginTop: 50,
@@ -80,42 +69,27 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#302ead",
+    backgroundColor: "#302ea6",
     width: "100%",
     borderRadius: 25,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 0,
     flexDirection: "column",
   },
-  note: {
-    backgroundColor: "#5ee093",
-    color: "#FFFF",
-    height: 75,
-    width: 75,
-    borderRadius: 10,
-    marginLeft: "4%",
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-  },
+
   leftTextFirst: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#FFFF",
   },
   leftTextSecond: {
-    fontSize: 12,
-    color: "#FFFF",
-  },
-  noteText: {
-    fontSize: 30,
-    fontWeight: "bold",
+    fontSize: 14,
     color: "#FFFF",
   },
   leftBox: {
     height: 75,
     borderRadius: 10,
     marginLeft: "2%",
-    paddingRight: "22%",
     justifyContent: "center", // center vertically
     alignItems: "flex-start", // center horizontally
   },

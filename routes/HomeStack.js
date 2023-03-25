@@ -1,29 +1,30 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { NativeWindStyleSheet } from "nativewind";
-import Home from "../screens/Home";
+import HomeScreen from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import deptChoiceScreen from "../screens/deptChoice";
 import dashboardScreen from "../screens/dashboard";
 import passedExamScreen from "../screens/passedExam";
-import ExamCorrectionScreen from "../screens/ExamCorrection";
 import HomeTestScreen from "../screens/HomeTest";
 import RegisterTestScreen from "../screens/RegisterTest";
 import InformationsScreen from "../screens/Informations";
 import passerExamScreen from "../screens/passerExam";
 import InformationsExamenScreen from "../screens/InformationsExamen";
+import ExamCorrectionScreen from "../screens/ExamCorrection";
 import qcmTest from "../screens/qcmTest";
+import RecentExamsScreen from "../screens/recentExams";
 
 const screens = {
   LoginScreen: {
-    screen: HomeTestScreen,
+    screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  Home: {
-    screen: HomeTestScreen,
+  LoginScreen: {
+    screen: LoginScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -34,14 +35,39 @@ const screens = {
       headerShown: false,
     },
   },
-  passedExamScreen: {
-    screen: passedExamScreen,
+  deptChoiceScreen: {
+    screen: deptChoiceScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-  deptChoiceScreen: {
-    screen: deptChoiceScreen,
+  HomeTestScreen: {
+    screen: HomeTestScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  InformationsScreen: {
+    screen: InformationsScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  RecentExamsScreen: {
+    screen: RecentExamsScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  ExamCorrectionScreen: {
+    screen: ExamCorrectionScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+
+  passedExamScreen: {
+    screen: passedExamScreen,
     navigationOptions: {
       headerShown: false,
     },

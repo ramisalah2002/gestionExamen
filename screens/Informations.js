@@ -11,6 +11,7 @@ import {
   Text,
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
+import { AntDesign } from "@expo/vector-icons";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
@@ -248,6 +249,16 @@ export default function InformationsScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
+        <View style={{width:'100%',}}>
+            <TouchableOpacity onPress={()=>navigation.goBack()}>
+              <AntDesign
+                style={styles.iconBack}
+                name="arrowleft"
+                size={30}
+                color="#3d394e"
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.titleText}>Vos Informations</Text>
           <Text style={styles.secondText}>
             Vous trouverez dans cette page vos informations personnelles{" "}
@@ -306,10 +317,10 @@ const styles = StyleSheet.create({
   },
   informationsContainer: {
     flexDirection: "column",
-    margin: 10,
+    margin: 5,
     marginTop: 0,
     backgroundColor: "#ffff",
-    borderRadius: 15,
+    borderRadius: 10,
     shadowColor: "#111952",
     shadowOffset: {
       width: 0,
@@ -317,8 +328,8 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.3,
     shadowRadius: 3.84,
-    elevation: 7,
-    padding: 15,
+    elevation: 5,
+    padding: 10,
   },
   informationContainer: {
     padding: 10,
@@ -347,9 +358,9 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: "#2e6af7",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 5,
     alignSelf: "flex-end",
     marginTop: -20,
   },
@@ -375,13 +386,14 @@ const styles = StyleSheet.create({
   },
   editingButtonsContainer: {
     flexDirection: "row",
+    alignItems:'center',
     justifyContent: "flex-end",
   },
   editingButton: {
     backgroundColor: "#2e6af7",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 5,
     marginLeft: 10,
   },
   editingButtonText: {

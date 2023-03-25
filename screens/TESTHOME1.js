@@ -13,26 +13,15 @@ export default function Home({ navigation }) {
   const [filteredExams, setFilteredExams] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
-  const pressHandlerLogout = () => {
-    // ndiro logout
-  };
-  const pressHandlerRecent = () => {
-    navigation.navigate("RecentExamsScreen");
-  };
-  const pressHandlerToday = () => {
-    navigation.navigate("SignupScreen");
-  };
-  const pressHandlerInfo = () => {
-    navigation.navigate("InformationsScreen");
-  };
+
   const filterExams = (searchText, filter) => {
     const filtered = exams.filter((exam) => {
       const examDate = new Date(exam.date);
       const today = new Date();
       const isToday = examDate.toDateString() === today.toDateString();
-      const isUpcoming = examDate >= today;
+      const isUpcoming = examDate >= today;;
       const isPassed = examDate < today;
-
+  
       switch (filter) {
         case "PassedExam":
           if (!isPassed) return false;
@@ -46,12 +35,14 @@ export default function Home({ navigation }) {
         default:
           break;
       }
-
+  
       return exam.title.toLowerCase().startsWith(searchText.toLowerCase());
     });
-
+  
     return filtered;
   };
+  
+
 
   const FilterDropdown = ({ onSelect }) => {
     return (
@@ -100,6 +91,7 @@ export default function Home({ navigation }) {
     setSearchTerm(text);
     setFilteredExams(filterExams(text, activeFilter));
   };
+  
 
   useEffect(() => {
     if (searchTerm) {
@@ -179,17 +171,12 @@ export default function Home({ navigation }) {
                 >
                   <Text style={styles.bodyFirstText}>Examens Recents</Text>
                   <View style={styles.seeAllBox}>
-                    <TouchableOpacity onPress={pressHandlerRecent}>
+                    <TouchableOpacity>
                       <Text style={styles.seeAll}>voir plus</Text>
                     </TouchableOpacity>
                   </View>
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
+                <View style={{ flexDirection: "row" }}>
                   <View style={styles.examPrevious}>
                     <TouchableOpacity>
                       <View style={styles.languageBox}>
@@ -222,11 +209,6 @@ export default function Home({ navigation }) {
                   <Text style={styles.bodyFirstText}>
                     Examens d'aujourd'hui
                   </Text>
-                  <View style={styles.seeAllBox}>
-                    <TouchableOpacity>
-                      <Text style={styles.seeAll}>voir plus</Text>
-                    </TouchableOpacity>
-                  </View>
                 </View>
 
                 <View
@@ -235,11 +217,7 @@ export default function Home({ navigation }) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                  >
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} >
                     <View style={styles.todayExam}>
                       <TouchableOpacity>
                         <View style={styles.languageBox}>
@@ -280,6 +258,14 @@ export default function Home({ navigation }) {
                     </View>
                   </ScrollView>
                 </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 30,
+                }}
+              >
                 <View
                   style={{
                     flexDirection: "row",
@@ -287,13 +273,8 @@ export default function Home({ navigation }) {
                   }}
                 >
                   <Text style={styles.bodyFirstText}>
-                    Mes informations personnelles
+                    Vos Informations Personnelles
                   </Text>
-                  <View style={styles.seeAllBox}>
-                    <TouchableOpacity onPress={pressHandlerInfo}>
-                      <Text style={styles.seeAll}>voir plus</Text>
-                    </TouchableOpacity>
-                  </View>
                 </View>
               </View>
             </View>
@@ -313,11 +294,12 @@ export default function Home({ navigation }) {
       </ScrollView>
       {dropdownVisible && (
         <FilterDropdown
-          onSelect={(filter) => {
+        onSelect={(filter) => {
             setActiveFilter(filter);
             setFilteredExams(filterExams(searchTerm, filter));
             setDropdownVisible(false);
           }}
+          
         />
       )}
     </View>
@@ -330,7 +312,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleTop: {
-    marginTop: 30,
+    marginTop: 50,
     marginLeft: 20,
     fontSize: 30,
     fontWeight: "bold",
@@ -410,27 +392,17 @@ const styles = StyleSheet.create({
   },
   bodyFirstText: {
     marginTop: 30,
-    paddingLeft: 10,
+    marginLeft: 20,
     fontSize: 20,
     fontWeight: "bold",
     color: "#13129e",
     height: 33,
   },
-  bodyFirstTextInfo: {
-    paddingLeft: 10,
-    fontSize: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    fontWeight: "bold",
-    color: "#13129e",
-    height: "100%",
-  },
   seeAllBox: {
-    padding: 5,
-    justifyContent: "center",
+    padding: 7,
     alignItems: "center",
     backgroundColor: "#eaeaf6",
-    borderRadius: 5,
+    borderRadius: 10,
     marginTop: 27,
     marginLeft: "27%",
     marginRight: 20,
@@ -438,13 +410,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   seeAll: {
-    fontSize: 18,
+    fontSize: 15,
     color: "#13129e",
   },
   examPrevious: {
     padding: 7,
     alignItems: "center",
-    justifyContent:'center',
     backgroundColor: "#302ea6",
     borderRadius: 10,
     marginLeft: 20,
@@ -458,29 +429,29 @@ const styles = StyleSheet.create({
     color: "#ffff",
   },
   languageBox: {
-    paddingVertical: 7,
+    padding: 7,
     alignItems: "center",
-    justifyContent: "center",
     backgroundColor: "#8282c9",
-    borderRadius: 5,
-    width: '80%',
+    borderRadius: 10,
+    marginTop: 10,
+    marginLeft: 0,
+    width: "100%",
     minWidth: 70,
-    height: 40,
+    height: 33,
   },
   noteBox: {
+    padding: 15,
+    paddingTop: 18,
+    alignItems: "center",
     backgroundColor: "#8282c9",
-    color: "#FFFF",
-    height: 75,
-    width: '80%',
-    borderRadius: 5,
-    marginTop:10,
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
+    borderRadius: 50,
+    marginTop: "20%",
+    marginLeft: 0,
+    height: 50,
   },
   note: {
-    fontSize: 26,
-     fontWeight: "bold",
-     color: "#FFFF",
+    fontSize: 14,
+    color: "#ffff",
   },
   todayExam: {
     padding: 7,

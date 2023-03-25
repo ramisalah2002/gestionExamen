@@ -1,60 +1,68 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView, FlatList, Touchable } from "react-native";
-import QuestionsList from "../screens/QuestionsList";
+import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { AntDesign } from "@expo/vector-icons";
+import axios from "axios";
 
-export default function ExamCorrectionScreen({ navigation }) {
-  const pressHandlerClose = () =>{
-    navigation.goBack();
-  }
+const QuestionsList = ({navigation}) => {
+  const [data, setData] = useState([]);
+
+
+
+  useEffect(() => {
+    axios
+      .get("https://reqres.in/api/users?page=2")
+      .then((response) => {
+        setData(response.data.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
+  // Changes that I need to do
+  // first-name à changé par reponse
+  // last-name à changé par correction
+  // first-name à changé par reponse
+  // id à changé par numéro seulement dans <Text style={styles.question}>Question {item.id}</Text>
+  // Quelque nom de variable pour que le code soit plus clair
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="light" />
-      <View style={styles.header} resizeMode="cover">
-        <TouchableOpacity onPress={pressHandlerClose} style={styles.topIcons}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
-        </TouchableOpacity>
-        <View style={styles.infoBox}>
-          <View style={styles.note}>
-            <Text style={styles.noteText}>17</Text>
+    <View>
+      {data.map((item) => {
+        const isCorrect = item.first_name === item.last_name;
+        return (
+          <View key={item.id}>
+            <View key={item.id} style={styles.questionContainer}>
+              <TouchableOpacity>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Question 1</Text>
+                <Text style={styles.espace}> </Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    fontWeight: "bold",
+                    color: "#3c7da6"
+                  }}
+                >
+                Correcte
+                </Text>
+              </View>
+            </View>
+            <View style={styles.horizontaleLine} />
           </View>
-          <View style={styles.leftBox}>
-            <Text style={styles.leftTextFirst}>
-              Programmation Java (13-03-2022)
-            </Text>
-            <Text style={styles.espace}> </Text>
-            <Text style={styles.leftTextSecond}>
-              Ecole Supérieur de technologis Salé - UM5
-            </Text>
-          </View>
-        </View>
-      </View>
-      <View style={styles.body} resizeMode="cover">
-        <View style={styles.bodyLeft}>
-          <Text style={styles.bodyFirstText}>Correct</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>17/20</Text>
-        </View>
-        <View style={styles.verticalLine} />
-        <View style={styles.bodyRight}>
-          <Text style={styles.bodyFirstText}>Wrong</Text>
-          <Text style={styles.espace}> </Text>
-          <Text style={styles.bodySecondText}>3/20</Text>
-        </View>
-      </View>
-      <ScrollView>
-        <View style={styles.innerContainer}>
-          <Text style={styles.title}>Liste des Questions</Text>
-          <Text style={styles.espace}> </Text>
-          <QuestionsList />
-        </View>
-      </ScrollView>
+        );
+      })}
     </View>
   );
-}
-
+};
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
@@ -80,11 +88,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#302ead",
+    backgroundColor: "#46bee6",
     width: "100%",
-    borderRadius: 25,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
     flexDirection: "column",
   },
   note: {
@@ -178,18 +183,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
-  answerTrue: {
-    fontSize: 12,
-    color: "#5ee093",
-    fontWeight: "bold",
-  },
-  answerFalse: {
-    fontSize: 12,
-    color: "#f14746",
-    fontWeight: "bold",
-  },
   horizontaleLine: {
     borderBottomWidth: 1.7,
     borderBottomColor: "#eeee",
   },
 });
+export default QuestionsList;
