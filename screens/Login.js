@@ -2,28 +2,52 @@ import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleShe
 import { NativeWindStyleSheet } from 'nativewind';
 import React, { useState } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function SignupScreen({navigation}){
     const [activeButton, setActiveButton] = useState(null);
     const [selectedButton, setSelectedButton] = useState(null);
 
-    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userType, setUserType] = useState(null);
     
     const [showPassword, setShowPassword] = useState(false);
-    const [isHovering, setIsHovering] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
-    // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
-    const isDisabled = (email.length > 0 && password.length > 0);
+    const isDisabled = !(email.length > 0 && password.length > 0);
 
     
     const handleLogin = () => {
-        navigation.navigate('dashboardScreen');
+      fetch("http://10.0.2.2:8000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.token) {
+            // Save the token in state or storage
+            const token = data.token;
+            const name = data.name; // assuming that the response contains the name of the logged user
+            console.log('success'); 
+            navigation.navigate("HomeTestScreen", { token: token, name: data.name });
+
+          } else {
+            setError("Invalid email or password");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          setError("Something went wrong");
+        });
     };
+    
 
     const handlePressSignup = () => {
       navigation.navigate('SignupScreen');
@@ -71,10 +95,6 @@ export default function SignupScreen({navigation}){
               </View>
 
               <TouchableOpacity onPress={handleLogin} style={styles.button}
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                onTouchStart={() => setIsHovering(true)}
-                onTouchEnd={() => setIsHovering(false)}
                 disabled={isDisabled}
               >
                 <Text style={styles.buttonText}>Continuer</Text>
@@ -104,7 +124,7 @@ const styles = StyleSheet.create({
     width:'95%',
   },
   iconBack: {
-    marginTop:30,
+    marginTop:0,
   },
   image: {
     width: '100%',

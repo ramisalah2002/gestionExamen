@@ -3,25 +3,20 @@ import { View, Text } from 'react-native';
 import axios from 'axios';
 
 const UserList = () => {
-  const [data, setData] = useState([]);
+  const [etudiants, setEtudiants] = useState([]);
 
   useEffect(() => {
-    axios.get('https://reqres.in/api/users?page=2')
-      .then(response => {
-        setData(response.data.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    axios.get('http://10.0.2.2:8000/api/etudiants/')
+      .then(response => setEtudiants(response.data))
+      .catch(error => console.error(error))
   }, []);
 
   return (
     <View>
-      {data.map(item => (
-        <View key={item.id}>
-          <Text>{item.id}</Text>
-          <Text>{item.email}</Text>
-          <Text>{item.first_name} {item.last_name}</Text>
+      {etudiants.map(etudiant => (
+        <View key={etudiant.id}>
+          <Text>{etudiant.nom} {etudiant.prenom}</Text>
+          <Text>{etudiant.email}</Text>
         </View>
       ))}
     </View>

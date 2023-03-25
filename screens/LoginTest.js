@@ -15,7 +15,7 @@ const LoginTest = ({ navigation }) => {
   const val = useContext(AuthContext);
 
   const handleLogin = () => {
-    fetch("https://bit.ly/3LHHr24", {
+    fetch("http://10.0.2.2:8000/api/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +31,7 @@ const LoginTest = ({ navigation }) => {
           // Save the token in state or storage
           const token = data.token;
           console.log('succes'); 
-          navigation.navigate("RegisterTestScreen", { token: token });
+          navigation.navigate("HomeTestScreen", { token: token });
         } else {
           setError("Invalid email or password");
         }
