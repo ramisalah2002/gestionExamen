@@ -3,22 +3,113 @@ import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { AuthContext } from "../src/context/AuthContext";
 import axios from "axios";
-import {
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  FlatList,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-export default function ExamCorrectionScreen({ navigation }) {
+export default function Home({ navigation }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const [exams, setExams] = useState([]);
+  const [filteredExams, setFilteredExams] = useState([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("");
+
+  const filterExams = (searchText, filter) => {
+    const filtered = exams.filter((exam) => {
+      const examDate = new Date(exam.date);
+      const today = new Date();
+      const isToday = examDate.toDateString() === today.toDateString();
+      const isUpcoming = examDate >= today;;
+      const isPassed = examDate < today;
+  
+      switch (filter) {
+        case "PassedExam":
+          if (!isPassed) return false;
+          break;
+        case "UpcommingExam":
+          if (!isUpcoming) return false;
+          break;
+        case "TodayExam":
+          if (!isToday) return false;
+          break;
+        default:
+          break;
+      }
+  
+      return exam.title.toLowerCase().startsWith(searchText.toLowerCase());
+    });
+  
+    return filtered;
+  };
+  
+
+
+  const FilterDropdown = ({ onSelect }) => {
+    return (
+      <View style={styles.dropdown}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("PassedExam")}
+        >
+          <Text style={styles.optionText}>Passed Exam</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("UpcomingExam")}
+        >
+          <Text style={styles.optionText}>Upcoming Exam</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("TodayExam")}
+        >
+          <Text style={styles.optionText}>Today Exam</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    const dummyExams = [
+      { id: 1, title: "PHP MySQL", score: "17/20", date: "2023-03-22" },
+      { id: 2, title: "SQL Oracle", score: "14/20", date: "2023-03-24" },
+      { id: 3, title: "JavaScript", score: "18/20", date: "2023-03-20" },
+      { id: 4, title: "React Native", score: "16/20", date: "2023-03-21" },
+      { id: 5, title: "Angular", score: "19/20", date: "2023-03-25" },
+      { id: 6, title: "Vue.js", score: "15/20", date: "2023-03-23" },
+      { id: 7, title: "Python", score: "20/20", date: "2023-03-26" },
+      { id: 8, title: "Ruby on Rails", score: "13/20", date: "2023-03-27" },
+      { id: 9, title: "Java", score: "17/20", date: "2023-03-28" },
+      { id: 10, title: "C++", score: "14/20", date: "2023-03-29" },
+    ];
+
+    setExams(dummyExams);
+    setFilteredExams(dummyExams);
+  }, []);
 
   const handleSearch = (text) => {
     setSearchTerm(text);
-    // Do your search logic here
+    setFilteredExams(filterExams(text, activeFilter));
+  };
+  
+
+  useEffect(() => {
+    if (searchTerm) {
+      const results = exams.filter((exam) =>
+        exam.title.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+      setFilteredExams(results);
+    } else {
+      setFilteredExams([]);
+    }
+  }, [searchTerm]);
+
+  const handleFocus = () => {
+    setShowResults(true);
+  };
+
+  const handleBlur = () => {
+    setShowResults(false);
   };
 
   // l icon li lfo9 3la limn n9dro nbdloha b logout
@@ -53,112 +144,164 @@ export default function ExamCorrectionScreen({ navigation }) {
               placeholder="Cherchez votre Examen"
               value={searchTerm}
               onChangeText={handleSearch}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
           </View>
           <View style={styles.containerFilter}>
-            <TouchableOpacity style={styles.filterButton}>
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => setDropdownVisible(!dropdownVisible)}
+            >
               <AntDesign name="filter" size={20} color="#cdcde9" />
             </TouchableOpacity>
           </View>
         </View>
       </View>
       <ScrollView>
-        <View style={styles.body} resizeMode="cover">
-          <View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.bodyFirstText}>Examens Recents</Text>
-              <View style={styles.seeAllBox}>
-                <TouchableOpacity>
-                  <Text style={styles.seeAll}>voir plus</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{ flexDirection: "row" }}>
-              <View style={styles.examPrevious}>
-                <TouchableOpacity>
-                  <View style={styles.languageBox}>
-                    <Text style={styles.language}>PHP MYSQL</Text>
+        {!showResults && (
+          <>
+            <View style={styles.body} resizeMode="cover">
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>Examens Recents</Text>
+                  <View style={styles.seeAllBox}>
+                    <TouchableOpacity>
+                      <Text style={styles.seeAll}>voir plus</Text>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-                <View style={styles.noteBox}>
-                  <Text style={styles.note}>17/20</Text>
+                </View>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={styles.examPrevious}>
+                    <TouchableOpacity>
+                      <View style={styles.languageBox}>
+                        <Text style={styles.language}>PHP MYSQL</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>17/20</Text>
+                    </View>
+                  </View>
+                  <View style={styles.examPrevious}>
+                    <TouchableOpacity>
+                      <View style={styles.languageBox}>
+                        <Text style={styles.language}>SQL ORACLE</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>14/20</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
-              <View style={styles.examPrevious}>
-                <TouchableOpacity>
-                  <View style={styles.languageBox}>
-                    <Text style={styles.language}>SQL ORACLE</Text>
-                  </View>
-                </TouchableOpacity>
-                <View style={styles.noteBox}>
-                  <Text style={styles.note}>14/20</Text>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>
+                    Examens d'aujourd'hui
+                  </Text>
                 </View>
-              </View>
-            </View>
-          </View>
-          <View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.bodyFirstText}>Examens d'aujourd'hui</Text>
-            </View>
 
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <ScrollView horizontal>
-                <View style={styles.todayExam}>
-                  <TouchableOpacity>
-                    <View style={styles.languageBox}>
-                      <Text style={styles.language}> Java</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <ScrollView horizontal showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} >
+                    <View style={styles.todayExam}>
+                      <TouchableOpacity>
+                        <View style={styles.languageBox}>
+                          <Text style={styles.language}> Java</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View style={styles.todayExamInformation}>
+                        <Text style={styles.todayExamInformationText1}>
+                          Programmation Java
+                        </Text>
+                        <Text style={styles.todayExamInformationText2}>
+                          commence : 16:30
+                        </Text>
+                        <Text style={styles.todayExamInformationText3}>
+                          reste : 10h 30min
+                        </Text>
+                      </View>
+                      <View style={styles.verticalLine} />
                     </View>
-                  </TouchableOpacity>
-                  <View style={styles.todayExamInformation}>
-                    <Text style={styles.todayExamInformationText1}>
-                      Programmation Java
-                    </Text>
-                    <Text style={styles.todayExamInformationText2}>
-                      commence : 16:30
-                    </Text>
-                    <Text style={styles.todayExamInformationText3}>
-                      reste : 10h 30min
-                    </Text>
-                  </View>
-                  <View style={styles.verticalLine} />
-                </View>
-                <View style={styles.todayExam}>
-                  <TouchableOpacity>
-                    <View style={styles.languageBox}>
-                      <Text style={styles.language}>Français</Text>
+                    <View style={styles.todayExam}>
+                      <TouchableOpacity>
+                        <View style={styles.languageBox}>
+                          <Text style={styles.language}>Français</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View style={styles.todayExamInformation}>
+                        <Text style={styles.todayExamInformationText1}>
+                          La langue Française
+                        </Text>
+                        <Text style={styles.todayExamInformationText2}>
+                          commence : 12:30
+                        </Text>
+                        <Text style={styles.todayExamInformationText3}>
+                          reste : 6h 30min
+                        </Text>
+                      </View>
+                      <View style={styles.verticalLine} />
                     </View>
-                  </TouchableOpacity>
-                  <View style={styles.todayExamInformation}>
-                    <Text style={styles.todayExamInformationText1}>
-                      La langue Française
-                    </Text>
-                    <Text style={styles.todayExamInformationText2}>
-                      commence : 12:30
-                    </Text>
-                    <Text style={styles.todayExamInformationText3}>
-                      reste : 6h 30min
-                    </Text>
-                  </View>
-                  <View style={styles.verticalLine} />
+                  </ScrollView>
                 </View>
-              </ScrollView>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginTop: 30,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>
+                    Vos Informations Personnelles
+                  </Text>
+                </View>
+              </View>
             </View>
-          </View >
-          <View  style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.bodyFirstText}>Vos Informations Personnelles</Text>
-            </View>
+          </>
+        )}
+
+        {showResults && (
+          <View>
+            {filteredExams.map((exam, index) => (
+              <View key={index} style={styles.searchResult}>
+                <Text style={styles.searchResultTitle}>{exam.title}</Text>
+                <Text style={styles.searchResultDate}>{exam.date}</Text>
+              </View>
+            ))}
           </View>
-        </View>
+        )}
       </ScrollView>
+      {dropdownVisible && (
+        <FilterDropdown
+        onSelect={(filter) => {
+            setActiveFilter(filter);
+            setFilteredExams(filterExams(searchTerm, filter));
+            setDropdownVisible(false);
+          }}
+          
+        />
+      )}
     </View>
   );
 }
@@ -350,5 +493,62 @@ const styles = StyleSheet.create({
   },
   espace: {
     height: 10,
+  },
+  dropdown: {
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    position: "absolute",
+    right: 20,
+    top: 65,
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  dropdown: {
+    position: "absolute",
+    top: 175,
+    right: 20,
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    padding: 10,
+  },
+  option: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#8282c9",
+  },
+  optionText: {
+    color: "#eaeaf6",
+    fontSize: 16,
+  },
+  searchResult: {
+    padding: 12,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  searchResultTitle: {
+    fontSize: 18,
+    color: "#ffffff",
+  },
+  searchResultDate: {
+    fontSize: 14,
+    color: "#e5f3ff",
   },
 });

@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#f7f7f7",
     marginHorizontal: -25,
-    width: "116.5%",
+    width: "116%",
   },
   editButton: {
     backgroundColor: "#2e6af7",

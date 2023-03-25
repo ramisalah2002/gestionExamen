@@ -17,7 +17,7 @@ import qcmTest from "../screens/qcmTest";
 
 const screens = {
   LoginScreen: {
-    screen: InformationsScreen,
+    screen: HomeTestScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -59,6 +59,13 @@ const screens = {
       headerShown: false,
     },
   },
+  InformationsExamenScreen: {
+    screen: InformationsExamenScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  
 };
 
 const HomeStack = createStackNavigator(screens);

@@ -16,11 +16,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function passerExamScreen({ navigation }) {
+export default function InformationsExamen({ navigation }) {
   const [matiere, setMatiere] = useState("Programmation Java");
   const [duree, setDuree] = useState("2h 30min");
   const [dateExamen, setDateExamen] = useState("2023-03-21T03:24:00.000Z");
-
   const [tempsRestant, setTempsRestant] = useState(0);
   const [timerTerminé, setTimerTerminé] = useState(false);
 
@@ -82,7 +81,7 @@ export default function passerExamScreen({ navigation }) {
           <View style={styles.examInfo}>
             <Text style={styles.examInfoTitle}>Date d 'examen:</Text>
             <Text style={styles.examInfoText}>
-              {new Date( dateExamen)
+              {new Date(dateExamen)
                 .toLocaleString("fr-FR", {
                   year: "numeric",
                   month: "2-digit",
@@ -109,9 +108,7 @@ export default function passerExamScreen({ navigation }) {
                 style={styles.submitButton}
                 onPress={handlePasserExamen}
               >
-                <Text style={styles.submitButtonText}>
-                  Passer l'examen
-                </Text>
+                <Text style={styles.submitButtonText}>Passer l'examen</Text>
               </TouchableOpacity>
             )}
           </View>
@@ -160,7 +157,6 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   topIcons: {
-    
     marginBottom: 20,
     flexDirection: "row",
     alignItems: "center",
@@ -209,16 +205,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   submitButton: {
-    backgroundColor: '#302ea6',
+    backgroundColor: "#302ea6",
     borderRadius: 5,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 15,
-    width:'100%',
+    width: "100%",
     marginTop: 120,
   },
   submitButtonText: {
-    color: 'white',
+    color: "white",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
