@@ -31,7 +31,7 @@ const LoginTest = ({ navigation }) => {
           // Save the token in state or storage
           const token = data.token;
           console.log('succes'); 
-          navigation.navigate("HomeTestScreen", { token: token });
+          navigation.navigate("HomeScreen", { token: token });
         } else {
           setError("Invalid email or password");
         }

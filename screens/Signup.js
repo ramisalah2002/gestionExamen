@@ -21,16 +21,6 @@ export default function SignupScreen({navigation}){
 
     // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
     const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0);
-
-    const handlePressTeacher = () => {
-      setUserType('teacher');
-      setActiveButton(1);
-    };
-  
-    const handlePressStudent = () => {
-      setUserType('student');
-      setActiveButton(2);
-    };
     
     const handleSignup = () => {
         navigation.navigate('deptChoiceScreen');
