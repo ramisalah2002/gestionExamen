@@ -4,8 +4,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 
-const ExamCorrectionList = () => {
+const ExamsList = ({navigation}) => {
   const [data, setData] = useState([]);
+
+
 
   useEffect(() => {
     axios
@@ -41,19 +43,16 @@ const ExamCorrectionList = () => {
                 />
               </TouchableOpacity>
               <View style={styles.correction}>
-                <Text style={styles.question}>Question {item.id}</Text>
+                <Text style={styles.question}>Programmation Java</Text>
                 <Text style={styles.espace}> </Text>
                 <Text
                   style={{
                     fontSize: 12,
                     fontWeight: "bold",
-                    color: isCorrect ? "#5ee093" : "#f14746",
+                    color: "#3c7da6"
                   }}
                 >
-                  {" "}
-                  {item.first_name === item.last_name
-                    ? "Correct Answer"
-                    : "Wrong Answer"}
+                13-04-2023
                 </Text>
               </View>
             </View>
@@ -189,4 +188,4 @@ const styles = StyleSheet.create({
     borderBottomColor: "#eeee",
   },
 });
-export default ExamCorrectionList;
+export default ExamsList;

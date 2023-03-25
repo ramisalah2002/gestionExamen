@@ -1,23 +1,21 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView, FlatList } from "react-native";
-import ExamCorrectionList from "./ExamCorrectionList";
+import { StyleSheet, View, Text, ScrollView, FlatList, Touchable } from "react-native";
+import QuestionsList from "../screens/QuestionsList";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function ExamCorrectionScreen({ navigation }) {
+  const pressHandlerClose = () =>{
+    navigation.goBack();
+  }
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
-        <View style={styles.topIcons}>
+        <TouchableOpacity onPress={pressHandlerClose} style={styles.topIcons}>
           <AntDesign style={styles.icon} name="close" size={30} color="white" />
-          <AntDesign
-            style={styles.icon}
-            name="arrowright"
-            size={30}
-            color="white"
-          />
-        </View>
+        </TouchableOpacity>
         <View style={styles.infoBox}>
           <View style={styles.note}>
             <Text style={styles.noteText}>17</Text>
@@ -50,7 +48,7 @@ export default function ExamCorrectionScreen({ navigation }) {
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Liste des Questions</Text>
           <Text style={styles.espace}> </Text>
-          <ExamCorrectionList />
+          <QuestionsList />
         </View>
       </ScrollView>
     </View>
@@ -82,8 +80,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    backgroundColor: "#46bee6",
+    backgroundColor: "#302ea6",
     width: "100%",
+    borderRadius: 25,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
     flexDirection: "column",
   },
   note: {

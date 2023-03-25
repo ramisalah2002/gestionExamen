@@ -22,6 +22,19 @@ export default function ExamCorrectionScreen({ navigation }) {
     // Do your search logic here
   };
 
+  const pressHandlerLogout = () =>{
+    // ndiro logout
+  }
+  const pressHandlerRecent = () =>{
+    navigation.navigate('RecentExamsScreen');
+  }
+  const pressHandlerToday = () =>{
+    navigation.navigate('SignupScreen');
+  }
+  const pressHandlerInfo = () =>{
+    navigation.navigate('InformationsScreen');
+  }
+
   // l icon li lfo9 3la limn n9dro nbdloha b logout
 
   return (
@@ -57,33 +70,27 @@ export default function ExamCorrectionScreen({ navigation }) {
       <ScrollView>
         <View style={styles.body} resizeMode="cover">
           <View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.bodyFirstText}>Examens Recents</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={styles.bodyFirstText}>Examens Récents</Text>
               <View style={styles.seeAllBox}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={pressHandlerRecent}>
                   <Text style={styles.seeAll}>voir plus</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={{ flexDirection: "row"}}>
+            <View style={{ flexDirection: "row",justifyContent:'space-around'}}>
               <View style={styles.examPrevious}>
-                <TouchableOpacity>
                   <View style={styles.languageBox}>
                     <Text style={styles.language}>PHP MYSQL</Text>
                   </View>
-                </TouchableOpacity>
                 <View style={styles.noteBox}>
                   <Text style={styles.note}>17/20</Text>
                 </View>
               </View>
               <View style={styles.examPrevious}>
-                <TouchableOpacity>
                   <View style={styles.languageBox}>
                     <Text style={styles.language}>SQL ORACLE</Text>
                   </View>
-                </TouchableOpacity>
                 <View style={styles.noteBox}>
                   <Text style={styles.note}>14/20</Text>
                 </View>
@@ -92,10 +99,13 @@ export default function ExamCorrectionScreen({ navigation }) {
           </View>
           
           <View>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
               <Text style={styles.bodyFirstText}>Examens d'aujourd'hui</Text>
+              <View style={styles.seeAllBox}>
+                <TouchableOpacity>
+                  <Text style={styles.seeAll}>voir plus</Text>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View
@@ -142,12 +152,13 @@ export default function ExamCorrectionScreen({ navigation }) {
                 </View>
               </ScrollView>
             </View>
-          </View>
-          <View  style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 30 }}>
-            <View
-              style={{ flexDirection: "row", justifyContent: "space-between" }}
-            >
-              <Text style={styles.bodyFirstText}>Vos Informations Personnelles</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+              <Text style={styles.bodyFirstText}>Mes informations personnelles</Text>
+              <View style={styles.seeAllBox}>
+                <TouchableOpacity onPress={pressHandlerInfo}>
+                  <Text style={styles.seeAll}>voir plus</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
@@ -162,7 +173,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleTop: {
-    marginTop: 50,
+    marginTop: 30,
     marginLeft: 20,
     fontSize: 30,
     fontWeight: "bold",
@@ -244,34 +255,41 @@ const styles = StyleSheet.create({
   },
   bodyFirstText: {
     marginTop: 30,
-    marginLeft: 20,
+    paddingLeft:10,
     fontSize: 20,
     fontWeight: "bold",
     color: "#13129e",
     height: 33,
   },
+  bodyFirstTextInfo: {
+    paddingLeft:10,
+    fontSize: 20,
+    alignItems:'center',
+    justifyContent:'center',
+    fontWeight: "bold",
+    color: "#13129e",
+    height:'100%'
+  },
   seeAllBox: {
-    padding: 7,
+    padding: 5,
+    justifyContent:'center',
     alignItems: "center",
     backgroundColor: "#eaeaf6",
-    borderRadius: 10,
+    borderRadius: 5,
     marginTop: 27,
-    marginLeft: "27%",
     marginRight: 20,
-    height: 33,
     marginBottom: 20,
   },
   seeAll: {
-    fontSize: 15,
+    fontSize: 18,
     color: "#13129e",
   },
   examPrevious: {
     padding: 7,
     alignItems: "center",
+    justifyContent:'center',
     backgroundColor: "#302ea6",
     borderRadius: 10,
-    marginLeft: 20,
-    marginRight: 10,
     width: "40%",
     height: 160,
     marginBottom: 0,
@@ -281,29 +299,29 @@ const styles = StyleSheet.create({
     color: "#ffff",
   },
   languageBox: {
-    padding: 7,
+    paddingVertical: 7,
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: "#8282c9",
-    borderRadius: 10,
-    marginTop: 10,
-    marginLeft: 0,
-    width: "100%",
+    borderRadius: 5,
+    width: '80%',
     minWidth: 70,
-    height: 33,
+    height: 40,
   },
   noteBox: {
-    padding: 15,
-    paddingTop: 18,
-    alignItems: "center",
     backgroundColor: "#8282c9",
-    borderRadius: 50,
-    marginTop: "20%",
-    marginLeft: 0,
-    height: 50,
+    color: "#FFFF",
+    height: 75,
+    width: '80%',
+    borderRadius: 5,
+    marginTop:10,
+    justifyContent: "center", // center vertically
+    alignItems: "center", // center horizontally
   },
   note: {
-    fontSize: 14,
-    color: "#ffff",
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#FFFF",
   },
   todayExam: {
     padding: 7,

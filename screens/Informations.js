@@ -249,16 +249,16 @@ export default function InformationsScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
-        <View style={styles.topIcons}>
-          <TouchableOpacity onPress={() => navigation.openDrawer()}  >
-            <AntDesign
-              style={styles.icon}
-              name="menuunfold"
-              size={30}
-              color="#302ea6"
-            />
-          </TouchableOpacity>
-        </View>
+        <View style={{width:'100%',}}>
+            <TouchableOpacity onPress={()=>navigation.goBack()}>
+              <AntDesign
+                style={styles.iconBack}
+                name="arrowleft"
+                size={30}
+                color="#3d394e"
+              />
+            </TouchableOpacity>
+          </View>
           <Text style={styles.titleText}>Vos Informations</Text>
           <Text style={styles.secondText}>
             Vous trouverez dans cette page vos informations personnelles{" "}
@@ -358,9 +358,9 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: "#2e6af7",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 5,
     alignSelf: "flex-end",
     marginTop: -20,
   },
@@ -386,13 +386,14 @@ const styles = StyleSheet.create({
   },
   editingButtonsContainer: {
     flexDirection: "row",
+    alignItems:'center',
     justifyContent: "flex-end",
   },
   editingButton: {
     backgroundColor: "#2e6af7",
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
+    paddingVertical: 7,
+    paddingHorizontal: 15,
+    borderRadius: 5,
     marginLeft: 10,
   },
   editingButtonText: {
