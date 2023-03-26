@@ -17,20 +17,19 @@ export default function HomeScreen({ navigation, route }) {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
   const { user } = useContext(AuthContext);
-  const { userName } = useContext(AuthContext);
   
 
   const pressHandlerLogout = () => {
     // ndiro logout
   };
   const pressHandlerRecent = () => {
-    navigation.navigate("RecentExamsScreen");
+    navigation.navigate("RecentExamsScreen", {user});
   };
   const pressHandlerToday = () => {
-    navigation.navigate("SignupScreen");
+    navigation.navigate("SignupScreen", {user});
   };
   const pressHandlerInfo = () => {
-    navigation.navigate("InformationsScreen");
+    navigation.navigate("InformationsScreen", {user});
   };
   const filterExams = (searchText, filter) => {
     const filtered = exams.filter((exam) => {
@@ -132,7 +131,6 @@ export default function HomeScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
-
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <TouchableOpacity onPress={() => navigation.goBack()}>

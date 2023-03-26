@@ -10,7 +10,7 @@ import {
   Text,
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,7 +28,6 @@ export default function LoginScreen({ navigation }) {
 
   const isDisabled = !(email.length > 0 && password.length > 0);
   const [error, setError] = useState("");
-  const { setUserName } = useContext(AuthContext);
   const { signIn } = useAuth();
 
   const handleLogin = () => {
@@ -50,11 +49,15 @@ export default function LoginScreen({ navigation }) {
           const token = data.token;
           const nom = data.etudiant.nom;
           const prenom = data.etudiant.prenom;
+          const etudiantId = data.etudiant.id;
+          const etudiantEmail = data.etudiant.email;
+          const etudiantPassword = data.etudiant.password;
+          const etudiantFiliereId = data.etudiant.filiere_id;
           
-          signIn({ token: token, name: `${prenom} ${nom}` });
+          signIn({ token: token, name: `${prenom} ${nom}`, etudiantId: etudiantId, etudiantEmail: etudiantEmail ,etudiantPassword : etudiantPassword,etudiantFiliereId : etudiantFiliereId});
 
           console.log("success");
-          navigation.navigate("HomeScreen", { token: token, name: data.name });
+          navigation.navigate("HomeScreen");
         } else {
           setError(data.error || "Erreur inconnue");
         }
@@ -64,6 +67,14 @@ export default function LoginScreen({ navigation }) {
         setError("Something went wrong");
       });
   };
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      navigation.navigate("HomeScreen");
+    }
+  }, [user]);
 
   const handlePressSignup = () => {
     navigation.navigate("SignupScreen");

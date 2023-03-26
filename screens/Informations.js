@@ -12,7 +12,9 @@ import {
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect,useContext } from "react";
+import { AuthContext } from "../src/context/AuthContext";
+import { useAuth } from "../src/context/AuthContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Formik } from "formik";
 import { Picker } from "@react-native-picker/picker";
@@ -20,34 +22,27 @@ import { Picker } from "@react-native-picker/picker";
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");
   const [editingValue, setEditingValue] = useState("");
-  const [name, setName] = useState("L3wamir Anass");
-  const [firstName, setFirstName] = useState("Laawamir");
-  const [lastName, setLastName] = useState("Anass");
-  const [email, setEmail] = useState("Dasisko@gmail.com");
+  const [name, setName] = useState("Laaouamir Anass");  
   const [filiere, setFiliere] = useState("Génie Logiciel");
   const [password, setPassword] = useState("123");
   const [isEditing, setIsEditing] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const { user } = useContext(AuthContext);
+  const Username= user.name;
+  const Email = user.etudiantEmail;
 
   const renderField = (label, value, editable) => {
     if (editingField === label) {
-      if (label === "Nom" || label === "Prénom") {
+      if (label === "Nom") {
         return (
           <View>
             <Text style={styles.editingTitle}>Nom et Prénom</Text>
             <TextInput
               style={styles.editingTextInput}
-              value={firstName}
-              onChangeText={(text) => setFirstName(text)}
-              placeholder="Prénom"
-            />
-            <TextInput
-              style={styles.editingTextInput}
-              value={lastName}
-              onChangeText={(text) => setLastName(text)}
-              placeholder="Nom"
+              onChangeText={(text) => setName(text)}
+              placeholder="Nom et Prenom"
             />
             <View style={styles.editingButtonsContainer}>
               <TouchableOpacity
@@ -62,7 +57,7 @@ export default function InformationsScreen({ navigation }) {
                 style={styles.editingButton}
                 onPress={() => {
                   setEditingField("");
-                  setName(firstName + " " + lastName);
+                  setName(name);
                 }}
               >
                 <Text style={styles.editingButtonText}>Sauvegarder</Text>
@@ -271,8 +266,8 @@ export default function InformationsScreen({ navigation }) {
           />
         </View>
         <View style={styles.informationsContainer}>
-          {renderField("Nom", firstName + " " + lastName, true)}
-          {renderField("Email", email, true)}
+          {renderField("Nom", Username, true)}
+          {renderField("Email", Email, true)}
           {renderField("Filiere", filiere, true)}
           {renderField("Password", "••••••••", true)}
         </View>

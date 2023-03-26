@@ -200,12 +200,14 @@ export default function passerExamScreen({ navigation }) {
       <StatusBar style="light" />
         <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
-          <AntDesign
-            style={styles.icon}
-            name="arrowleft"
-            size={30}
-            color="white"
-          />
+          <TouchableOpacity onPress={handleSubmit}>
+            <AntDesign
+              style={styles.icon}
+              name="arrowleft"
+              size={30}
+              color="white"
+            />
+          </TouchableOpacity>
           <Text style={styles.headerText}>RAMI Salah-eddine</Text>
         </View>
         <View style={{width:'100%',marginBottom:10}}>

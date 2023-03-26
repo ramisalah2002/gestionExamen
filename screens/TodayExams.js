@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 import moment from 'moment';
 import { View,StatusBar,TextInput, Text,Image, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -72,6 +73,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 
 export default function TodayExamsScreen({navigation}) {
+  const { user } = useContext(AuthContext);
     return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -80,7 +82,7 @@ export default function TodayExamsScreen({navigation}) {
           <TouchableOpacity onPress={()=>navigation.goBack()}>
           <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
           </TouchableOpacity>
-          <Text style={{fontSize:24,color:"#fff"}}>Boulaajoul Anass</Text>
+          <Text style={{fontSize:24,color:"#fff"}}>{user.name}</Text>
         </View>
         <Text style={styles.titleTop}>Examens d'Aujourd’hui ( {todayExams.length} )</Text>
         <Text style={styles.textTop}>Ecole Supérieur de technologis Salé - UM5</Text>
