@@ -1,19 +1,25 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
+import { useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import { AuthContext } from "../src/context/AuthContext";
 import axios from "axios";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useAuth } from "../src/context/AuthContext";
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, route }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
   const [exams, setExams] = useState([]);
   const [filteredExams, setFilteredExams] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
+  const { user } = useContext(AuthContext);
+  const { userName } = useContext(AuthContext);
+  
+
   const pressHandlerLogout = () => {
     // ndiro logout
   };
@@ -129,12 +135,17 @@ export default function HomeScreen({ navigation }) {
 
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
-          <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <Ionicons name="log-out-outline" color="#FFF" size={30} style={{ transform: [{ scaleX: -1 }] }}/>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons
+              name="log-out-outline"
+              color="#FFF"
+              size={30}
+              style={{ transform: [{ scaleX: -1 }] }}
+            />
           </TouchableOpacity>
-          <Text style={{fontSize:20,color:"#fff"}}>BOULAAJOUL Anass</Text>
+          <Text style={{ fontSize: 20, color: "#fff" }}>{user.name}</Text>
         </View>
-        <Text style={styles.titleTop}>Bonjour!</Text>
+        <Text style={styles.titleTop}>Bonjour {user && user.name ? user.name : "Guest"} !</Text>
         <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={styles.containerSearch}>
@@ -216,7 +227,9 @@ export default function HomeScreen({ navigation }) {
                     Examens d'aujourd'hui
                   </Text>
                   <View style={styles.seeAllBox}>
-                    <TouchableOpacity onPress={()=>navigation.navigate("TodayExamsScreen")}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate("TodayExamsScreen")}
+                    >
                       <Text style={styles.seeAll}>voir plus</Text>
                     </TouchableOpacity>
                   </View>
@@ -234,9 +247,9 @@ export default function HomeScreen({ navigation }) {
                     showsVerticalScrollIndicator={false}
                   >
                     <View style={styles.todayExam}>
-                        <View style={styles.languageBoxToday}>
-                          <Text style={styles.language}> Java</Text>
-                        </View>
+                      <View style={styles.languageBoxToday}>
+                        <Text style={styles.language}> Java</Text>
+                      </View>
                       <View style={styles.todayExamInformation}>
                         <Text style={styles.todayExamInformationText1}>
                           Programmation Java
@@ -387,9 +400,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    borderTopLeftRadius:0,
-    borderTopRightRadius:0,
-    borderRadius:25,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderRadius: 25,
     backgroundColor: "#302ea6",
     width: "100%",
   },
@@ -436,7 +449,7 @@ const styles = StyleSheet.create({
   examPrevious: {
     padding: 7,
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: "center",
     backgroundColor: "#302ea6",
     borderRadius: 10,
     marginLeft: 20,
@@ -463,7 +476,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#8282c9",
     borderRadius: 5,
-    width:70,
+    width: 70,
     height: 40,
   },
   noteBox: {
@@ -472,14 +485,14 @@ const styles = StyleSheet.create({
     height: 75,
     width: 120,
     borderRadius: 5,
-    marginTop:10,
+    marginTop: 10,
     justifyContent: "center", // center vertically
     alignItems: "center", // center horizontally
   },
   note: {
     fontSize: 26,
-     fontWeight: "bold",
-     color: "#FFFF",
+    fontWeight: "bold",
+    color: "#FFFF",
   },
   todayExam: {
     padding: 7,

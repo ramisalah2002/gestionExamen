@@ -1,53 +1,69 @@
-import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
-import { NativeWindStyleSheet } from 'nativewind';
-import React, { useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+  ScrollView,
+  Switch,
+  TextInput,
+  Button,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Text,
+} from "react-native";
+import { NativeWindStyleSheet } from "nativewind";
+import React, { useState, useContext } from "react";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
+import { useAuth } from "../src/context/AuthContext";
 
 export default function LoginScreen({ navigation }) {
   const [activeButton, setActiveButton] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    
-    const [showPassword, setShowPassword] = useState(false);
-    const [iconName, setIconName] = useState("eye");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const isDisabled = !(email.length > 0 && password.length > 0);
+  const [showPassword, setShowPassword] = useState(false);
+  const [iconName, setIconName] = useState("eye");
 
-    
-    const handleLogin = () => {
-      fetch("http://10.0.2.2:8000/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+  const isDisabled = !(email.length > 0 && password.length > 0);
+  const [error, setError] = useState("");
+  const { setUserName } = useContext(AuthContext);
+  const { signIn } = useAuth();
+
+  const handleLogin = () => {
+    setError("");
+    fetch("http://10.0.2.2:8000/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: email,
+        password: password,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.token) {
+          // Save the token in state or storage
+          const token = data.token;
+          const nom = data.etudiant.nom;
+          const prenom = data.etudiant.prenom;
+          
+          signIn({ token: token, name: `${prenom} ${nom}` });
+
+          console.log("success");
+          navigation.navigate("HomeScreen", { token: token, name: data.name });
+        } else {
+          setError(data.error || "Erreur inconnue");
+        }
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.token) {
-            // Save the token in state or storage
-            const token = data.token;
-            const name = data.name; // assuming that the response contains the name of the logged user
-            console.log('success'); 
-            navigation.navigate("HomeScreen", { token: token, name: data.name });
-
-          } else {
-            setError("Invalid email or password");
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-          setError("Something went wrong");
-        });
-    };
-    
+      .catch((error) => {
+        console.error(error);
+        setError("Something went wrong");
+      });
+  };
 
   const handlePressSignup = () => {
     navigation.navigate("SignupScreen");
@@ -116,23 +132,31 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </View>
 
-              <TouchableOpacity onPress={handleLogin} style={styles.button}
-                disabled={isDisabled}
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={styles.button}
+            disabled={isDisabled}
+          >
+            <Text style={styles.buttonText}>Se Connecter</Text>
+          </TouchableOpacity>
+          <View style={styles.divisionLine}></View>
+          <View style={styles.signup}>
+            <Text style={styles.signupText}>Vous n'avez pas de compte?</Text>
+            <TouchableOpacity onPress={handlePressSignup}>
+              <Text
+                style={{ fontSize: 18, fontWeight: "900", color: "#302ea6" }}
               >
-                <Text style={styles.buttonText}>
-                  Se Connecter
-                </Text>
-              </TouchableOpacity>
-              <View style={styles.divisionLine}></View>
-              <View style={styles.signup}>
-                  <Text style={styles.signupText}>
-                  Vous n'avez pas de compte? 
-                  </Text>
-                  <TouchableOpacity onPress={handlePressSignup} >
-                    <Text style={{fontSize:18,fontWeight:'900',color:'#302ea6'}}> S'inscrire</Text>
-                  </TouchableOpacity>
-              </View>
+                {" "}
+                S'inscrire
+              </Text>
+            </TouchableOpacity>
           </View>
+          {error ? (
+            <Text style={styles.errorMessage}>
+              Email ou mot de passe erroné
+            </Text>
+          ) : null}
+        </View>
       </ScrollView>
     </View>
   );
@@ -148,7 +172,7 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   iconBack: {
-    marginTop:20,
+    marginTop: 20,
   },
   image: {
     width: "100%",
@@ -220,28 +244,28 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: "flex-start",
   },
-  signupText :{
+  signupText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#999999',
-},
-miniTitle :{
+    fontWeight: "600",
+    color: "#999999",
+  },
+  miniTitle: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-},
-divisionLine: {
-  marginTop: 5,
-  backgroundColor:'#bbbcc0', 
-  width: '100%',
-  borderRadius: 10,
-  height: 1.5,
-},
-signupBtn :{
+    fontWeight: "600",
+    color: "#000",
+  },
+  divisionLine: {
+    marginTop: 5,
+    backgroundColor: "#bbbcc0",
+    width: "100%",
+    borderRadius: 10,
+    height: 1.5,
+  },
+  signupBtn: {
     fontSize: 20,
-    fontWeight: '900',
-    color: '#48bee6',
-},
+    fontWeight: "900",
+    color: "#48bee6",
+  },
   input: {
     width: "85%",
     height: 30,
@@ -299,5 +323,13 @@ signupBtn :{
     borderRadius: 5,
     paddingLeft: 10,
     borderColor: "#000",
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 10,
+    marginTop: 10,
+    textAlign: "center",
   },
 });

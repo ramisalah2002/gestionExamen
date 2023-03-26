@@ -1,36 +1,27 @@
-import axios from "axios";
-import React, { createContext } from "react";
-import { BASE_URL } from "../config";
+import React, { createContext, useState } from 'react';
 
 export const AuthContext = createContext();
 
+export function useAuth() {
+  return React.useContext(AuthContext);
+}
+
 export const AuthProvider = ({ children }) => {
-  const register = (
-    nom,
-    prenom,
-    email,
-    password,
-    password_confirmation,
-    filiere_id
-  ) => {
-    axios
-      .post(`${BASE_URL}/register`, {
-        nom,
-        prenom,
-        email,
-        password,
-        password_confirmation,
-        filiere_id,
-      })
-      .then((res) => {
-        let userInfo = res.data;
-        console.log(userInfo);
-      })
-      .catch((e) => {
-        console.log(`register error ${e}`);
-      });
+  const [user, setUser] = useState(null);
+
+  const signIn = (userData) => {
+    setUser(userData);
   };
-  return (
-    <AuthContext.Provider value='febai'>{children}</AuthContext.Provider>
-  );
+
+  const signOut = () => {
+    setUser(null);
+  };
+
+  const value = {
+    user,
+    signIn,
+    signOut,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
