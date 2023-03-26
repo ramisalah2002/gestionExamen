@@ -3,33 +3,79 @@ import {
   ScrollView,
   Switch,
   TextInput,
-  Button,
   Image,
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
 } from "react-native";
-import { NativeWindStyleSheet } from "nativewind";
+
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Formik } from "formik";
+import React, { useState, useEffect, useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");
   const [editingValue, setEditingValue] = useState("");
-  const [name, setName] = useState("L3wamir Anass");
-  const [firstName, setFirstName] = useState("Laawamir");
-  const [lastName, setLastName] = useState("Anass");
-  const [email, setEmail] = useState("Dasisko@gmail.com");
-  const [filiere, setFiliere] = useState("Génie Logiciel");
-  const [password, setPassword] = useState("123");
+  const { user } = useContext(AuthContext);
+  const [name, setName] = useState(user.nom + " " + user.prenom);
+  const [firstName, setFirstName] = useState(user.prenom);
+  const [lastName, setLastName] = useState(user.nom);
+  const [email, setEmail] = useState(user.email);
+  const [filiere, setFiliere] = useState("");
+  const [filiere_id, setFiliereId] = useState(null);
+  const [password, setPassword] = useState(user.password);
   const [isEditing, setIsEditing] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [filieres, setFilieres] = useState([]);
+  const { updateUser } = useContext(AuthContext);
+  
+  useEffect(() => {
+    if (user && user.filiere_id) {
+      setFiliereId(user.filiere_id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchFilieres = async () => {
+      try {
+        const response = await fetch("http://10.0.2.2:8000/api/filieres");
+        const data = await response.json();
+        setFilieres(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des filières:", error);
+      }
+    };
+
+    fetchFilieres();
+  }, []);
+
+  useEffect(() => {
+    if (filiere_id) {
+      const fetchFiliereDetails = async () => {
+        try {
+          const response = await fetch(
+            "http://10.0.2.2:8000/api/filieres/" + filiere_id
+          );
+          const data = await response.json();
+
+          if (data && data.nom) {
+            setFiliere(data.nom);
+          }
+        } catch (error) {
+          console.error(
+            "Erreur lors de la récupération des données de la filière:",
+            error
+          );
+        }
+      };
+
+      fetchFiliereDetails();
+    }
+  }, [filiere_id]);
 
   const renderField = (label, value, editable) => {
     if (editingField === label) {
@@ -60,9 +106,18 @@ export default function InformationsScreen({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.editingButton}
-                onPress={() => {
-                  setEditingField("");
-                  setName(firstName + " " + lastName);
+                onPress={async () => {
+                  try {
+                    setEditingField("");
+                    setName(firstName + " " + lastName);
+                    // Mettre à jour l'utilisateur dans la base de données
+                    await updateUser({ nom: lastName, prenom: firstName });
+                  } catch (error) {
+                    console.error(
+                      "Erreur lors de la mise à jour des informations utilisateur:",
+                      error
+                    );
+                  }
                 }}
               >
                 <Text style={styles.editingButtonText}>Sauvegarder</Text>
@@ -144,15 +199,15 @@ export default function InformationsScreen({ navigation }) {
                   setEditingValue(itemValue)
                 }
               >
-                <Picker.Item label="Génie Logiciel" value="Génie Logiciel" />
-                <Picker.Item label="Informatique" value="Informatique" />
-                <Picker.Item
-                  label="Réseaux et Télécommunications"
-                  value="Réseaux et Télécommunications"
-                />
-                <Picker.Item label="Génie Civil" value="Génie Civil" />
-                {/* Ajoutez d'autres filières si nécessaire */}
+                {filieres.map((filiere) => (
+                  <Picker.Item
+                    key={filiere.id}
+                    label={filiere.nom}
+                    value={filiere.nom}
+                  />
+                ))}
               </Picker>
+
               <View style={styles.editingButtonsContainer}>
                 <TouchableOpacity
                   style={styles.editingButton}
@@ -249,8 +304,8 @@ export default function InformationsScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
-        <View style={{width:'100%',}}>
-            <TouchableOpacity onPress={()=>navigation.goBack()}>
+          <View style={{ width: "100%" }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <AntDesign
                 style={styles.iconBack}
                 name="arrowleft"
@@ -386,7 +441,7 @@ const styles = StyleSheet.create({
   },
   editingButtonsContainer: {
     flexDirection: "row",
-    alignItems:'center',
+    alignItems: "center",
     justifyContent: "flex-end",
   },
   editingButton: {

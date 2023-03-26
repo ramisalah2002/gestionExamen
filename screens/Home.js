@@ -18,7 +18,6 @@ export default function HomeScreen({ navigation, route }) {
   const [activeFilter, setActiveFilter] = useState("");
   const { user } = useContext(AuthContext);
   const { userName } = useContext(AuthContext);
-  
 
   const pressHandlerLogout = () => {
     // ndiro logout
@@ -30,7 +29,11 @@ export default function HomeScreen({ navigation, route }) {
     navigation.navigate("SignupScreen");
   };
   const pressHandlerInfo = () => {
-    navigation.navigate("InformationsScreen");
+    navigation.navigate("InformationsScreen", {
+      name: user.name,
+      email: user.email,
+      token: user.token,
+    });
   };
   const filterExams = (searchText, filter) => {
     const filtered = exams.filter((exam) => {
@@ -145,7 +148,7 @@ export default function HomeScreen({ navigation, route }) {
           </TouchableOpacity>
           <Text style={{ fontSize: 20, color: "#fff" }}>{user.name}</Text>
         </View>
-        <Text style={styles.titleTop}>Bonjour {user && user.name ? user.name : "Guest"} !</Text>
+        <Text style={styles.titleTop}>Bonjour !</Text>
         <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={styles.containerSearch}>
