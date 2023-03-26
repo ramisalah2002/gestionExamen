@@ -1,293 +1,582 @@
-// import * as React from 'react';
-// import { View, Text } from 'react-native';
-// import { NavigationContainer } from '@react-navigation/native';
-// import { createDrawerNavigator } from '@react-navigation/drawer';
-
-// function Dashboard() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>Dashboard Screen</Text>
-//     </View>
-//   );
-// }
-
-// function Exams() {
-//   return (
-//     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-//       <Text>Exams Screen</Text>
-//     </View>
-//   );
-// }
-
-// const Drawer = createDrawerNavigator();
-
-// function MyDrawer() {
-//   return (
-//     <Drawer.Navigator useLegacyImplementation>
-//       <Drawer.Screen name="Dashboard" component={Dashboard} />
-//       <Drawer.Screen name="Exams" component={Exams} />
-//     </Drawer.Navigator>
-//   );
-// }
-
-// export default function Home() {
-//   return (
-//     <NavigationContainer>
-//       <MyDrawer />
-//     </NavigationContainer>
-//   );
-// }
-
-import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
-import { NativeWindStyleSheet } from 'nativewind';
 import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect } from "react";
+import { AntDesign } from "@expo/vector-icons";
+import { AuthContext } from "../src/context/AuthContext";
+import axios from "axios";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-import React, { useState } from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-export default function HomeScreen({navigation}) {
-  const pressHandlerLogin = () =>{
-    navigation.navigate('LoginScreen');
-  }
-  const pressHandlerSign = () =>{
-    navigation.navigate('SignupScreen');
-  }
-  
+export default function HomeScreen({ navigation }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showResults, setShowResults] = useState(false);
+  const [exams, setExams] = useState([]);
+  const [filteredExams, setFilteredExams] = useState([]);
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [activeFilter, setActiveFilter] = useState("");
+  const pressHandlerLogout = () => {
+    // ndiro logout
+  };
+  const pressHandlerRecent = () => {
+    navigation.navigate("RecentExamsScreen");
+  };
+  const pressHandlerToday = () => {
+    navigation.navigate("SignupScreen");
+  };
+  const pressHandlerInfo = () => {
+    navigation.navigate("InformationsScreen");
+  };
+  const filterExams = (searchText, filter) => {
+    const filtered = exams.filter((exam) => {
+      const examDate = new Date(exam.date);
+      const today = new Date();
+      const isToday = examDate.toDateString() === today.toDateString();
+      const isUpcoming = examDate >= today;
+      const isPassed = examDate < today;
+
+      switch (filter) {
+        case "PassedExam":
+          if (!isPassed) return false;
+          break;
+        case "UpcommingExam":
+          if (!isUpcoming) return false;
+          break;
+        case "TodayExam":
+          if (!isToday) return false;
+          break;
+        default:
+          break;
+      }
+
+      return exam.title.toLowerCase().startsWith(searchText.toLowerCase());
+    });
+
+    return filtered;
+  };
+
+  const FilterDropdown = ({ onSelect }) => {
+    return (
+      <View style={styles.dropdown}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("PassedExam")}
+        >
+          <Text style={styles.optionText}>Examens passés</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("UpcomingExam")}
+        >
+          <Text style={styles.optionText}>Examens à venir</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => onSelect("TodayExam")}
+        >
+          <Text style={styles.optionText}>Examens d'Aujourd’hui</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  useEffect(() => {
+    const dummyExams = [
+      { id: 1, title: "PHP MySQL", score: "17/20", date: "2023-03-22" },
+      { id: 2, title: "SQL Oracle", score: "14/20", date: "2023-03-24" },
+      { id: 3, title: "JavaScript", score: "18/20", date: "2023-03-20" },
+      { id: 4, title: "React Native", score: "16/20", date: "2023-03-21" },
+      { id: 5, title: "Angular", score: "19/20", date: "2023-03-25" },
+      { id: 6, title: "Vue.js", score: "15/20", date: "2023-03-23" },
+      { id: 7, title: "Python", score: "20/20", date: "2023-03-26" },
+      { id: 8, title: "Ruby on Rails", score: "13/20", date: "2023-03-27" },
+      { id: 9, title: "Java", score: "17/20", date: "2023-03-28" },
+      { id: 10, title: "C++", score: "14/20", date: "2023-03-29" },
+    ];
+
+    setExams(dummyExams);
+    setFilteredExams(dummyExams);
+  }, []);
+
+  const handleSearch = (text) => {
+    setSearchTerm(text);
+    setFilteredExams(filterExams(text, activeFilter));
+  };
+
+  useEffect(() => {
+    if (searchTerm) {
+      const results = exams.filter((exam) =>
+        exam.title.toLowerCase().startsWith(searchTerm.toLowerCase())
+      );
+      setFilteredExams(results);
+    } else {
+      setFilteredExams([]);
+    }
+  }, [searchTerm]);
+
+  const handleFocus = () => {
+    setShowResults(true);
+  };
+
+  const handleBlur = () => {
+    setShowResults(false);
+  };
+
+  // l icon li lfo9 3la limn n9dro nbdloha b logout
+
   return (
-    
     <View style={styles.container}>
-    <StatusBar style="light" />
-      <ScrollView style={styles.content}>
-        <Image
-          source={require('../images/testLogo.jpg')}
-          style={styles.image}
+      <StatusBar style="light" />
+
+      <View style={styles.header} resizeMode="cover">
+        <View style={styles.topIcons}>
+          <TouchableOpacity onPress={()=>navigation.goBack()}>
+            <Ionicons name="log-out-outline" color="#FFF" size={30} style={{ transform: [{ scaleX: -1 }] }}/>
+          </TouchableOpacity>
+          <Text style={{fontSize:20,color:"#fff"}}>BOULAAJOUL Anass</Text>
+        </View>
+        <Text style={styles.titleTop}>Bonjour!</Text>
+        <Text style={styles.textTop}>Quel Examen désirez-vous voir ?</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={styles.containerSearch}>
+            <AntDesign name="search1" size={20} color="#cdcde9" />
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#cdcde9"
+              placeholder="Cherchez votre Examen"
+              value={searchTerm}
+              onChangeText={handleSearch}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+            />
+          </View>
+          <View style={styles.containerFilter}>
+            <TouchableOpacity
+              style={styles.filterButton}
+              onPress={() => setDropdownVisible(!dropdownVisible)}
+            >
+              <AntDesign name="filter" size={20} color="#cdcde9" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+      <ScrollView>
+        {!showResults && (
+          <>
+            <View style={styles.body} resizeMode="cover">
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>Examens Récents</Text>
+                  <View style={styles.seeAllBox}>
+                    <TouchableOpacity onPress={pressHandlerRecent}>
+                      <Text style={styles.seeAll}>voir plus</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <View style={styles.examPrevious}>
+                    <TouchableOpacity>
+                      <View style={styles.languageBox}>
+                        <Text style={styles.language}>PHP MYSQL</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>17/20</Text>
+                    </View>
+                  </View>
+                  <View style={styles.examPrevious}>
+                    <TouchableOpacity>
+                      <View style={styles.languageBox}>
+                        <Text style={styles.language}>SQL ORACLE</Text>
+                      </View>
+                    </TouchableOpacity>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>14/20</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>
+                    Examens d'aujourd'hui
+                  </Text>
+                  <View style={styles.seeAllBox}>
+                    <TouchableOpacity onPress={()=>navigation.navigate("TodayExamsScreen")}>
+                      <Text style={styles.seeAll}>voir plus</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    <View style={styles.todayExam}>
+                        <View style={styles.languageBoxToday}>
+                          <Text style={styles.language}> Java</Text>
+                        </View>
+                      <View style={styles.todayExamInformation}>
+                        <Text style={styles.todayExamInformationText1}>
+                          Programmation Java
+                        </Text>
+                        <Text style={styles.todayExamInformationText2}>
+                          commence : 16:30
+                        </Text>
+                        <Text style={styles.todayExamInformationText3}>
+                          reste : 10h 30min
+                        </Text>
+                      </View>
+                      <View style={styles.verticalLine} />
+                    </View>
+                    <View style={styles.todayExam}>
+                      <TouchableOpacity>
+                        <View style={styles.languageBoxToday}>
+                          <Text style={styles.language}>Français</Text>
+                        </View>
+                      </TouchableOpacity>
+                      <View style={styles.todayExamInformation}>
+                        <Text style={styles.todayExamInformationText1}>
+                          La langue Française
+                        </Text>
+                        <Text style={styles.todayExamInformationText2}>
+                          commence : 12:30
+                        </Text>
+                        <Text style={styles.todayExamInformationText3}>
+                          reste : 6h 30min
+                        </Text>
+                      </View>
+                      <View style={styles.verticalLine} />
+                    </View>
+                  </ScrollView>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>
+                    Mes informations personnelles
+                  </Text>
+                  <View style={styles.seeAllBox}>
+                    <TouchableOpacity onPress={pressHandlerInfo}>
+                      <Text style={styles.seeAll}>voir plus</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </>
+        )}
+
+        {showResults && (
+          <View>
+            {filteredExams.map((exam, index) => (
+              <View key={index} style={styles.searchResult}>
+                <Text style={styles.searchResultTitle}>{exam.title}</Text>
+                <Text style={styles.searchResultDate}>{exam.date}</Text>
+              </View>
+            ))}
+          </View>
+        )}
+      </ScrollView>
+      {dropdownVisible && (
+        <FilterDropdown
+          onSelect={(filter) => {
+            setActiveFilter(filter);
+            setFilteredExams(filterExams(searchTerm, filter));
+            setDropdownVisible(false);
+          }}
         />
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>L'examen en ligne n'a jamais été aussi simple</Text>
-        </View>
-        {/* <Text style={styles.paragraph}>Small paragraph</Text> */}
-        </ScrollView>
-        <View style={styles.buttonsContainer}>
-          <TouchableOpacity onPress={pressHandlerSign} style={styles.buttonSign}>
-            <Text style={styles.buttonText}>s'inscrire</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={pressHandlerLogin} style={styles.buttonLogin}>
-            <Text style={styles.buttonText}>se connecter</Text>
-          </TouchableOpacity>
-        </View>
-      
+      )}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     flex: 1,
-    alignItems:'center',
-    backgroundColor: '#dde6f2',
-    paddingBottom:30
   },
-  content: {
-    width:'95%',
+  titleTop: {
+    marginTop: 20,
+    marginLeft: 20,
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#e5f3ff",
   },
-  image: {
-    width: '100%',
-    height: 400,
-    borderRadius: 15,
-    marginTop: 40,
-    marginBottom: 30,
+  textTop: {
+    marginTop: 5,
+    marginLeft: 20,
+    fontSize: 17,
+
+    color: "#c8ceed",
   },
-  titleContainer: {
-    width:'100%',
-    alignItems:'center',
+  questionContainer: {
+    width: "100%",
+    flexDirection: "row-reverse",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  title: {
-    fontSize: 26,
-    fontWeight: '900',
-    textAlign:'center',
-    color:'#363349',
-    marginTop:50
+  infoBox: {
+    flexDirection: "row",
+    paddingVertical: 20,
+    //marginTop:10,
   },
-  paragraph: {
+  containerSearch: {
+    padding: 7,
+    paddingLeft: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5554b7",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginTop: 10,
+    marginRight: 15,
+    width: "72%",
+    marginBottom: 15,
+  },
+  containerFilter: {
+    padding: 7,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#5554b7",
+    borderRadius: 10,
+    marginTop: 10,
+    marginRight: 20,
+    width: "14%",
+    marginBottom: 15,
+  },
+  input: {
+    flex: 1,
+    padding: 10,
     fontSize: 18,
+    color: "#ffff",
   },
-  buttonsContainer: {
-    width:'95%',
-    alignItems:'center',
-    justifyContent:'space-between',
-    flexDirection:'row',
-    marginTop:100,
+  filterButton: {
+    padding: 10,
   },
-  buttonSign: {
-    borderColor:"#fefeff",
-    borderWidth:1,
-    borderBottomLeftRadius:10,
-    borderTopLeftRadius:10,
-    backgroundColor: '#fff',
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    paddingVertical: 15,
+  topIcons: {
+    marginTop: 30,
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: "4%",
+    width: "92%",
+    justifyContent: "space-between",
   },
-  buttonLogin: {
-    borderColor:"#fefeff",
-    borderWidth:1,
-    backgroundColor: '#eaecf6',
-    borderBottomRightRadius:10,
-    borderTopRightRadius:10,
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    paddingVertical: 15,
+  header: {
+    borderTopLeftRadius:0,
+    borderTopRightRadius:0,
+    borderRadius:25,
+    backgroundColor: "#302ea6",
+    width: "100%",
   },
-  buttonText: {
-    color: 'black',
+  body: {
+    backgroundColor: "#FFFF",
+    resizeMode: "contain",
+    height: "12%",
+    width: "100%",
+    minWidth: "100%",
+    justifyContent: "space-between",
+  },
+  bodyFirstText: {
+    marginTop: 30,
+    paddingLeft: 10,
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
+    color: "#13129e",
+    height: 33,
+  },
+  bodyFirstTextInfo: {
+    paddingLeft: 10,
+    fontSize: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    fontWeight: "bold",
+    color: "#13129e",
+    height: "100%",
+  },
+  seeAllBox: {
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#eaeaf6",
+    borderRadius: 5,
+    marginTop: 27,
+    marginRight: 20,
+    height: 33,
+    marginBottom: 20,
+  },
+  seeAll: {
+    fontSize: 18,
+    color: "#13129e",
+  },
+  examPrevious: {
+    padding: 7,
+    alignItems: "center",
+    justifyContent:'center',
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 10,
+    width: "40%",
+    height: 160,
+    marginBottom: 0,
+  },
+  language: {
+    fontSize: 15,
+    color: "#ffff",
+  },
+  languageBox: {
+    paddingVertical: 7,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#8282c9",
+    borderRadius: 5,
+    width: 120,
+    height: 40,
+  },
+  languageBoxToday: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#8282c9",
+    borderRadius: 5,
+    width:70,
+    height: 40,
+  },
+  noteBox: {
+    backgroundColor: "#8282c9",
+    color: "#FFFF",
+    height: 75,
+    width: 120,
+    borderRadius: 5,
+    marginTop:10,
+    justifyContent: "center", // center vertically
+    alignItems: "center", // center horizontally
+  },
+  note: {
+    fontSize: 26,
+     fontWeight: "bold",
+     color: "#FFFF",
+  },
+  todayExam: {
+    padding: 7,
+    paddingTop: 0,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 200,
+    width: 85,
+    height: 85,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  todayExamInformation: {
+    paddingTop: 15,
+    marginLeft: 20,
+    marginRight: -30,
+    flexDirection: "column",
+    width: 200,
+  },
+  todayExamInformationText1: {
+    fontWeight: "bold",
+    marginBottom: 7,
+  },
+  todayExamInformationText2: {
+    marginBottom: 7,
+  },
+  todayExamInformationText3: {
+    color: "orange",
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  verticalLine: {
+    borderLeftWidth: 1.5,
+    borderLeftColor: "#eeeeee",
+    height: 50,
+  },
+  espace: {
+    height: 10,
+  },
+  dropdown: {
+    backgroundColor: "#fff",
+    borderRadius: 5,
+    padding: 10,
+    position: "absolute",
+    right: 20,
+    top: 65,
+    zIndex: 100,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  dropdownItem: {
+    fontSize: 16,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+  },
+  dropdown: {
+    position: "absolute",
+    top: 175,
+    right: 20,
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    padding: 10,
+  },
+  option: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#8282c9",
+  },
+  optionText: {
+    color: "#eaeaf6",
+    fontSize: 16,
+  },
+  searchResult: {
+    padding: 12,
+    paddingLeft: 20,
+    paddingRight: 20,
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 8,
+    marginLeft: 20,
+    marginRight: 20,
+  },
+  searchResultTitle: {
+    fontSize: 18,
+    color: "#ffffff",
+  },
+  searchResultDate: {
+    fontSize: 14,
+    color: "#e5f3ff",
   },
 });
-
-
-// // import React, { useState, useEffect } from 'react';
-// // import { View, Text } from 'react-native';
-
-// // const TestScreen = () => {
-// //   const [users, setUsers] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         const response = await fetch('http://127.0.0.1:8000/users');
-// //         const result = await response.json();
-// //         setUsers(result);
-// //       } catch (error) {
-// //         console.error(error);
-// //       }
-// //     };    
-// //     fetchData();
-// //   }, []);
-
-// //   return (
-// //     <View>
-// //       {users.map(user => (
-// //         <View key={user.email}>
-// //           <Text>Email: {user.email}</Text>
-// //           <Text>Password: {user.password}</Text>
-// //         </View>
-// //       ))}
-// //     </View>
-// //   );
-// // };
-
-// // export default TestScreen;
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from 'react';
-// import { FlatList, Text, View } from 'react-native';
-
-// export default Home = () => {
-//   const [data, setData] = useState([]);
-//   console.log(data);
-
-//   useEffect(() => {
-//     fetch('http://127.0.0.1:8000/api/users')
-//       .then((response) => response.json())
-//       .then((json) => setData(json))
-//       .catch((error) => console.error(error))
-//   }, []);
-
-//   return (
-
-//     <View style={{ flex: 1, padding: 24 }}>
-//       {
-//       ( <View style={{ flex: 1, flexDirection: 'column', justifyContent:  'space-between'}}>
-//           <Text style={{ fontSize: 14, color: 'green', textAlign: 'center', paddingBottom: 10}}>Users:</Text>
-//           <FlatList
-//             data={data.users}
-//             keyExtractor={({ id }, index) => id}
-//             renderItem={({ item }) => (
-//               <Text>{item.id + '. ' + item.name}</Text>
-//             )}
-//           />
-//         </View>
-//       )}
-//     </View>
-//   );
-// }
-
-
-// import React , {useState} from 'react';
-// import { StyleSheet, Text, View } from 'react-native';
-// import { CheckBox } from 'react-native-elements';
-
-
-
-
-
-// export default function App() {
-//   const [checkBoxValue, setChackBoxValue] = useState(false);
-
-//   return (
-//     <View>
-//       <Text>Test</Text>
-//       <Text>Test</Text>
-//       <Text>Test</Text>
-//       <CheckBox 
-//         containerStyle={{marginLeft:0,width:'100%'}}
-//         title={'circle Checkbox'}
-//         checked={checkBoxValue}
-//         onPress={()=>setChackBoxValue(!checkBoxValue)}
-//         checkedIcon={'dot-circle-o'}
-//         uncheckedIcon={'circle-o'}
-//       />
-      
-//     </View>
-//   );
-// }
-
-// const styles = StyleSheet.create({
-  
-// });
-
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { Button, Image, View, Platform } from 'react-native';
-// import * as ImagePicker from 'expo-image-picker';
-
-// export default function ImagePickerExample() {
-  // const [image, setImage] = useState(null);
-
-  // const pickImage = async () => {
-  //   // No permissions request is necessary for launching the image library
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
-  //     allowsEditing: true,
-  //     aspect: [4, 3],
-  //     quality: 1,
-  //   });
-
-  //   console.log(result);
-
-  //   if (!result.canceled) {
-  //     setImage(result.assets[0].uri);
-  //   }
-  // };
-
-//   return (
-//     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-//       <Button title="Pick an image from camera roll" onPress={pickImage} />
-//       {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-//     </View>
-//   );
-// }
-
-

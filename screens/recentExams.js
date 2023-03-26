@@ -8,7 +8,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function RecentExamsScreen({ navigation }) {
   const pressHandlerClose = () =>{
-    navigation.navigate("ExamCorrectionScreen");
+    navigation.goBack();
   }
   return (
     <View style={styles.container}>
@@ -16,7 +16,7 @@ export default function RecentExamsScreen({ navigation }) {
       <View style={styles.header} resizeMode="cover">
       <View style={styles.topIcons}>
           <TouchableOpacity onPress={pressHandlerClose}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
+          <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
           </TouchableOpacity>
           <Text style={{fontSize:24,color:'#fff'}}>Boulaajoul Anass</Text>
         </View>
@@ -37,7 +37,56 @@ export default function RecentExamsScreen({ navigation }) {
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Liste des examens passés</Text>
           <Text style={styles.espace}> </Text>
-          <ExamsList />
+          <View style={styles.questionsContainer}>
+            <View style={styles.questionContainer}>
+              <TouchableOpacity onPress={()=>navigation.navigate("ExamCorrectionScreen")}>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Programmation PAVA</Text>
+                <Text style={styles.espace}> </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    color: "#3c7da6"
+                  }}
+                >
+                13-04-2023
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.questionsContainer}>
+            <View style={styles.questionContainer}>
+              <TouchableOpacity>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Programmation PAVA</Text>
+                <Text style={styles.espace}> </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    color: "#3c7da6"
+                  }}
+                >
+                13-04-2023
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
     </View>
@@ -53,7 +102,24 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row-reverse",
     alignItems: "center",
+    padding:5,
     justifyContent: "space-between",
+  },
+  questionsContainer: {
+    width:"100%",
+    borderWidth:1,
+    borderColor:"#d0ecfe",
+    backgroundColor:"#d0ecfe",
+    borderRadius:5,
+    shadowColor: "#d0ecfe",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    marginBottom:10,
+    shadowRadius: 1.84,
+    elevation: 1,
   },
   infoBox: {
     flexDirection: "row",
@@ -134,14 +200,14 @@ const styles = StyleSheet.create({
     height: 10,
   },
   innerContainer: {
+    marginTop:20,
     backgroundColor: "transparent",
-    paddingTop: 25,
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingHorizontal:7,
   },
   title: {
-    fontSize: 15,
+    fontSize: 20,
     fontWeight: "bold",
+    marginBottom:10,
     color: "#66707c",
   },
   correction: {
@@ -149,7 +215,7 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   question: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: "bold",
   },
   answerTrue: {

@@ -1,25 +1,26 @@
 import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import { NativeWindStyleSheet } from "nativewind";
-import HomeScreen from "../screens/Home";
 import LoginScreen from "../screens/Login";
 import SignupScreen from "../screens/Signup";
 import deptChoiceScreen from "../screens/deptChoice";
 import dashboardScreen from "../screens/dashboard";
 import passedExamScreen from "../screens/passedExam";
-import HomeTestScreen from "../screens/HomeTest";
+import HomeScreen from "../screens/Home";
+import LoginTestScreen from "../screens/LoginTest";
 import RegisterTestScreen from "../screens/RegisterTest";
 import InformationsScreen from "../screens/Informations";
 import passerExamScreen from "../screens/passerExam";
-import InformationsExamenScreen from "../screens/InformationsExamen";
 import ExamCorrectionScreen from "../screens/ExamCorrection";
 import qcmTest from "../screens/qcmTest";
 import RecentExamsScreen from "../screens/recentExams";
 import UserList from "../screens/UserList";
+import openAppScreen from "../screens/openApp";
+import TodayExamsScreen from "../screens/TodayExams";
 
 const screens = {
-  HomeScreen: {
-    screen: LoginScreen,
+  openAppScreen: {
+    screen: openAppScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -42,8 +43,14 @@ const screens = {
       headerShown: false,
     },
   },
-  HomeTestScreen: {
-    screen: HomeTestScreen,
+  HomeScreen: {
+    screen: HomeScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
+  TodayExamsScreen: {
+    screen: TodayExamsScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -60,22 +67,20 @@ const screens = {
       headerShown: false,
     },
   },
+  passerExamScreen: {
+    screen: passerExamScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
   ExamCorrectionScreen: {
     screen: ExamCorrectionScreen,
     navigationOptions: {
       headerShown: false,
     },
   },
-
   passedExamScreen: {
     screen: passedExamScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-
-  dashboardScreen: {
-    screen: dashboardScreen,
     navigationOptions: {
       headerShown: false,
     },
@@ -86,13 +91,6 @@ const screens = {
       headerShown: false,
     },
   },
-  InformationsExamenScreen: {
-    screen: InformationsExamenScreen,
-    navigationOptions: {
-      headerShown: false,
-    },
-  },
-  
 };
 
 const HomeStack = createStackNavigator(screens);

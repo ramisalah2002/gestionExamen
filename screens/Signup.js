@@ -21,16 +21,6 @@ export default function SignupScreen({navigation}){
 
     // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
     const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0);
-
-    const handlePressTeacher = () => {
-      setUserType('teacher');
-      setActiveButton(1);
-    };
-  
-    const handlePressStudent = () => {
-      setUserType('student');
-      setActiveButton(2);
-    };
     
     const handleSignup = () => {
         navigation.navigate('deptChoiceScreen');
@@ -181,12 +171,12 @@ const styles = StyleSheet.create({
     width:'95%',
   },
   iconBack: {
-    marginTop:30,
+    marginTop:20,
   },
   image: {
     width: '100%',
     height: 300,
-    borderRadius: 15,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 15,
   },

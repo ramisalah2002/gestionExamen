@@ -363,9 +363,9 @@ const styles = StyleSheet.create({
     color: "#ff8645",
   },
   headerText: {
-    fontSize: 14,
+    fontSize: 20,
     fontWeight: "bold",
-    color: "#e5f3ff",
+    color: "#fff",
   },
   headerScore: {
     alignItems:'center',

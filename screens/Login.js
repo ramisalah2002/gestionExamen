@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function SignupScreen({ navigation }) {
+export default function LoginScreen({ navigation }) {
   const [activeButton, setActiveButton] = useState(null);
   const [selectedButton, setSelectedButton] = useState(null);
 
@@ -36,7 +36,7 @@ export default function SignupScreen({ navigation }) {
             const token = data.token;
             const name = data.name; // assuming that the response contains the name of the logged user
             console.log('success'); 
-            navigation.navigate("HomeTestScreen", { token: token, name: data.name });
+            navigation.navigate("HomeScreen", { token: token, name: data.name });
 
           } else {
             setError("Invalid email or password");
@@ -49,9 +49,8 @@ export default function SignupScreen({ navigation }) {
     };
     
 
-
   const handlePressSignup = () => {
-    navigation.navigate("RegisterTestScreen");
+    navigation.navigate("SignupScreen");
   };
 
   return (
@@ -120,12 +119,20 @@ export default function SignupScreen({ navigation }) {
               <TouchableOpacity onPress={handleLogin} style={styles.button}
                 disabled={isDisabled}
               >
-                {" "}
-                S'inscrire
-              </Text>
-            </TouchableOpacity>
+                <Text style={styles.buttonText}>
+                  Se Connecter
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.divisionLine}></View>
+              <View style={styles.signup}>
+                  <Text style={styles.signupText}>
+                  Vous n'avez pas de compte? 
+                  </Text>
+                  <TouchableOpacity onPress={handlePressSignup} >
+                    <Text style={{fontSize:18,fontWeight:'900',color:'#302ea6'}}> S'inscrire</Text>
+                  </TouchableOpacity>
+              </View>
           </View>
-        </View>
       </ScrollView>
     </View>
   );
@@ -141,12 +148,12 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   iconBack: {
-    marginTop:0,
+    marginTop:20,
   },
   image: {
     width: "100%",
     height: 300,
-    borderRadius: 15,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 15,
   },
@@ -213,28 +220,28 @@ const styles = StyleSheet.create({
     marginTop: 50,
     alignItems: "flex-start",
   },
-  signupText: {
+  signupText :{
     fontSize: 18,
-    fontWeight: "600",
-    color: "#999999",
-  },
-  miniTitle: {
+    fontWeight: '600',
+    color: '#999999',
+},
+miniTitle :{
     fontSize: 16,
-    fontWeight: "600",
-    color: "#000",
-  },
-  divisionLine: {
-    marginTop: 5,
-    backgroundColor: "#bbbcc0",
-    width: "100%",
-    borderRadius: 10,
-    height: 1.5,
-  },
-  signupBtn: {
+    fontWeight: '600',
+    color: '#000',
+},
+divisionLine: {
+  marginTop: 5,
+  backgroundColor:'#bbbcc0', 
+  width: '100%',
+  borderRadius: 10,
+  height: 1.5,
+},
+signupBtn :{
     fontSize: 20,
-    fontWeight: "900",
-    color: "#48bee6",
-  },
+    fontWeight: '900',
+    color: '#48bee6',
+},
   input: {
     width: "85%",
     height: 30,
