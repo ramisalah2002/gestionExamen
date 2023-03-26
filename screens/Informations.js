@@ -32,7 +32,7 @@ export default function InformationsScreen({ navigation }) {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [filieres, setFilieres] = useState([]);
   const { updateUser } = useContext(AuthContext);
-  
+
   useEffect(() => {
     if (user && user.filiere_id) {
       setFiliereId(user.filiere_id);
@@ -79,14 +79,21 @@ export default function InformationsScreen({ navigation }) {
 
   const renderField = (label, value, editable) => {
     if (editingField === label) {
-      if (label === "Nom") {
+      if (label === "Nom" || label === "Prénom") {
         return (
           <View>
             <Text style={styles.editingTitle}>Nom et Prénom</Text>
             <TextInput
               style={styles.editingTextInput}
-              onChangeText={(text) => setName(text)}
-              placeholder="Nom et Prenom"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              placeholder="Prénom"
+            />
+            <TextInput
+              style={styles.editingTextInput}
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              placeholder="Nom"
             />
             <View style={styles.editingButtonsContainer}>
               <TouchableOpacity
@@ -181,6 +188,39 @@ export default function InformationsScreen({ navigation }) {
             </View>
           );
         }
+        if (label === "Email") {
+          return (
+            <View>
+              <Text style={styles.editingTitle}>{label}</Text>
+              <TextInput
+                style={styles.editingTextInput}
+                value={editingValue}
+                onChangeText={(text) => setEditingValue(text)}
+              />
+              <View style={styles.editingButtonsContainer}>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                    setEditingValue("");
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Annuler</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                    setEmail(editingValue);
+                    updateUser({ email: editingValue });
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Sauvegarder</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }
         if (label === "Filiere") {
           return (
             <View>
@@ -196,7 +236,7 @@ export default function InformationsScreen({ navigation }) {
                   <Picker.Item
                     key={filiere.id}
                     label={filiere.nom}
-                    value={filiere.nom}
+                    value={filiere.id}
                   />
                 ))}
               </Picker>
@@ -214,7 +254,8 @@ export default function InformationsScreen({ navigation }) {
                   style={styles.editingButton}
                   onPress={() => {
                     setEditingField("");
-                    setFiliere(editingValue);
+                    setFiliereId(editingValue);
+                    updateUser({ filiere_id: editingValue });
                   }}
                 >
                   <Text style={styles.editingButtonText}>Sauvegarder</Text>
@@ -319,7 +360,7 @@ export default function InformationsScreen({ navigation }) {
           />
         </View>
         <View style={styles.informationsContainer}>
-          {renderField("Nom", name, true)}
+          {renderField("Nom", firstName + " " + lastName, true)}
           {renderField("Email", email, true)}
           {renderField("Filiere", filiere, true)}
           {renderField("Password", "••••••••", true)}
