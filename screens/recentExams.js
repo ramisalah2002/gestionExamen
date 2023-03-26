@@ -1,12 +1,15 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
 import { StyleSheet, View, Text, ScrollView, FlatList, Touchable } from "react-native";
 import ExamsList from "./ExamsList";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from "react-native-gesture-handler";
 
+
 export default function RecentExamsScreen({ navigation }) {
+  const { user } = useContext(AuthContext);
   const pressHandlerClose = () =>{
     navigation.goBack();
   }
@@ -18,7 +21,7 @@ export default function RecentExamsScreen({ navigation }) {
           <TouchableOpacity onPress={pressHandlerClose}>
           <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
           </TouchableOpacity>
-          <Text style={{fontSize:24,color:'#fff'}}>Boulaajoul Anass</Text>
+          <Text style={{fontSize:24,color:'#fff'}}>{user.name}</Text>
         </View>
         <View style={styles.infoBox}>
           <View style={styles.leftBox}>

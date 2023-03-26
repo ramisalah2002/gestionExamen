@@ -79,21 +79,14 @@ export default function InformationsScreen({ navigation }) {
 
   const renderField = (label, value, editable) => {
     if (editingField === label) {
-      if (label === "Nom" || label === "Prénom") {
+      if (label === "Nom") {
         return (
           <View>
             <Text style={styles.editingTitle}>Nom et Prénom</Text>
             <TextInput
               style={styles.editingTextInput}
-              value={firstName}
-              onChangeText={(text) => setFirstName(text)}
-              placeholder="Prénom"
-            />
-            <TextInput
-              style={styles.editingTextInput}
-              value={lastName}
-              onChangeText={(text) => setLastName(text)}
-              placeholder="Nom"
+              onChangeText={(text) => setName(text)}
+              placeholder="Nom et Prenom"
             />
             <View style={styles.editingButtonsContainer}>
               <TouchableOpacity
@@ -326,8 +319,8 @@ export default function InformationsScreen({ navigation }) {
           />
         </View>
         <View style={styles.informationsContainer}>
-          {renderField("Nom", firstName + " " + lastName, true)}
-          {renderField("Email", email, true)}
+          {renderField("Nom", Username, true)}
+          {renderField("Email", Email, true)}
           {renderField("Filiere", filiere, true)}
           {renderField("Password", "••••••••", true)}
         </View>

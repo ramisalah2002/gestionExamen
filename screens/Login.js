@@ -10,7 +10,7 @@ import {
   Text,
 } from "react-native";
 import { NativeWindStyleSheet } from "nativewind";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,7 +28,6 @@ export default function LoginScreen({ navigation }) {
 
   const isDisabled = !(email.length > 0 && password.length > 0);
   const [error, setError] = useState("");
-  const { setUserName } = useContext(AuthContext);
   const { signIn } = useAuth();
 
   const handleLogin = () => {
@@ -58,7 +57,7 @@ export default function LoginScreen({ navigation }) {
           signIn({ token: token, id : id, name: `${prenom} ${nom}`, nom: nom, prenom: prenom, email : email , password : password, filiere_id: filiere_id });
           
           console.log("success");
-          navigation.navigate("HomeScreen", { token: token, name: data.name });
+          navigation.navigate("HomeScreen");
         } else {
           setError(data.error || "Erreur inconnue");
         }
@@ -68,6 +67,14 @@ export default function LoginScreen({ navigation }) {
         setError("Something went wrong");
       });
   };
+
+  const { user } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user) {
+      navigation.navigate("HomeScreen");
+    }
+  }, [user]);
 
   const handlePressSignup = () => {
     navigation.navigate("SignupScreen");
