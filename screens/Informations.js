@@ -319,8 +319,8 @@ export default function InformationsScreen({ navigation }) {
           />
         </View>
         <View style={styles.informationsContainer}>
-          {renderField("Nom", Username, true)}
-          {renderField("Email", Email, true)}
+          {renderField("Nom", name, true)}
+          {renderField("Email", email, true)}
           {renderField("Filiere", filiere, true)}
           {renderField("Password", "••••••••", true)}
         </View>

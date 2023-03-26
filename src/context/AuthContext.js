@@ -41,6 +41,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const data = await response.json();
+     
       updateUserContext(data);
     } catch (error) {
       console.error(
