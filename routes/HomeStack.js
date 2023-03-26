@@ -67,6 +67,12 @@ const screens = {
       headerShown: false,
     },
   },
+  passerExamScreen: {
+    screen: passerExamScreen,
+    navigationOptions: {
+      headerShown: false,
+    },
+  },
   ExamCorrectionScreen: {
     screen: ExamCorrectionScreen,
     navigationOptions: {

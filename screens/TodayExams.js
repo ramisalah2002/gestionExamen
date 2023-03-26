@@ -62,47 +62,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 
 
-const renderTodayExamsRows = () => (
-  todayExams.map((exam, index) => {
-    const examTimeInSeconds = parseInt(exam.examTime.split(':')[0],10)*3600 + parseInt(exam.examTime.split(':')[1],10)*60;
-    const timeDiffInSeconds = examTimeInSeconds - getCurrentTimeInSeconds();
-    const remainingTimeInSeconds = timeDiffInSeconds > 0 ? timeDiffInSeconds : 0;
-    
 
-    let backgroundColor;
-    if (remainingTimeInSeconds <= 0) {
-      backgroundColor = 'blue';
-    }else if (remainingTimeInSeconds < 3600) {
-      backgroundColor = 'lightcoral';
-    } else if (remainingTimeInSeconds < 10800) {
-      backgroundColor = 'orange';
-    } else {
-      backgroundColor = 'lightgreen';
-    }
-    return (
-      <View style={styles.row} key={index}>
-        <View style={{width:"100%",alignItems:'center'}}>
-            <View style={{width:"100%"}}>
-                <Text style={styles.name}>
-                    <Text style={styles.subject}>{exam.subject}</Text>
-                </Text>
-                <Text style={styles.date}>{exam.date}</Text>
-            </View>
-        {remainingTimeInSeconds > 0 ? (
-          <View style={[styles.todayCircle, { backgroundColor}]}>
-            <CountdownTimer time={remainingTimeInSeconds} />
-          </View>
-        ) : (
-          <TouchableOpacity style={[styles.todayCircle, { backgroundColor: '#48bee6'}]}>
-            <Text style={{fontSize:20,fontWeight:'bold'}}>Passer</Text>
-          </TouchableOpacity>
-        )}
-        </View>
-
-      </View>
-    );
-  })
-);
 //<TouchableOpacity style={[styles.todayCircle, { backgroundColor: '#48bee6'}]} onPress={() => console.log('Passed Exam:', exam)}>
 
 
@@ -118,7 +78,7 @@ export default function TodayExamsScreen({navigation}) {
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <TouchableOpacity onPress={()=>navigation.goBack()}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
+          <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
           </TouchableOpacity>
           <Text style={{fontSize:24,color:"#fff"}}>Boulaajoul Anass</Text>
         </View>
@@ -126,7 +86,43 @@ export default function TodayExamsScreen({navigation}) {
         <Text style={styles.textTop}>Ecole Supérieur de technologis Salé - UM5</Text>
       </View>
         <ScrollView contentContainerStyle={styles.passedContainer}>
-        {renderTodayExamsRows()}
+          {todayExams.map((exam, index) => {
+            const examTimeInSeconds = parseInt(exam.examTime.split(':')[0], 10) * 3600 + parseInt(exam.examTime.split(':')[1], 10) * 60;
+            const timeDiffInSeconds = examTimeInSeconds - getCurrentTimeInSeconds();
+            const remainingTimeInSeconds = timeDiffInSeconds > 0 ? timeDiffInSeconds : 0;
+        
+            let backgroundColor;
+            if (remainingTimeInSeconds <= 0) {
+              backgroundColor = 'blue';
+            } else if (remainingTimeInSeconds < 3600) {
+              backgroundColor = 'lightcoral';
+            } else if (remainingTimeInSeconds < 10800) {
+              backgroundColor = 'orange';
+            } else {
+              backgroundColor = 'lightgreen';
+            }
+            return (
+              <View style={styles.row} key={index}>
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                  <View style={{ width: '100%' }}>
+                    <Text style={styles.name}>
+                      <Text style={styles.subject}>{exam.subject}</Text>
+                    </Text>
+                    <Text style={styles.date}>{exam.date}</Text>
+                  </View>
+                  {remainingTimeInSeconds > 0 ? (
+                    <View style={[styles.todayCircle, { backgroundColor }]}>
+                      <CountdownTimer time={remainingTimeInSeconds} />
+                    </View>
+                  ) : (
+                    <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen")} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
+                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
+            );
+          })}
         </ScrollView>
     </View>
   );
@@ -193,7 +189,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   todayCircle: {
-    borderRadius: 10,
+    borderRadius: 5,
     width: "100%",
     paddingVertical:10,
     justifyContent: 'center',

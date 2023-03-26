@@ -171,12 +171,12 @@ const styles = StyleSheet.create({
     width:'95%',
   },
   iconBack: {
-    marginTop:30,
+    marginTop:20,
   },
   image: {
     width: '100%',
     height: 300,
-    borderRadius: 15,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 15,
   },

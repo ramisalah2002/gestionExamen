@@ -130,7 +130,7 @@ export default function HomeScreen({ navigation }) {
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <Ionicons name="log-out-outline" color="#FFF" size={30}/>
+            <Ionicons name="log-out-outline" color="#FFF" size={30} style={{ transform: [{ scaleX: -1 }] }}/>
           </TouchableOpacity>
           <Text style={{fontSize:20,color:"#fff"}}>BOULAAJOUL Anass</Text>
         </View>
@@ -170,7 +170,7 @@ export default function HomeScreen({ navigation }) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text style={styles.bodyFirstText}>Examens Recents</Text>
+                  <Text style={styles.bodyFirstText}>Examens Récents</Text>
                   <View style={styles.seeAllBox}>
                     <TouchableOpacity onPress={pressHandlerRecent}>
                       <Text style={styles.seeAll}>voir plus</Text>
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   topIcons: {
-    marginTop: 50,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     marginLeft: "4%",
@@ -459,7 +459,6 @@ const styles = StyleSheet.create({
     height: 40,
   },
   languageBoxToday: {
-    paddingVertical: 7,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "#8282c9",

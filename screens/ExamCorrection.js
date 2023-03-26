@@ -14,7 +14,7 @@ export default function ExamCorrectionScreen({ navigation }) {
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
         <TouchableOpacity onPress={pressHandlerClose} style={styles.topIcons}>
-          <AntDesign style={styles.icon} name="close" size={30} color="white" />
+          <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
         </TouchableOpacity>
         <View style={styles.infoBox}>
           <View style={styles.note}>
@@ -33,13 +33,13 @@ export default function ExamCorrectionScreen({ navigation }) {
       </View>
       <View style={styles.body} resizeMode="cover">
         <View style={styles.bodyLeft}>
-          <Text style={styles.bodyFirstText}>Correct</Text>
+          <Text style={styles.bodyFirstText}>Correctes</Text>
           <Text style={styles.espace}> </Text>
           <Text style={styles.bodySecondText}>17/20</Text>
         </View>
         <View style={styles.verticalLine} />
         <View style={styles.bodyRight}>
-          <Text style={styles.bodyFirstText}>Wrong</Text>
+          <Text style={styles.bodyFirstText}>Fausses</Text>
           <Text style={styles.espace}> </Text>
           <Text style={styles.bodySecondText}>3/20</Text>
         </View>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     //marginTop:10,
   },
   topIcons: {
-    marginTop: 50,
+    marginTop: 30,
     flexDirection: "row",
     alignItems: "center",
     marginLeft: "4%",
@@ -122,7 +122,7 @@ const styles = StyleSheet.create({
   body: {
     backgroundColor: "#FFFF",
     resizeMode: "contain",
-    height: "12%",
+    height: "10%",
     width: "100%",
     minWidth: "100%",
     alignSelf: "center",

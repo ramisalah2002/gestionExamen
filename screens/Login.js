@@ -15,7 +15,7 @@ export default function LoginScreen({ navigation }) {
     const [showPassword, setShowPassword] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
-    const isDisabled = (email.length > 0 && password.length > 0);
+    const isDisabled = !(email.length > 0 && password.length > 0);
 
     
     const handleLogin = () => {
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
     width: "95%",
   },
   iconBack: {
-    marginTop:10,
+    marginTop:20,
   },
   image: {
     width: "100%",
     height: 300,
-    borderRadius: 15,
+    borderRadius: 10,
     marginTop: 10,
     marginBottom: 15,
   },
