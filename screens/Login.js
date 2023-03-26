@@ -49,9 +49,6 @@ export default function SignupScreen({ navigation }) {
     };
     
 
-  const handleLogin = () => {
-    navigation.navigate("HomeTestScreen");
-  };
 
   const handlePressSignup = () => {
     navigation.navigate("RegisterTestScreen");
