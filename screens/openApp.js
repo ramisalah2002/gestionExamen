@@ -115,7 +115,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     justifyContent:'space-between',
     flexDirection:'row',
-    marginTop:100,
   },
   buttonSign: {
     borderColor:"#fefeff",

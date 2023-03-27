@@ -1,30 +1,77 @@
 import {ScrollView, Switch, TextInput, Button, Image, TouchableOpacity, StyleSheet, View, Text } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
 import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Picker } from '@react-native-picker/picker';
+import { AuthContext } from "../src/context/AuthContext";
 
-import React, { useState } from 'react';
+import axios from "axios";
+
+import React, { useState, useEffect } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { useContext } from "react";
 import { AntDesign } from "@expo/vector-icons";
 
 export default function SignupScreen({navigation}){
     const [activeButton, setActiveButton] = useState(null);
     const [selectedButton, setSelectedButton] = useState(null);
+    const { signup } = useContext(AuthContext);
 
-    const [name, setName] = useState('');
+    const handlePressSignup = async () => {
+      try {
+        const response = await axios.post('http://10.0.2.2:8000/api/register', {
+          nom: nom,
+          prenom: prenom,
+          email: email,
+          password: password,
+          filiere_id: selectedFiliere.id
+        });
+        // handle successful response
+        console.log(response.data);
+        navigation.navigate('LoginScreen');
+      } catch (error) {
+        // handle error
+        console.log(error.response.data);
+      }
+    };
+    
+
+    const [nom, setNom] = useState('');
+    const [prenom, setPrenom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userType, setUserType] = useState(null);
-    
+    const [password_confirmation, setPassword_confirmation] = useState("");    
     const [showPassword, setShowPassword] = useState(false);
     const [isHovering, setIsHovering] = useState(false);
     const [iconName, setIconName] = useState("eye");
 
     // const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0); L ASLYA HYA HADI
-    const isDisabled = (name.length > 0 && email.length > 0 && password.length > 0);
+    const isDisabled = !(prenom.length>0 && nom.length > 0 && email.length > 0 && password.length > 0);
+
+    const [filieres, setFilieres] = useState([]);
+    const [selectedFiliere, setSelectedFiliere] = useState(null);
+
+    useEffect(() => {
+      axios.get("http://10.0.2.2:8000/api/filieres")
+        .then(res => {
+          setFilieres(res.data);
+          setSelectedFiliere(res.data[0]);
+        })
+        .catch(error => {
+          console.log(`Error fetching filieres: ${error}`);
+        });
+    }, []);
     
-    const handleSignup = () => {
-        navigation.navigate('deptChoiceScreen');
+    const handleFiliereChange = (value) => {
+      const selectedFiliere = filieres.find((f) => f.id === parseInt(value));
+      setSelectedFiliere(selectedFiliere);
     };
+
+
+    
+    
+    
 
     const handlePressLogin = () => {
       navigation.navigate('LoginScreen');
@@ -103,18 +150,23 @@ export default function SignupScreen({navigation}){
                   source={require('../images/signup.jpg')}
                   style={styles.image}
                 />
-                <View style={{width:'100%',marginBottom:15}}>
-                  <Text style={{fontSize:30,fontWeight:'900'}}>Inscription</Text>
+                <View style={{width:'100%',marginBottom:10}}>
+                  <Text style={{fontSize:25,fontWeight:'900'}}>Inscription</Text>
                 </View>
-              <View style={styles.emailField}>
-                  <AntDesign
-                    style={styles.icon}
-                    name="user"
-                    size={24}
-                    color="#3d394e"
-                  />
-                  <TextInput selectionColor='#000' placeholder="Nom complet" placeholderTextColor="#bbbcc0" value={name} onChangeText={setName} style={styles.input}/>
-              </View>
+                <View style={styles.nameContainer}>
+                <View style={styles.nameField}>
+                    <AntDesign
+                      style={styles.icon}
+                      name="user"
+                      size={24}
+                      color="#3d394e"
+                    />
+                    <TextInput placeholder="Nom" placeholderTextColor="#bbbcc0" value={nom} onChangeText={setNom} style={styles.input}/>
+                  </View>
+                  <View style={styles.nameField}>
+                    <TextInput placeholder="Prénom" placeholderTextColor="#bbbcc0" value={prenom} onChangeText={setPrenom} style={styles.input}/>
+                  </View>
+                </View>
               <View style={styles.emailField}>
                   <AntDesign
                     style={styles.icon}
@@ -122,7 +174,18 @@ export default function SignupScreen({navigation}){
                     size={24}
                     color="#3d394e"
                   />
-                  <TextInput selectionColor='#000' placeholder="Email" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
+                  <TextInput placeholder="Email" placeholderTextColor="#bbbcc0" value={email} onChangeText={setEmail} style={styles.input}/>
+              </View>
+              <View style={styles.pickerContainer}>
+                <Picker
+                  style={styles.picker}
+                  selectedValue={selectedFiliere?.id}
+                  onValueChange={handleFiliereChange}
+                >
+                  {filieres.map((filiere) => (
+                    <Picker.Item key={filiere.id} label={filiere.nom} value={filiere.id} />
+                  ))}
+                </Picker>
               </View>
               <View style={styles.passwordField}>
                   <AntDesign
@@ -131,21 +194,17 @@ export default function SignupScreen({navigation}){
                     size={26}
                     color="#3d394e"
                   />
-                  <TextInput selectionColor='#000' placeholder="Mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
+                  <TextInput placeholder="Mot de passe" placeholderTextColor="#bbbcc0" value={password} onChangeText={text => setPassword(text)} secureTextEntry={!showPassword} style={styles.input}/>
                   <TouchableOpacity onPress={() => setShowPassword(!showPassword)} value={showPassword}><Icon style={styles.icon} size={22}  color='#000' name={showPassword ? 'eye-slash' : 'eye'}/></TouchableOpacity>
               </View>
               <View style={styles.passwordStrengthContainer}>
                   {passwordStrengthViews}
               </View>
-              <TouchableOpacity onPress={handleSignup} style={styles.button}
-                onMouseEnter={() => setIsHovering(true)}
-                onMouseLeave={() => setIsHovering(false)}
-                onTouchStart={() => setIsHovering(true)}
-                onTouchEnd={() => setIsHovering(false)}
-                disabled={isDisabled}
-              >
+              <TouchableOpacity style={styles.button} onPress={handlePressSignup} disabled={isDisabled}>
                 <Text style={styles.buttonText}>Continuer</Text>
               </TouchableOpacity>
+
+
               <View style={styles.divisionLine}></View>
               <View style={styles.signup}>
                   <Text style={styles.signupText}>
@@ -167,6 +226,24 @@ const styles = StyleSheet.create({
     alignItems:'center',
     backgroundColor: '#dde6f2',
   },
+  pickerContainer: {
+    flexDirection: 'column',
+    width: '100%',
+    marginBottom:15,
+    justifyContent: 'space-between',
+  },
+  picker: {
+    height: 25,
+    width:'100%',
+    color:'#000',
+    fontWeight:'900',
+    fontSize:20,
+    backgroundColor: '#fefefe',
+    marginBottom:10,
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 5,
+  },
   content: {
     width:'95%',
   },
@@ -178,7 +255,7 @@ const styles = StyleSheet.create({
     height: 300,
     borderRadius: 10,
     marginTop: 10,
-    marginBottom: 15,
+    marginBottom: 10,
   },
   loginContainer: {
     marginTop: 10,
@@ -279,7 +356,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 10,
-    height: 55,
+    height: 50,
   },
   signup: {
       marginTop: 5,
@@ -308,10 +385,26 @@ const styles = StyleSheet.create({
       borderColor: '#000',
       marginBottom:10,
   },
+  nameContainer: {
+      width: '100%',
+      flexDirection:'row',
+      justifyContent:'space-between'
+  },
+  nameField: {
+      backgroundColor: '#fefefe',
+      width: '49%',
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderRadius: 5,
+      paddingLeft: 10,
+      borderColor: '#000',
+      marginBottom:10,
+  },
 
   passwordField: {
       backgroundColor: '#fefefe',
       width: '100%',
+      marginTop:15,
       flexDirection: 'row',
       alignItems: 'center',
       borderRadius: 5,

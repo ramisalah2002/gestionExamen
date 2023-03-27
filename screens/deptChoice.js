@@ -1,102 +1,108 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { NativeWindStyleSheet } from 'nativewind';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import { AntDesign } from "@expo/vector-icons";
+import { AuthContext } from "../src/context/AuthContext";
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import axios from 'axios';
+
+export default function deptChoiceScreen({ navigation }) {
+
+  const etudiant_nom = navigation.getParam('userNom');
+  const etudiant_prenom = navigation.getParam('userPrenom');
+  const etudiant_email = navigation.getParam('userEmail');
+  const etudiant_password = navigation.getParam('userPassword');
+
+  const [filieres, setFilieres] = useState([]);
+  const [selectedFiliere, setSelectedFiliere] = useState(null);
 
 
-const departments = [
-  {
-    id: 1,
-    name: 'Informatique',
-    classes: [
-      { id: 1, name: 'Génie Logiciel' },
-      { id: 2, name: 'Réseau informatique' },
-    ],
-  },
-  {
-    id: 2,
-    name: 'industriel',
-    classes: [
-      { id: 1, name: 'Génie civil' },
-      { id: 2, name: 'Génie bio industriel' },
-    ],
-  },
-];
+  useEffect(() => {
+    axios.get("http://10.0.2.2:8000/api/filieres")
+      .then(res => {
+        setFilieres(res.data);
+        setSelectedFiliere(res.data[0]);
+      })
+      .catch(error => {
+        console.log(`Error fetching filieres: ${error}`);
+      });
+  }, []);
 
-export default function deptChoiceScreen({navigation}) {
-  const [selectedDepartment, setSelectedDepartment] = useState(departments[0]);
-  const [selectedClass, setSelectedClass] = useState(selectedDepartment.classes[0]);
-
-  const handleDepartmentChange = (value) => {
-    const department = departments.find((d) => d.id === parseInt(value));
-    setSelectedDepartment(department);
-    setSelectedClass(department.classes[0]);
+  const handleFiliereChange = (value) => {
+    const selectedFiliere = filieres.find((f) => f.id === parseInt(value));
+    setSelectedFiliere(selectedFiliere);
   };
 
-  const handleClassChange = (value) => {
-    const classObj = selectedDepartment.classes.find((c) => c.id === parseInt(value));
-    setSelectedClass(classObj);
-  };
-
-  const handleSignup = () => {
-    navigation.navigate('HomeScreen');
+  const handleRegister = (
+    nom,
+    prenom,
+    email,
+    filiere_id,
+    password
+  ) => {
+    axios
+      .post("http://10.0.2.2:8000/api/register", {
+        nom,
+        prenom,
+        email,
+        password,
+        filiere_id : selectedFiliere.id, // Pass the selected filiere's id as filiere_id parameter
+      })
+      .then((res) => {
+        let userInfo = res.data;
+        console.log(userInfo);
+      })
+      .catch((e) => {
+        console.log(`register error ${e}`);
+      });
   };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={{width:'100%',}}>
-            <TouchableOpacity onPress={()=>navigation.goBack()}>
-              <AntDesign
-                style={styles.iconBack}
-                name="arrowleft"
-                size={30}
-                color="#3d394e"
-              />
-            </TouchableOpacity>
-          </View>
-          <Image
-            source={require('../images/choice.jpg')}
-            style={styles.image}
-          />
-          <View style={{width:'100%',marginBottom:15}}>
-            <Text style={{fontSize:30,fontWeight:'900'}}>Choix de filière</Text>
-          </View>
-          <View style={styles.pickerContainer}>
-            <Text style={styles.pickerTitle}>
-              Département
-            </Text>
-            <Picker
-              style={styles.picker}
-              selectedValue={selectedDepartment.id}
-              onValueChange={handleDepartmentChange}
-            >
-              {departments.map((department) => (
-                <Picker.Item key={department.id} label={department.name} value={department.id} />
-              ))}
-            </Picker>
-            <Text style={styles.pickerTitle}>
-              Filière
-            </Text>
-            <Picker
-              style={styles.picker}
-              selectedValue={selectedClass.id}
-              onValueChange={handleClassChange}
-            >
-              {selectedDepartment.classes.map((classObj) => (
-                <Picker.Item key={classObj.id} label={classObj.name} value={classObj.id} />
-              ))}
-            </Picker>
-          </View>
-      </ScrollView>
-          <TouchableOpacity onPress={handleSignup} style={styles.button}>
-                  <Text style={styles.buttonText}>S'inscrire</Text>
+        <View style={{ width: '100%' }}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign
+              style={styles.iconBack}
+              name="arrowleft"
+              size={30}
+              color="#3d394e"
+            />
           </TouchableOpacity>
+        </View>
+        <Image
+          source={require('../images/choice.jpg')}
+          style={styles.image}
+        />
+        <View style={{ width: '100%', marginBottom: 15 }}>
+          <Text style={{ fontSize: 30, fontWeight: '900' }}>{navigation.getParam('userNom')}</Text>
+        </View>
+        <View style={styles.pickerContainer}>
+          <Text style={styles.pickerTitle}>
+            Filière
+          </Text>
+          <Picker
+            style={styles.picker}
+            selectedValue={selectedFiliere?.id}
+            onValueChange={handleFiliereChange}
+          >
+            {filieres.map((filiere) => (
+              <Picker.Item key={filiere.id} label={filiere.nom} value={filiere.id} />
+            ))}
+          </Picker>
+        </View>
+      </ScrollView>
+      <TouchableOpacity onPress={() => handleRegister(nom, etudiant_prenom, etudiant_email, etudiant_password)} style={styles.button}>
+        <Text style={styles.buttonText}>S'inscrire</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {

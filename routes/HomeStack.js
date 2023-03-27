@@ -20,7 +20,7 @@ import TodayExamsScreen from "../screens/TodayExams";
 
 const screens = {
   openAppScreen: {
-    screen: openAppScreen,
+    screen: SignupScreen,
     navigationOptions: {
       headerShown: false,
     },

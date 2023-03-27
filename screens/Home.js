@@ -1,8 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
-import { AntDesign } from "@expo/vector-icons";
 import { AuthContext } from "../src/context/AuthContext";
+import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";

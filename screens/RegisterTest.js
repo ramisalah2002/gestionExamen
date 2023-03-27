@@ -8,16 +8,15 @@ import {
 } from "react-native";
 import { AuthContext } from "../src/context/AuthContext";
 import axios from "axios";
-import { BASE_URL } from "../src/config";
 
-const RegisterScreen = () => {
+
+const RegisterTestScreen = () => {
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password_confirmation, setPassword_confirmation] = useState("");
   const [filiere_id, setFiliere_id] = useState("");
-  const val = useContext(AuthContext);
 
   const handleRegister = (
     nom,
@@ -48,7 +47,6 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
-      <Text>{val}</Text>
       <TextInput
         style={styles.input}
         placeholder="Nom"
@@ -140,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterScreen;
+export default RegisterTestScreen;
