@@ -51,7 +51,7 @@ export default function RecentExamsScreen({ navigation }) {
                 />
               </TouchableOpacity>
               <View style={styles.correction}>
-                <Text style={styles.question}>Programmation PAVA</Text>
+                <Text style={styles.question}>MTP</Text>
                 <Text style={styles.espace}> </Text>
                 <Text
                   style={{
@@ -60,7 +60,32 @@ export default function RecentExamsScreen({ navigation }) {
                     color: "#3c7da6"
                   }}
                 >
-                13-04-2023
+                13-03-2023
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View style={styles.questionsContainer}>
+            <View style={styles.questionContainer}>
+              <TouchableOpacity onPress={()=>navigation.navigate("ExamCorrectionScreen")}>
+                <AntDesign
+                  style={styles.icon}
+                  name="right"
+                  size={35}
+                  color="black"
+                />
+              </TouchableOpacity>
+              <View style={styles.correction}>
+                <Text style={styles.question}>Pava</Text>
+                <Text style={styles.espace}> </Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "bold",
+                    color: "#3c7da6"
+                  }}
+                >
+                13-03-2023
                 </Text>
               </View>
             </View>
@@ -76,7 +101,7 @@ export default function RecentExamsScreen({ navigation }) {
                 />
               </TouchableOpacity>
               <View style={styles.correction}>
-                <Text style={styles.question}>Programmation PAVA</Text>
+                <Text style={styles.question}>Programmation Java</Text>
                 <Text style={styles.espace}> </Text>
                 <Text
                   style={{
@@ -85,7 +110,7 @@ export default function RecentExamsScreen({ navigation }) {
                     color: "#3c7da6"
                   }}
                 >
-                13-04-2023
+                14-03-2023
                 </Text>
               </View>
             </View>
