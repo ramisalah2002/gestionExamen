@@ -3,46 +3,97 @@ import {
   ScrollView,
   Switch,
   TextInput,
-  Button,
   Image,
   TouchableOpacity,
   StyleSheet,
   View,
   Text,
 } from "react-native";
-import { NativeWindStyleSheet } from "nativewind";
+
 import { AntDesign } from "@expo/vector-icons";
-import React, { useState, useEffect,useContext } from "react";
-import { AuthContext } from "../src/context/AuthContext";
-import { useAuth } from "../src/context/AuthContext";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { Formik } from "formik";
+import React, { useState, useEffect, useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
+import { AuthContext } from "../src/context/AuthContext";
 
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");
   const [editingValue, setEditingValue] = useState("");
-  const [name, setName] = useState("Laaouamir Anass");  
-  const [filiere, setFiliere] = useState("Génie Logiciel");
-  const [password, setPassword] = useState("123");
+  const { user } = useContext(AuthContext);
+  const [name, setName] = useState(user.nom + " " + user.prenom);
+  const [firstName, setFirstName] = useState(user.prenom);
+  const [lastName, setLastName] = useState(user.nom);
+  const [email, setEmail] = useState(user.email);
+  const [filiere, setFiliere] = useState("");
+  const [filiere_id, setFiliereId] = useState(null);
+  const [password, setPassword] = useState(user.password);
   const [isEditing, setIsEditing] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { user } = useContext(AuthContext);
-  const Username= user.name;
-  const Email = user.etudiantEmail;
+  const [filieres, setFilieres] = useState([]);
+  const { updateUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (user && user.filiere_id) {
+      setFiliereId(user.filiere_id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchFilieres = async () => {
+      try {
+        const response = await fetch("http://10.0.2.2:8000/api/filieres");
+        const data = await response.json();
+        setFilieres(data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des filières:", error);
+      }
+    };
+
+    fetchFilieres();
+  }, []);
+
+  useEffect(() => {
+    if (filiere_id) {
+      const fetchFiliereDetails = async () => {
+        try {
+          const response = await fetch(
+            "http://10.0.2.2:8000/api/filieres/" + filiere_id
+          );
+          const data = await response.json();
+
+          if (data && data.nom) {
+            setFiliere(data.nom);
+          }
+        } catch (error) {
+          console.error(
+            "Erreur lors de la récupération des données de la filière:",
+            error
+          );
+        }
+      };
+
+      fetchFiliereDetails();
+    }
+  }, [filiere_id]);
 
   const renderField = (label, value, editable) => {
     if (editingField === label) {
-      if (label === "Nom") {
+      if (label === "Nom" || label === "Prénom") {
         return (
           <View>
             <Text style={styles.editingTitle}>Nom et Prénom</Text>
             <TextInput
               style={styles.editingTextInput}
-              onChangeText={(text) => setName(text)}
-              placeholder="Nom et Prenom"
+              value={firstName}
+              onChangeText={(text) => setFirstName(text)}
+              placeholder="Prénom"
+            />
+            <TextInput
+              style={styles.editingTextInput}
+              value={lastName}
+              onChangeText={(text) => setLastName(text)}
+              placeholder="Nom"
             />
             <View style={styles.editingButtonsContainer}>
               <TouchableOpacity
@@ -55,9 +106,18 @@ export default function InformationsScreen({ navigation }) {
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.editingButton}
-                onPress={() => {
-                  setEditingField("");
-                  setName(name);
+                onPress={async () => {
+                  try {
+                    setEditingField("");
+                    setName(firstName + " " + lastName);
+                    // Mettre à jour l'utilisateur dans la base de données
+                    await updateUser({ nom: lastName, prenom: firstName });
+                  } catch (error) {
+                    console.error(
+                      "Erreur lors de la mise à jour des informations utilisateur:",
+                      error
+                    );
+                  }
                 }}
               >
                 <Text style={styles.editingButtonText}>Sauvegarder</Text>
@@ -128,6 +188,39 @@ export default function InformationsScreen({ navigation }) {
             </View>
           );
         }
+        if (label === "Email") {
+          return (
+            <View>
+              <Text style={styles.editingTitle}>{label}</Text>
+              <TextInput
+                style={styles.editingTextInput}
+                value={editingValue}
+                onChangeText={(text) => setEditingValue(text)}
+              />
+              <View style={styles.editingButtonsContainer}>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                    setEditingValue("");
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Annuler</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.editingButton}
+                  onPress={() => {
+                    setEditingField("");
+                    setEmail(editingValue);
+                    updateUser({ email: editingValue });
+                  }}
+                >
+                  <Text style={styles.editingButtonText}>Sauvegarder</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          );
+        }
         if (label === "Filiere") {
           return (
             <View>
@@ -139,15 +232,15 @@ export default function InformationsScreen({ navigation }) {
                   setEditingValue(itemValue)
                 }
               >
-                <Picker.Item label="Génie Logiciel" value="Génie Logiciel" />
-                <Picker.Item label="Informatique" value="Informatique" />
-                <Picker.Item
-                  label="Réseaux et Télécommunications"
-                  value="Réseaux et Télécommunications"
-                />
-                <Picker.Item label="Génie Civil" value="Génie Civil" />
-                {/* Ajoutez d'autres filières si nécessaire */}
+                {filieres.map((filiere) => (
+                  <Picker.Item
+                    key={filiere.id}
+                    label={filiere.nom}
+                    value={filiere.id}
+                  />
+                ))}
               </Picker>
+
               <View style={styles.editingButtonsContainer}>
                 <TouchableOpacity
                   style={styles.editingButton}
@@ -161,7 +254,8 @@ export default function InformationsScreen({ navigation }) {
                   style={styles.editingButton}
                   onPress={() => {
                     setEditingField("");
-                    setFiliere(editingValue);
+                    setFiliereId(editingValue);
+                    updateUser({ filiere_id: editingValue });
                   }}
                 >
                   <Text style={styles.editingButtonText}>Sauvegarder</Text>
@@ -244,8 +338,8 @@ export default function InformationsScreen({ navigation }) {
       <ScrollView showsVerticalScrollIndicator={false}>
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
-        <View style={{width:'100%',}}>
-            <TouchableOpacity onPress={()=>navigation.goBack()}>
+          <View style={{ width: "100%" }}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <AntDesign
                 style={styles.iconBack}
                 name="arrowleft"
@@ -266,8 +360,8 @@ export default function InformationsScreen({ navigation }) {
           />
         </View>
         <View style={styles.informationsContainer}>
-          {renderField("Nom", Username, true)}
-          {renderField("Email", Email, true)}
+          {renderField("Nom", firstName + " " + lastName, true)}
+          {renderField("Email", email, true)}
           {renderField("Filiere", filiere, true)}
           {renderField("Password", "••••••••", true)}
         </View>
@@ -381,7 +475,7 @@ const styles = StyleSheet.create({
   },
   editingButtonsContainer: {
     flexDirection: "row",
-    alignItems:'center',
+    alignItems: "center",
     justifyContent: "flex-end",
   },
   editingButton: {

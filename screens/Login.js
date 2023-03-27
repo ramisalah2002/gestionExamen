@@ -47,15 +47,15 @@ export default function LoginScreen({ navigation }) {
         if (data.token) {
           // Save the token in state or storage
           const token = data.token;
+          const id = data.etudiant.id;
           const nom = data.etudiant.nom;
           const prenom = data.etudiant.prenom;
-          const etudiantId = data.etudiant.id;
-          const etudiantEmail = data.etudiant.email;
-          const etudiantPassword = data.etudiant.password;
-          const etudiantFiliereId = data.etudiant.filiere_id;
-          
-          signIn({ token: token, name: `${prenom} ${nom}`, etudiantId: etudiantId, etudiantEmail: etudiantEmail ,etudiantPassword : etudiantPassword,etudiantFiliereId : etudiantFiliereId});
+          const email = data.etudiant.email;
+          const password = data.etudiant.password;
+          const filiere_id = data.etudiant.filiere_id;
 
+          signIn({ token: token, id : id, name: `${prenom} ${nom}`, nom: nom, prenom: prenom, email : email , password : password, filiere_id: filiere_id });
+          
           console.log("success");
           navigation.navigate("HomeScreen");
         } else {
