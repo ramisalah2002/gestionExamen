@@ -74,7 +74,7 @@ export default function InformationsScreen({ navigation }) {
       };
 
       fetchFiliereDetails();
-    }
+    } 
   }, [filiere_id]);
 
   const renderField = (label, value, editable) => {
