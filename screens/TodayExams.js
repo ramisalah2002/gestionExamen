@@ -13,122 +13,113 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 
 
-  const date = new Date();
-  const currentDate = new Date().toLocaleDateString('fr-FR');
+const CountdownTimer = ({ time }) => {
+  const [currentTime, setCurrentTime] = useState(time);
 
-  const todayExams = [
-    { id: 1, subject: 'Abd', time: 180, date: "18/03/2023", examTime: "00:54" },
-    { id: 2, subject: 'Plsql', time: 200, date: "18/03/2023", examTime: "22:45" },
-    { id: 3, subject: 'Orga', time: 120, date: "18/03/2023", examTime: "17:30" },
-  ];
-//The countdownTimer that allows to display the remaining time for the exam/////
-        const formatTime = (timeInSeconds) => {
-          const pad = (num, size) => `0${num}`.slice(size * -1);
-          const time = parseFloat(timeInSeconds).toFixed(3);
-          const hours = Math.floor(time / 60 / 60);
-          const minutes = Math.floor(time / 60) % 60;
-          const seconds = Math.floor(time - minutes * 60);
-          return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
-        };
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(intervalId);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [time]);
 
-        const CountdownTimer = ({ time }) => {
-          const [currentTime, setCurrentTime] = useState(time);
-        
-          useEffect(() => {
-            const intervalId = setInterval(() => {
-              setCurrentTime((prevTime) => {
-                if (prevTime <= 0) {
-                  clearInterval(intervalId);
-                  return 0;
-                }
-                return prevTime - 1;
-              });
-            }, 1000);
-            return () => clearInterval(intervalId);
-          }, [time]);
-        
-          return (
-            <Text style={{fontSize:20,fontWeight:'bold'}}>{formatTime(currentTime)}</Text>
-          );
-        };
+  const formatTime = (timeInSeconds) => {
+    const pad = (num, size) => `0${num}`.slice(size * -1);
+    const time = parseFloat(timeInSeconds).toFixed(3);
+    const hours = Math.floor(time / 60 / 60);
+    const minutes = Math.floor(time / 60) % 60;
+    const seconds = Math.floor(time - minutes * 60);
+    return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
+  };
 
-        const getCurrentTimeInSeconds = () => {
-          const now = new Date();
-          return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-        };
-//////////////////////////////////////////////////////////////////////////
+  return (
+    <Text style={{fontSize:20,fontWeight:'bold'}}>{formatTime(currentTime)}</Text>
+  );
+};
 
-
-
-
-
-
-
-//<TouchableOpacity style={[styles.todayCircle, { backgroundColor: '#48bee6'}]} onPress={() => console.log('Passed Exam:', exam)}>
-
-
-
-
-
+const getCurrentTimeInSeconds = () => {
+  const now = new Date();
+  return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+};
 const Tab = createMaterialTopTabNavigator();
 
 export default function TodayExamsScreen({navigation}) {
   const { user } = useContext(AuthContext);
-    return (
+  const [upcomingExams, setUpcomingExams] = useState([]);
+
+  useEffect(() => {
+    fetch("http://10.0.2.2:8000/api/upcoming-exams/4")
+      .then((response) => response.json())
+      .then((data) => {
+        setUpcomingExams(data);
+        console.log("examens success")
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
           <TouchableOpacity onPress={()=>navigation.goBack()}>
-          <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
+            <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
           </TouchableOpacity>
           <Text style={{fontSize:24,color:"#fff"}}>{user.name}</Text>
         </View>
-        <Text style={styles.titleTop}>Examens d'Aujourd’hui ( {todayExams.length} )</Text>
+        <Text style={styles.titleTop}>Examens à venir ( {upcomingExams.length} )</Text>
         <Text style={styles.textTop}>Ecole Supérieur de technologis Salé - UM5</Text>
       </View>
-        <ScrollView contentContainerStyle={styles.passedContainer}>
-          {todayExams.map((exam, index) => {
-            const examTimeInSeconds = parseInt(exam.examTime.split(':')[0], 10) * 3600 + parseInt(exam.examTime.split(':')[1], 10) * 60;
-            const timeDiffInSeconds = examTimeInSeconds - getCurrentTimeInSeconds();
-            const remainingTimeInSeconds = timeDiffInSeconds > 0 ? timeDiffInSeconds : 0;
+      <ScrollView contentContainerStyle={styles.passedContainer}>
+        {upcomingExams.map((exam, index) => {
+          const examTimeInSeconds = moment(`${exam.date}T${exam.heure}`, 'YYYY-MM-DDTHH:mm:ss').diff(moment(), 'seconds');
+          const timeDiffInSeconds = examTimeInSeconds > 0 ? examTimeInSeconds : 0;
         
-            let backgroundColor;
-            if (remainingTimeInSeconds <= 0) {
-              backgroundColor = 'blue';
-            } else if (remainingTimeInSeconds < 3600) {
-              backgroundColor = 'lightcoral';
-            } else if (remainingTimeInSeconds < 10800) {
-              backgroundColor = 'orange';
-            } else {
-              backgroundColor = 'lightgreen';
-            }
-            return (
-              <View style={styles.row} key={index}>
-                <View style={{ width: '100%', alignItems: 'center' }}>
-                  <View style={{ width: '100%' }}>
-                    <Text style={styles.name}>
-                      <Text style={styles.subject}>{exam.subject}</Text>
-                    </Text>
-                    <Text style={styles.date}>{exam.date}</Text>
-                  </View>
-                  {remainingTimeInSeconds > 0 ? (
-                    <View style={[styles.todayCircle, { backgroundColor }]}>
-                      <CountdownTimer time={remainingTimeInSeconds} />
-                    </View>
-                  ) : (
-                    <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen")} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
-                      <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
-                    </TouchableOpacity>
-                  )}
+          let backgroundColor;
+          if (timeDiffInSeconds <= 0) {
+            backgroundColor = 'blue';
+          } else if (timeDiffInSeconds < 3600) {
+            backgroundColor = 'lightcoral';
+          } else if (timeDiffInSeconds < 10800) {
+            backgroundColor = 'orange';
+          } else {
+            backgroundColor = 'lightgreen';
+          }
+          return (
+            <View style={styles.row} key={index}>
+              <View style={{ width: '100%', alignItems: 'center' }}>
+                <View style={{ width: '100%' }}>
+                  <Text style={styles.name}>
+                    <Text style={styles.subject}>{exam.matiere_nom}</Text>
+                  </Text>
+                  <Text style={styles.date}>{exam.date} {exam.heure}</Text>
                 </View>
+                {timeDiffInSeconds > 0 ? (
+                  <View style={[styles.todayCircle, { backgroundColor }]}>
+                    <CountdownTimer time={timeDiffInSeconds} />
+                  </View>
+                ) : (
+                  <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen")} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
+                  </TouchableOpacity>
+                )}
               </View>
-            );
-          })}
-        </ScrollView>
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
   );
 }
+
 
 const styles = StyleSheet.create({
   passedContainer: {

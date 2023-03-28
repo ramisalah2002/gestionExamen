@@ -98,8 +98,8 @@ const questions = [
     ],
   },
 ];
-
-const EXAM_DURATION = 2 * 60 * 60 * 1000; // Exam duration is 2 hours in milliseconds
+const duree_minutes = 120;
+const EXAM_DURATION = duree_minutes * 60 * 1000; // Exam duration is 2 hours in milliseconds
 
 export default function passerExamScreen({ navigation }) {
 
