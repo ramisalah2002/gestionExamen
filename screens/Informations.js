@@ -339,7 +339,7 @@ export default function InformationsScreen({ navigation }) {
         <StatusBar style="dark" />
         <View style={styles.titleContainer}>
           <View style={{ width: "100%" }}>
-            <TouchableOpacity onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.navigate("HomeScreen",{user})}>
               <AntDesign
                 style={styles.iconBack}
                 name="arrowleft"
