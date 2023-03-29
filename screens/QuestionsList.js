@@ -1,40 +1,57 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
+import ExamCorrectionScreen from "./ExamCorrection";
+import { AuthContext } from "../src/context/AuthContext";
 
-const QuestionsList = ({navigation}) => {
-  const [data, setData] = useState([]);
+export default function QuestionsList({ navigation }) {
+  // const [data, setData] = useState([]);
 
-
-
+  const { user } = useContext(AuthContext);
+  const [etudiantId, setEtudiantId] = useState(user.id);
+  // const [examenId, setExamenId] = useState("100");
+  const { authToken } = useContext(AuthContext);
+  const [resultats, setResultats] = useState([]);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
+  const [examenId, setExamenId] = useState(navigation.getParam("examenId"));
+  const handleIconClick = (index) => {
+    if (selectedQuestionIndex === index) {
+      setSelectedQuestionIndex(null);
+    } else {
+      setSelectedQuestionIndex(index);
+    }
+  };
   useEffect(() => {
-    axios
-      .get("https://reqres.in/api/users?page=2")
-      .then((response) => {
-        setData(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    const fetchResultats = async () => {
+      try {
+        const response = await fetch(
+          `http://10.0.2.2:8000/api/etudiant/${etudiantId}/examen/${examenId}/resultats`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        const data = await response.json();
+        setResultats(data.resultats);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des résultats:", error);
+      }
+    };
 
-  // Changes that I need to do
-  // first-name à changé par reponse
-  // last-name à changé par correction
-  // first-name à changé par reponse
-  // id à changé par numéro seulement dans <Text style={styles.question}>Question {item.id}</Text>
-  // Quelque nom de variable pour que le code soit plus clair
+    fetchResultats();
+  }, [etudiantId, examenId, authToken]);
 
   return (
     <View>
-      {data.map((item) => {
-        const isCorrect = item.first_name === item.last_name;
+      {resultats.map((resultat, index) => {
+        const isCorrect = resultat.est_correct;
         return (
-          <View key={item.id}>
-            <View key={item.id} style={styles.questionContainer}>
-              <TouchableOpacity>
+          <View key={index}>
+            <View key={index} style={styles.questionContainer}>
+              <TouchableOpacity onPress={() => handleIconClick(index)}>
                 <AntDesign
                   style={styles.icon}
                   name="right"
@@ -43,17 +60,29 @@ const QuestionsList = ({navigation}) => {
                 />
               </TouchableOpacity>
               <View style={styles.correction}>
-                <Text style={styles.question}>Question 1</Text>
+                <Text style={styles.question}>{resultat.question}</Text>
                 <Text style={styles.espace}> </Text>
                 <Text
                   style={{
                     fontSize: 12,
                     fontWeight: "bold",
-                    color: "#3c7da6"
+                    color: isCorrect ? "#5ee093" : "#f14746",
                   }}
                 >
-                Correcte
+                  {" "}
+                  {resultat.est_correct ? "Correct" : "Incorrect"}
                 </Text>
+
+                {selectedQuestionIndex === index && (
+                  <>
+                    <Text style={styles.studentAnswer}>
+                      Votre Reponse : {resultat.reponse_etudiant}
+                    </Text>
+                    <Text style={styles.correctAnswer}>
+                      Proposition correcte: {resultat.proposition_correcte}
+                    </Text>
+                  </>
+                )}
               </View>
             </View>
             <View style={styles.horizontaleLine} />
@@ -62,36 +91,9 @@ const QuestionsList = ({navigation}) => {
       })}
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    flex: 1,
-  },
-  questionContainer: {
-    width: "100%",
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  infoBox: {
-    flexDirection: "row",
-    paddingVertical: 20,
-    //marginTop:10,
-  },
-  topIcons: {
-    marginTop: 50,
-    flexDirection: "row",
-    alignItems: "center",
-    marginLeft: "4%",
-    width: "92%",
-    justifyContent: "space-between",
-  },
-  header: {
-    backgroundColor: "#46bee6",
-    width: "100%",
-    flexDirection: "column",
-  },
+  
   note: {
     backgroundColor: "#5ee093",
     color: "#FFFF",
@@ -187,5 +189,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1.7,
     borderBottomColor: "#eeee",
   },
+  studentAnswer: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#1a1c20",
+    marginTop: 5,
+  },
+  correctAnswer: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#1a1c20",
+    marginTop: 5,
+  },
 });
-export default QuestionsList;

@@ -17,6 +17,7 @@ import RecentExamsScreen from "../screens/recentExams";
 import UserList from "../screens/UserList";
 import openAppScreen from "../screens/openApp";
 import TodayExamsScreen from "../screens/TodayExams";
+import ExamCorrectionList from "../screens/ExamsList";
 
 const screens = {
   openAppScreen: {
@@ -91,6 +92,12 @@ const screens = {
       headerShown: false,
     },
   },
+  ExamCorrectionList: {
+    screen: ExamCorrectionList,
+    navigationOptions: {
+      headerShown: false,
+    },
+  }
 };
 
 const HomeStack = createStackNavigator(screens);

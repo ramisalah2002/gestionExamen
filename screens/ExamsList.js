@@ -1,40 +1,76 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
+import ExamCorrectionScreen from "./ExamCorrection";
+import { AuthContext } from "../src/context/AuthContext";
 
-const ExamsList = ({navigation}) => {
-  const [data, setData] = useState([]);
+export default function ExamCorrectionList({ navigation }) {
+  // const [data, setData] = useState([]);
 
+  const { user } = useContext(AuthContext);
+  const [etudiantId, setEtudiantId] = useState(user.id);
+  const [examenId, setExamenId] = useState("100");
+  const { authToken } = useContext(AuthContext);
+  const [resultats, setResultats] = useState([]);
+  const [selectedQuestionIndex, setSelectedQuestionIndex] = useState(null);
 
-
+  const handleIconClick = (index) => {
+    if (selectedQuestionIndex === index) {
+      setSelectedQuestionIndex(null);
+    } else {
+      setSelectedQuestionIndex(index);
+    }
+  };
   useEffect(() => {
-    axios
-      .get("https://reqres.in/api/users?page=2")
-      .then((response) => {
-        setData(response.data.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    const fetchResultats = async () => {
+      try {
+        const response = await fetch(
+          `http://10.0.2.2:8000/api/etudiant/${etudiantId}/examen/${examenId}/resultats`,
+          {
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+        const data = await response.json();
+        setResultats(data.resultats);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des résultats:", error);
+      }
+    };
+
+    fetchResultats();
+  }, [etudiantId, examenId, authToken]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("Mon url")
+  //     .then((response) => {
+  //       setData(response.data.data);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, []);
 
   // Changes that I need to do
-  // first-name à changé par reponse
-  // last-name à changé par correction
-  // first-name à changé par reponse
+  // reponse à changé par reponse
+  // correction à changé par correction
+  // reponse à changé par reponse
   // id à changé par numéro seulement dans <Text style={styles.question}>Question {item.id}</Text>
   // Quelque nom de variable pour que le code soit plus clair
 
   return (
     <View>
-      {data.map((item) => {
-        const isCorrect = item.first_name === item.last_name;
+      {resultats.map((resultat, index) => {
+        const isCorrect =
+          resultat.reponse_etudiant === resultat.proposition_correcte;
         return (
-          <View key={item.id}>
-            <View key={item.id} style={styles.questionContainer}>
-              <TouchableOpacity>
+          <View key={index}>
+            <View key={index} style={styles.questionContainer}>
+              <TouchableOpacity onPress={() => handleIconClick(index)}>
                 <AntDesign
                   style={styles.icon}
                   name="right"
@@ -43,17 +79,31 @@ const ExamsList = ({navigation}) => {
                 />
               </TouchableOpacity>
               <View style={styles.correction}>
-                <Text style={styles.question}>Programmation Java</Text>
+                <Text style={styles.question}>{resultat.question}</Text>
                 <Text style={styles.espace}> </Text>
                 <Text
                   style={{
                     fontSize: 12,
                     fontWeight: "bold",
-                    color: "#3c7da6"
+                    color: isCorrect ? "#5ee093" : "#f14746",
                   }}
                 >
-                13-04-2023
+                  {" "}
+                  {resultat.reponse_etudiant === resultat.proposition_correcte
+                    ? "Correct"
+                    : "Incorrect"}
                 </Text>
+
+                {selectedQuestionIndex === index && (
+                  <>
+                    <Text style={styles.studentAnswer}>
+                      Reponse Etudiant: {resultat.reponse_etudiant}
+                    </Text>
+                    <Text style={styles.correctAnswer}>
+                      Proposition Correcte: {resultat.proposition_correcte}
+                    </Text>
+                  </>
+                )}
               </View>
             </View>
             <View style={styles.horizontaleLine} />
@@ -62,45 +112,48 @@ const ExamsList = ({navigation}) => {
       })}
     </View>
   );
-};
+}
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
   },
-  questionContainer: {
+  header: {
+    backgroundColor: "#302ead",
     width: "100%",
-    flexDirection: "row-reverse",
-    alignItems: "center",
-    justifyContent: "space-between",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    paddingTop: 50,
+    paddingBottom: 20,
+    paddingHorizontal: 25,
+  },
+  topIcons: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  icon: {
+    marginLeft: 15,
   },
   infoBox: {
     flexDirection: "row",
-    paddingVertical: 20,
-    //marginTop:10,
-  },
-  topIcons: {
-    marginTop: 50,
-    flexDirection: "row",
     alignItems: "center",
-    marginLeft: "4%",
-    width: "92%",
-    justifyContent: "space-between",
-  },
-  header: {
-    backgroundColor: "#46bee6",
-    width: "100%",
-    flexDirection: "column",
+    marginTop: 10,
   },
   note: {
     backgroundColor: "#5ee093",
-    color: "#FFFF",
     height: 75,
     width: 75,
     borderRadius: 10,
-    marginLeft: "4%",
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noteText: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#FFFF",
+  },
+  leftBox: {
+    marginLeft: 15,
   },
   leftTextFirst: {
     fontSize: 18,
@@ -111,43 +164,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#FFFF",
   },
-  noteText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: "#FFFF",
-  },
-  leftBox: {
-    height: 75,
-    borderRadius: 10,
-    marginLeft: "2%",
-    paddingRight: "22%",
-    justifyContent: "center", // center vertically
-    alignItems: "flex-start", // center horizontally
-  },
   body: {
-    backgroundColor: "#FFFF",
-    resizeMode: "contain",
-    height: "12%",
-    width: "100%",
-    minWidth: "100%",
-    alignSelf: "center",
-    alignItems: "center",
-    justifyContent: "space-between",
     flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    height: "12%",
+    backgroundColor: "#FFFF",
+    borderBottomLeftRadius: 25,
+    borderBottomRightRadius: 25,
+    paddingHorizontal: 25,
     shadowColor: "grey",
     shadowOffset: { width: 0, height: 7 },
     shadowOpacity: 0.2,
     elevation: 2, // for Android only
-  },
-  bodyLeft: {
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-    marginLeft: "20%",
-  },
-  bodyRight: {
-    justifyContent: "center", // center vertically
-    alignItems: "center", // center horizontally
-    marginRight: "20%",
   },
   bodyFirstText: {
     color: "#1a1c20",
@@ -165,7 +194,6 @@ const styles = StyleSheet.create({
     height: 10,
   },
   innerContainer: {
-    backgroundColor: "transparent",
     paddingTop: 25,
     paddingLeft: 25,
     paddingRight: 25,
@@ -183,9 +211,30 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
   },
+  answerTrue: {
+    fontSize: 12,
+    color: "#5ee093",
+    fontWeight: "bold",
+  },
+  answerFalse: {
+    fontSize: 12,
+    color: "#f14746",
+    fontWeight: "bold",
+  },
   horizontaleLine: {
     borderBottomWidth: 1.7,
     borderBottomColor: "#eeee",
   },
+  studentAnswer: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#1a1c20",
+    marginTop: 5,
+  },
+  correctAnswer: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#1a1c20",
+    marginTop: 5,
+  },
 });
-export default ExamsList;

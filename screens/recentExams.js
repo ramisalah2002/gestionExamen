@@ -2,31 +2,67 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../src/context/AuthContext";
 import { AntDesign } from "@expo/vector-icons";
-import { StyleSheet, View, Text, ScrollView, FlatList, Touchable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  FlatList,
+  Touchable,
+} from "react-native";
 import ExamsList from "./ExamsList";
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
 
 export default function RecentExamsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
-  const pressHandlerClose = () =>{
+  const [examens, setExamens] = useState([]);
+  const pressHandlerClose = () => {
     navigation.goBack();
-  }
+  };
+  useEffect(() => {
+    const fetchExamens = async () => {
+      try {
+        const response = await fetch(
+          `http://10.0.2.2:8000/api/etudiants/${user.id}/examens-passes`
+        );
+        const data = await response.json();
+        const examensArray = Object.keys(data.examens).flatMap((matiere) =>
+          data.examens[matiere].map((examen) => ({
+            id: examen.id,
+            date: examen.date,
+            nom: matiere,
+            date: examen.date,
+          }))
+        );
+        setExamens(examensArray);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des examens:", error);
+      }
+    };
+
+    fetchExamens();
+  }, [user.id]);
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
-      <View style={styles.topIcons}>
+        <View style={styles.topIcons}>
           <TouchableOpacity onPress={pressHandlerClose}>
-          <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
+            <AntDesign
+              style={styles.icon}
+              name="arrowleft"
+              size={30}
+              color="white"
+            />
           </TouchableOpacity>
-          <Text style={{fontSize:24,color:'#fff'}}>{user.name}</Text>
+          <Text style={{ fontSize: 24, color: "#fff" }}>{user.name}</Text>
         </View>
         <View style={styles.infoBox}>
           <View style={styles.leftBox}>
             <Text style={styles.leftTextFirst}>
-              Examens passés ( 6 )
+              Examens passés ( {examens.length} )
             </Text>
             <Text style={styles.espace}> </Text>
             <Text style={styles.leftTextSecond}>
@@ -35,86 +71,46 @@ export default function RecentExamsScreen({ navigation }) {
           </View>
         </View>
       </View>
-      
+
       <ScrollView>
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Liste des examens passés</Text>
           <Text style={styles.espace}> </Text>
-          <View style={styles.questionsContainer}>
-            <View style={styles.questionContainer}>
-              <TouchableOpacity onPress={()=>navigation.navigate("ExamCorrectionScreen")}>
-                <AntDesign
-                  style={styles.icon}
-                  name="right"
-                  size={35}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <View style={styles.correction}>
-                <Text style={styles.question}>MTP</Text>
-                <Text style={styles.espace}> </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "bold",
-                    color: "#3c7da6"
-                  }}
+          {examens.map((examen, index) => (
+            <View key={index} style={styles.questionsContainer}>
+              <View style={styles.questionContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("ExamCorrectionScreen", {
+                      examenId: examen.id,
+                      examenNom: examen.nom,
+                      examenDate: examen.date,
+                    })
+                  }
                 >
-                13-03-2023
-                </Text>
+                  <AntDesign
+                    style={styles.icon}
+                    name="right"
+                    size={35}
+                    color="black"
+                  />
+                </TouchableOpacity>
+                <View style={styles.correction}>
+                  <Text style={styles.question}>{examen.nom}</Text>
+                  <Text style={styles.espace}> </Text>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "bold",
+                      color: "#3c7da6",
+                    }}
+                  >
+                    {examen.date}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={styles.questionsContainer}>
-            <View style={styles.questionContainer}>
-              <TouchableOpacity onPress={()=>navigation.navigate("ExamCorrectionScreen")}>
-                <AntDesign
-                  style={styles.icon}
-                  name="right"
-                  size={35}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <View style={styles.correction}>
-                <Text style={styles.question}>Pava</Text>
-                <Text style={styles.espace}> </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "bold",
-                    color: "#3c7da6"
-                  }}
-                >
-                13-03-2023
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View style={styles.questionsContainer}>
-            <View style={styles.questionContainer}>
-              <TouchableOpacity>
-                <AntDesign
-                  style={styles.icon}
-                  name="right"
-                  size={35}
-                  color="black"
-                />
-              </TouchableOpacity>
-              <View style={styles.correction}>
-                <Text style={styles.question}>Programmation Java</Text>
-                <Text style={styles.espace}> </Text>
-                <Text
-                  style={{
-                    fontSize: 14,
-                    fontWeight: "bold",
-                    color: "#3c7da6"
-                  }}
-                >
-                14-03-2023
-                </Text>
-              </View>
-            </View>
-          </View>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -130,22 +126,22 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row-reverse",
     alignItems: "center",
-    padding:5,
+    padding: 5,
     justifyContent: "space-between",
   },
   questionsContainer: {
-    width:"100%",
-    borderWidth:1,
-    borderColor:"#d0ecfe",
-    backgroundColor:"#d0ecfe",
-    borderRadius:5,
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#d0ecfe",
+    backgroundColor: "#d0ecfe",
+    borderRadius: 5,
     shadowColor: "#d0ecfe",
     shadowOffset: {
       width: 0,
       height: 1,
     },
     shadowOpacity: 0.1,
-    marginBottom:10,
+    marginBottom: 10,
     shadowRadius: 1.84,
     elevation: 1,
   },
@@ -228,14 +224,14 @@ const styles = StyleSheet.create({
     height: 10,
   },
   innerContainer: {
-    marginTop:20,
+    marginTop: 20,
     backgroundColor: "transparent",
-    paddingHorizontal:7,
+    paddingHorizontal: 7,
   },
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom:10,
+    marginBottom: 10,
     color: "#66707c",
   },
   correction: {
