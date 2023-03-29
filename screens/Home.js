@@ -58,6 +58,7 @@ export default function HomeScreen({ navigation, route }) {
     navigation.navigate("InformationsScreen", {
       name: user.name,
       email: user.email,
+      filiereId : user.filiere_id,
       token: user.token,
     });
   };

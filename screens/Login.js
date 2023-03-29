@@ -56,7 +56,7 @@ export default function LoginScreen({ navigation }) {
 
           signIn({ token: token, id : id, name: `${prenom} ${nom}`, nom: nom, prenom: prenom, email : email , password : password, filiere_id: filiere_id });
           
-          console.log("success");
+          console.log("connecté avec succès");
           navigation.navigate("HomeScreen");
         } else {
           setError(data.error || "Erreur inconnue");
@@ -64,7 +64,7 @@ export default function LoginScreen({ navigation }) {
       })
       .catch((error) => {
         console.error(error);
-        setError("Something went wrong");
+        setError("une erreur est survenue");
       });
   };
 

@@ -17,16 +17,19 @@ import {
 } from "react-native";
 
 
-export default function passerExam() {
+export default function passerExam({navigation}) {
   const [remainingTime, setRemainingTime] = useState(0);
   const [examData, setExamData] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  const exam_id = navigation.getParam('examId');
   
+  const link = "http://10.0.2.2:8000/api/examens/"+exam_id+"";
 
   useEffect(() => {
     const fetchExam = async () => {
       try {
-        const response = await fetch('http://10.0.2.2:8000/api/examens/100');
+        const response = await fetch(link);
         const examData = await response.json();
         setExamData(examData);
         const duration = parseInt(examData.duree) * 60 * 1000;
