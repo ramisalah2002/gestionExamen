@@ -16,97 +16,46 @@ import {
   TouchableOpacity
 } from "react-native";
 
-const questions = [
-  {
-    id: 1,
-    question: 'What is the capital of France?',
-    options: [
-      { id: 1, label: 'Paris', selected: false },
-      { id: 2, label: 'Madrid', selected: false },
-      { id: 3, label: 'Rome', selected: false },
-      { id: 4, label: 'Berlin', selected: false },
-    ],
-  },
-  {
-    id: 2,
-    question: 'What is the largest country by area?',
-    options: [
-      { id: 1, label: 'Russia', selected: false },
-      { id: 2, label: 'China', selected: false },
-      { id: 3, label: 'United States', selected: false },
-      { id: 4, label: 'Canada', selected: false },
-    ],
-  },
-  {
-    id: 3,
-    question: 'What is the capital of France?',
-    options: [
-      { id: 1, label: 'Paris', selected: false },
-      { id: 2, label: 'Madrid', selected: false },
-      { id: 3, label: 'Rome', selected: false },
-      { id: 4, label: 'Berlin', selected: false },
-    ],
-  },
-  {
-    id: 4,
-    question: 'What is the largest country by area?',
-    options: [
-      { id: 1, label: 'Russia', selected: false },
-      { id: 2, label: 'China', selected: false },
-      { id: 3, label: 'United States', selected: false },
-      { id: 4, label: 'Canada', selected: false },
-    ],
-  },
-  {
-    id: 5,
-    question: 'What is the capital of France?',
-    options: [
-      { id: 1, label: 'Paris', selected: false },
-      { id: 2, label: 'Madrid', selected: false },
-      { id: 3, label: 'Rome', selected: false },
-      { id: 4, label: 'Berlin', selected: false },
-    ],
-  },
-  {
-    id: 6,
-    question: 'What is the largest country by area?',
-    options: [
-      { id: 1, label: 'Russia', selected: false },
-      { id: 2, label: 'China', selected: false },
-      { id: 3, label: 'United States', selected: false },
-      { id: 4, label: 'Canada', selected: false },
-    ],
-  },
-  {
-    id: 7,
-    question: 'What is the capital of France?',
-    options: [
-      { id: 1, label: 'Paris', selected: false },
-      { id: 2, label: 'Madrid', selected: false },
-      { id: 3, label: 'Rome', selected: false },
-      { id: 4, label: 'Berlin', selected: false },
-    ],
-  },
-  {
-    id: 8,
-    question: 'What is the largest country by area?',
-    options: [
-      { id: 1, label: 'Russia', selected: false },
-      { id: 2, label: 'China', selected: false },
-      { id: 3, label: 'United States', selected: false },
-      { id: 4, label: 'Canada', selected: false },
-    ],
-  },
-];
-const duree_minutes = 120;
-const EXAM_DURATION = duree_minutes * 60 * 1000; // Exam duration is 2 hours in milliseconds
 
-export default function passerExamScreen({ navigation }) {
-
-  const [selectedAnswers, setSelectedAnswers] = useState([]);
-  const [isActive, setIsActive] = useState(true);
+export default function passerExam() {
+  const [remainingTime, setRemainingTime] = useState(0);
+  const [examData, setExamData] = useState(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   
-  const [remainingTime, setRemainingTime] = useState(EXAM_DURATION);
+
+  useEffect(() => {
+    const fetchExam = async () => {
+      try {
+        const response = await fetch('http://10.0.2.2:8000/api/examens/1');
+        const examData = await response.json();
+        setExamData(examData);
+        const duration = parseInt(examData.duree) * 60 * 1000;
+        setRemainingTime(duration)
+        console.log(duration);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchExam();
+  }, []);
+
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+
+  
+
+  
+
+  const handleAnswerPress = (propositionId) => {
+    setSelectedAnswer(propositionId);
+  }
+
+  useEffect(() => {
+    console.log(selectedAnswer);
+  }, [selectedAnswer]);
+
+
+  
+
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -127,194 +76,161 @@ export default function passerExamScreen({ navigation }) {
   }
 
   
-  const handleSelectAnswer = (questionId, optionId) => {
-    const question = questions.find((q) => q.id === questionId);
-    const option = question.options.find((o) => o.id === optionId);
-
-    // If the option is already selected, deselect it
-    if (option.selected) {
-      option.selected = false;
-      setSelectedAnswers((prevSelectedAnswers) =>
-        prevSelectedAnswers.filter(
-          (answer) => answer.questionId !== questionId
-        )
-      );
-    } else {
-      // Otherwise, select the new option and deselect the others
-      question.options.forEach((o) => {
-        if (o.id !== optionId) {
-          o.selected = false;
-        } else {
-          o.selected = true;
-        }
-      });
-      setSelectedAnswers((prevSelectedAnswers) => [
-        ...prevSelectedAnswers,
-        { questionId, optionId },
-      ]);
-    }
-  };
-
-  const handleSubmit = () => {
-    console.log(selectedAnswers);
-    setModalVisible(true)
-    // Do something with the selected answers, such as grade the exam
-  };
-
-  const handleClear = () => {
-    questions.forEach((q) => {
-      q.options.forEach((o) => {
-        o.selected = false;
-      });
-    });
-    setSelectedAnswers([]);
-  };
-
-  // Count the number of answered questions
-  useEffect(() => {
-    const count = questions.reduce((total, question) => {
-      const answer = selectedAnswers.find((a) => a.questionId === question.id);
-      return answer ? total + 1 : total;
-    }, 0);
-    setNumAnswered(count);
-  }, [selectedAnswers]);
 
   
 
+  const handleContinuePress = () => {
+    if (currentQuestionIndex < examData.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      const response = {
+        etudiant_id: 330,
+        question_id: currentQuestion.id,
+        proposition_id: selectedAnswer,
+      };
+  
+      fetch('http://10.0.2.2:8000/api/reponses/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+          alert('An error occurred while submitting your response.');
+        });
+    }else{
+      const response = {
+        etudiant_id: 330,
+        question_id: currentQuestion.id,
+        proposition_id: selectedAnswer,
+      };
+  
+      fetch('http://10.0.2.2:8000/api/reponses/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(response),
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+          alert('An error occurred while submitting your response.');
+        });
+    }
+  }
 
-  const [modalVisible, setModalVisible] = useState(false);
+  if (!examData) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading exam data...</Text>
+      </View>
+    );
+  }
 
-  const handleConfirm = () => {
-    // here we should save the submitted answers and go back to the precedent screen
-    setModalVisible(false);
-    navigation.goBack();
-  };
-
-  const handleCancel = () => {
-    // Handle cancel action
-    setModalVisible(false);
-  };
+  const currentQuestion = examData.questions[currentQuestionIndex];
 
   return (
-    <View style={styles.container}>
+    <View style={styles.Bigcontainer}>
       <StatusBar style="light" />
-        <View style={styles.header} resizeMode="cover">
-        <View style={styles.topIcons}>
-          <TouchableOpacity onPress={handleSubmit}>
-            <AntDesign
-              style={styles.icon}
-              name="arrowleft"
-              size={30}
-              color="white"
-            />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>RAMI Salah-eddine</Text>
-        </View>
-        <View style={{width:'100%',marginBottom:10}}>
-            <Text style={styles.titleTop}>Examen : Java</Text>
-        </View>
-        <View style={styles.headerTimer}>
-            <View style={styles.headerScore}>
-                <Text style={styles.itemTitle}>Score</Text>
-                <View style={styles.itemScoreContainer}>
-                  <Text style={styles.scoreNumber}>{numAnswered}</Text>
-                </View>
-            </View>
-            <View style={styles.headerCountdown}>
-                <Text style={styles.itemTitle}>Temps restant</Text>
-                <View style={styles.countdownTime}>
-                    <View style={styles.itemHourContainer}>
-                      <Text style={styles.HourNumber}>0{hourNumber}</Text>
-                    </View>
-                    <View style={styles.itemMinuteContainer}>
-                      <Text style={styles.MinuteNumber}>{zero}{minuteNumber}</Text>
-                    </View>
-                </View>
-            </View>
-        </View>
+      <View style={styles.header} resizeMode="cover">
+      <View style={styles.topIcons}>
+        <TouchableOpacity >
+          <AntDesign
+            style={styles.icon}
+            name="arrowleft"
+            size={30}
+            color="white"
+          />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>{examData.questions.length}</Text>
+      </View>
+      <View style={{width:'100%',marginBottom:10}}>
+        <Text style={styles.titleTop}>Examen : {examData.matiere.nom}</Text>
+      </View>
+      <View style={styles.headerTimer}>
+          <View style={styles.headerScore}>
+              <Text style={styles.itemTitle}>Question</Text>
+              <View style={styles.itemScoreContainer}>
+                <Text style={styles.scoreNumber}>N°{currentQuestionIndex+1}</Text>
+              </View>
+          </View>
+          <View style={styles.headerCountdown}>
+              <Text style={styles.itemTitle}>Temps restant</Text>
+              <View style={styles.countdownTime}>
+                  <View style={styles.itemHourContainer}>
+                    <Text style={styles.HourNumber}>0{hourNumber}</Text>
+                  </View>
+                  <View style={styles.itemMinuteContainer}>
+                    <Text style={styles.MinuteNumber}>{zero}{minuteNumber}</Text>
+                  </View>
+              </View>
+          </View>
+      </View>
     </View>
-        
-            <View style={[styles.infoContainer,{marginTop:10,paddingHorizontal: 20,}]}>
+    <View style={[styles.infoContainer,{marginTop:10,paddingHorizontal: 20,}]}>
                 <Text style={styles.bodyFirstText}>Informations sur l'examen</Text>
                 <View style={[styles.info,{flexDirection:'row',alignItems:'center',}]}>
                     <View style={styles.itemQuestionsContainer}>
                         <Text style={styles.questionsNumber}>Questions</Text>
-                        <Text style={styles.itemTitle}>{questions.length}</Text>
+                        <Text style={styles.itemTitle}>{examData.questions.length}</Text>
                     </View>
                     <View style={styles.itemTimeContainer}>
                         <Text style={styles.questionsNumber}>Temps d'examen</Text>
-                        <Text style={styles.itemTitle}>02H00M</Text>
+                        <Text style={styles.itemTitle}>{examData.duree} minutes</Text>
                     </View>
                 </View>
             </View>
-            <ScrollView>
-              <View style={[styles.questionsContainer,{marginTop:20,paddingHorizontal: 20,}]}>
-              {questions.map((question) => (
-                  <View key={question.id} style={styles.questContainer}>
-                      <View style={[styles.questionTitle,{flexDirection:'column',alignItems:'flex-start',}]}>
-                          <View style={{flexDirection:'row',alignItems:'center',}}>
-                              <View style={styles.questionNumberContainer}>
-                                <Text style={styles.questionNumber}>Q {question.id}</Text>
-                              </View>
-                              <Text style={styles.questionText}>{question.question}?</Text>
-                          </View>
-                          <View style={[styles.propositionsContainer,{flexDirection:'column',width:'100%',alignItems:'flex-start'}]}>
-                          {question.options.map((option) => (
-                            <CheckBox
-                              key={option.id}
-                              containerStyle={{ backgroundColor: "#f3f4f6", borderWidth: 0, padding: 0 }}
-                              checked={option.selected}
-                              checkedColor='#1dd1a1'
-                              title={option.label}
-                              textStyle={{ fontSize: 14 }}
-                              onPress={() => handleSelectAnswer(question.id, option.id)}
-                            />
-                          ))}
-                          </View>
-                      </View>
-                  </View>
-                  ))}
-                  <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-                    <Text style={styles.submitButtonText}>Finish The Exam</Text>
-                  </TouchableOpacity>
-              </View>
-            </ScrollView>
-            <Modal
-        visible={modalVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modal}>
-            <Text style={styles.modalTitle}>Confirmer la soumission</Text>
-            <Text style={styles.modalText}>
-            Êtes-vous sûr de vouloir soumettre vos réponses?
-            </Text>
-            <View style={styles.modalButtonContainer}>
-              
-              <TouchableOpacity
-                style={[styles.modalButton, styles.modalCancelButton]}
-                onPress={handleCancel}
-              >
-                <Text style={styles.modalButtonText}>Annuler</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.modalConfirmButton]}
-                onPress={handleConfirm}
-              >
-                <Text style={styles.modalButtonText}>Confirmer</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>{currentQuestion.libelle} ?</Text>
+      </View>
+      <View style={styles.propositionsContainer}>
+        {currentQuestion.propositions.map(proposition => (
+          <TouchableOpacity
+            key={proposition.id}
+            style={[
+              styles.propositionButton,
+              selectedAnswer === proposition.id && styles.propositionButtonSelected,
+            ]}
+            onPress={() => handleAnswerPress(proposition.id)}
+          >
+            <Text style={styles.propositionButtonText}>{proposition.libelle}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedAnswer === null && styles.buttonDisabled,
+          ]}
+          disabled={selectedAnswer === null}
+          onPress={handleContinuePress}
+        >
+          <Text style={styles.buttonText}>Continue</Text>
+        </TouchableOpacity>
+      </View>
+      {/* //// */}
+      
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 20,
+  },
+  Bigcontainer: {
     backgroundColor: "#f3f4f6",
     flex: 1,
   },
@@ -512,7 +428,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     paddingVertical: 15,
-    width:'100%',
+    marginLeft:10,
+    marginRight:10,
+    marginBottom:10,
   },
   submitButtonText: {
     color: 'white',
@@ -560,5 +478,55 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
     fontSize: 16,
+  },
+  examInfoText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  questionContainer: {
+    margin: 20,
+  },
+  questionText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  propositionsContainer: {
+    margin: 20,
+    width: '90%',
+  },
+  propositionButton: {
+    backgroundColor: '#ddd',
+    padding: 10,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  propositionButtonSelected: {
+    backgroundColor: '#0080ff',
+  },
+  propositionButtonText: {
+    fontSize: 18,
+    textAlign: 'center',
+  },
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    width: '100%',
+    alignItems: 'center',
+  },
+  button: {
+    backgroundColor: '#0080ff',
+    padding: 10,
+    borderRadius: 5,
+    width: '90%',
+  },
+  buttonDisabled: {
+    opacity: 0.5,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
