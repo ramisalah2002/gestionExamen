@@ -127,8 +127,10 @@ export default function ExamCorrectionScreen({ navigation }) {
                   <View key={index} style={styles.questionContainer}>
                     <TouchableOpacity onPress={() => handleIconClick(index)}>
                       <AntDesign
-                        style={styles.icon}                  
-                         name={selectedQuestionIndex === index ? "down" : "right"}
+                        style={styles.icon}
+                        name={
+                          selectedQuestionIndex === index ? "down" : "right"
+                        }
                         size={20}
                         color="black"
                       />
@@ -152,11 +154,10 @@ export default function ExamCorrectionScreen({ navigation }) {
                       {selectedQuestionIndex === index && (
                         <>
                           <Text style={styles.studentAnswer}>
-                            Votre Reponse :  {resultat.reponse_etudiant}
+                            Votre Reponse : {resultat.reponse_etudiant}
                           </Text>
                           <Text style={styles.correctAnswer}>
-                            Correction:{" "}
-                            {resultat.proposition_correcte}
+                            Correction: {resultat.proposition_correcte}
                           </Text>
                         </>
                       )}

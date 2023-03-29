@@ -19,14 +19,40 @@ export default function HomeScreen({ navigation, route }) {
   const { user } = useContext(AuthContext);
   const { userName } = useContext(AuthContext);
 
+  const [examens, setExamens] = useState([]);
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const fetchExamens = async () => {
+      try {
+        const response = await fetch(
+          `http://10.0.2.2:8000/api/etudiants/${user.id}/examens-passes`
+        );
+        const data = await response.json();
+        const examensArray = Object.keys(data.examens).flatMap((matiere) =>
+          data.examens[matiere].map((examen) => ({
+            id: examen.id,
+            nom: matiere,
+            note: "",
+          }))
+        );
+        setExamens(examensArray);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des examens:", error);
+      }
+    };
+
+    fetchExamens();
+  }, [user.id]);
+
   const pressHandlerLogout = () => {
     // ndiro logout
   };
   const pressHandlerRecent = () => {
-    navigation.navigate("RecentExamsScreen", {user});
+    navigation.navigate("RecentExamsScreen", { user });
   };
   const pressHandlerToday = () => {
-    navigation.navigate("SignupScreen", {user});
+    navigation.navigate("SignupScreen", { user });
   };
   const pressHandlerInfo = () => {
     navigation.navigate("InformationsScreen", {
@@ -196,26 +222,18 @@ export default function HomeScreen({ navigation, route }) {
                     justifyContent: "space-around",
                   }}
                 >
-                  <View style={styles.examPrevious}>
-                    <TouchableOpacity>
+                  {examens.map((examen, index) => (
+                    <View key={index} style={styles.examPrevious}>
                       <View style={styles.languageBox}>
-                        <Text style={styles.language}>PHP MYSQL</Text>
+                        <Text style={styles.language}>
+                          {examen.nom.toUpperCase()}
+                        </Text>
                       </View>
-                    </TouchableOpacity>
-                    <View style={styles.noteBox}>
-                      <Text style={styles.note}>17/20</Text>
-                    </View>
-                  </View>
-                  <View style={styles.examPrevious}>
-                    <TouchableOpacity>
-                      <View style={styles.languageBox}>
-                        <Text style={styles.language}>SQL ORACLE</Text>
+                      <View style={styles.noteBox}>
+                        <Text style={styles.note}>07/20</Text>
                       </View>
-                    </TouchableOpacity>
-                    <View style={styles.noteBox}>
-                      <Text style={styles.note}>14/20</Text>
                     </View>
-                  </View>
+                  ))}
                 </View>
               </View>
               <View>
@@ -447,6 +465,17 @@ const styles = StyleSheet.create({
   seeAll: {
     fontSize: 18,
     color: "#13129e",
+  },
+  examPreviousContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#302ea6",
+    borderRadius: 10,
+    marginLeft: 20,
+    marginRight: 10,
+    width: "40%",
+    height: 160,
+    marginBottom: 0,
   },
   examPrevious: {
     padding: 7,

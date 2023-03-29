@@ -26,7 +26,7 @@ export default function passerExam() {
   useEffect(() => {
     const fetchExam = async () => {
       try {
-        const response = await fetch('http://10.0.2.2:8000/api/examens/1');
+        const response = await fetch('http://10.0.2.2:8000/api/examens/100');
         const examData = await response.json();
         setExamData(examData);
         const duration = parseInt(examData.duree) * 60 * 1000;

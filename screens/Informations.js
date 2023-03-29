@@ -14,6 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import React, { useState, useEffect, useContext } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { AuthContext } from "../src/context/AuthContext";
+//Rah Ba9i madrt lmodification dyal l Password
 
 export default function InformationsScreen({ navigation }) {
   const [editingField, setEditingField] = useState("");

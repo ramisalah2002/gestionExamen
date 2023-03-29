@@ -56,7 +56,7 @@ export default function TodayExamsScreen({navigation}) {
   const [upcomingExams, setUpcomingExams] = useState([]);
 
   useEffect(() => {
-    fetch("http://10.0.2.2:8000/api/today-exams-filiere/4")
+    fetch("http://10.0.2.2:8000/api/today-exams-filiere/1")
       .then((response) => response.json())
       .then((data) => {
         setUpcomingExams(data);

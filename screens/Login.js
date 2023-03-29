@@ -281,7 +281,6 @@ const styles = StyleSheet.create({
     width: "85%",
     height: 30,
     borderRadius: 5,
-    border: "none",
     marginVertical: 10,
     paddingHorizontal: 10,
     fontSize: 18,
