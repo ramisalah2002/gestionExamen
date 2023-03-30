@@ -10,7 +10,6 @@ import {
   FlatList,
   Touchable,
 } from "react-native";
-import ExamsList from "./ExamsList";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
