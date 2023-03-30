@@ -231,7 +231,7 @@ export default function HomeScreen({ navigation, route }) {
                         </Text>
                       </View>
                       <View style={styles.noteBox}>
-                        <Text style={styles.note}>07/20</Text>
+                        <Text style={styles.note}>17/20</Text>
                       </View>
                     </View>
                   ))}

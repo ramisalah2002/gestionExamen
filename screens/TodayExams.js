@@ -1,17 +1,26 @@
 import React, { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../src/context/AuthContext";
-import moment from 'moment';
-import { View,StatusBar,TextInput, Text,Image, ImageBackground, StyleSheet, ScrollView, TouchableOpacity, Platform } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import moment from "moment";
+import {
+  View,
+  StatusBar,
+  TextInput,
+  Text,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { IconFill, IconOutline } from "@ant-design/icons-react-native";
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { AntDesign } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { AntDesign } from "@expo/vector-icons";
+import { NavigationContainer } from "@react-navigation/native";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 //import CountdownTimer from './CountdownTimer';
-
-
 
 const CountdownTimer = ({ time }) => {
   const [currentTime, setCurrentTime] = useState(time);
@@ -41,7 +50,9 @@ const CountdownTimer = ({ time }) => {
   };
 
   return (
-    <Text style={{fontSize:20,fontWeight:'bold'}}>{formatTime(currentTime)}</Text>
+    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+      {formatTime(currentTime)}
+    </Text>
   );
 };
 
@@ -51,16 +62,16 @@ const getCurrentTimeInSeconds = () => {
 };
 const Tab = createMaterialTopTabNavigator();
 
-export default function TodayExamsScreen({navigation}) {
+export default function TodayExamsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
   const [upcomingExams, setUpcomingExams] = useState([]);
 
   useEffect(() => {
-    fetch("http://10.0.2.2:8000/api/today-exams-filiere/4")
+    fetch("http://10.0.2.2:8000/api/today-exams-filiere/1")
       .then((response) => response.json())
       .then((data) => {
         setUpcomingExams(data);
-        console.log("examens success")
+        console.log("examens success");
       })
       .catch((error) => {
         console.error(error);
@@ -72,45 +83,71 @@ export default function TodayExamsScreen({navigation}) {
       <StatusBar style="light" />
       <View style={styles.header} resizeMode="cover">
         <View style={styles.topIcons}>
-          <TouchableOpacity onPress={()=>navigation.goBack()}>
-            <AntDesign style={styles.icon} name="arrowleft" size={30} color="white" />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <AntDesign
+              style={styles.icon}
+              name="arrowleft"
+              size={30}
+              color="white"
+            />
           </TouchableOpacity>
-          <Text style={{fontSize:24,color:"#fff"}}>{user.name}</Text>
+          <Text style={{ fontSize: 24, color: "#fff" }}>{user.name}</Text>
         </View>
-        <Text style={styles.titleTop}>Examens à venir ( {upcomingExams.length} )</Text>
-        <Text style={styles.textTop}>Ecole Supérieur de technologis Salé - UM5</Text>
+        <Text style={styles.titleTop}>
+          Examens à venir ( {upcomingExams.length} )
+        </Text>
+        <Text style={styles.textTop}>
+          Ecole Supérieur de technologis Salé - UM5
+        </Text>
       </View>
       <ScrollView contentContainerStyle={styles.passedContainer}>
         {upcomingExams.map((exam, index) => {
-          const examTimeInSeconds = moment(`${exam.date}T${exam.heure}`, 'YYYY-MM-DDTHH:mm:ss').diff(moment(), 'seconds');
-          const timeDiffInSeconds = examTimeInSeconds > 0 ? examTimeInSeconds : 0;
-        
+          const examTimeInSeconds = moment(
+            `${exam.date}T${exam.heure}`,
+            "YYYY-MM-DDTHH:mm:ss"
+          ).diff(moment(), "seconds");
+          const timeDiffInSeconds =
+            examTimeInSeconds > 0 ? examTimeInSeconds : 0;
+
           let backgroundColor;
           if (timeDiffInSeconds <= 0) {
-            backgroundColor = 'blue';
+            backgroundColor = "blue";
           } else if (timeDiffInSeconds < 3600) {
-            backgroundColor = 'lightcoral';
+            backgroundColor = "lightcoral";
           } else if (timeDiffInSeconds < 10800) {
-            backgroundColor = 'orange';
+            backgroundColor = "orange";
           } else {
-            backgroundColor = 'lightgreen';
+            backgroundColor = "lightgreen";
           }
           return (
             <View style={styles.row} key={index}>
-              <View style={{ width: '100%', alignItems: 'center' }}>
-                <View style={{ width: '100%' }}>
+              <View style={{ width: "100%", alignItems: "center" }}>
+                <View style={{ width: "100%" }}>
                   <Text style={styles.name}>
                     <Text style={styles.subject}>{exam.matiere_nom}</Text>
                   </Text>
-                  <Text style={styles.date}>{exam.date} {exam.heure}</Text>
+                  <Text style={styles.date}>
+                    {exam.date} {exam.heure}
+                  </Text>
                 </View>
                 {timeDiffInSeconds > 0 ? (
                   <View style={[styles.todayCircle, { backgroundColor }]}>
                     <CountdownTimer time={timeDiffInSeconds} />
                   </View>
                 ) : (
-                  <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen",{examId : exam.id,examMatiere : exam.matiere_nom, etudiantName: user.name})} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
-                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      navigation.navigate("passerExamScreen", {
+                        examId: exam.id,
+                        examMatiere: exam.matiere_nom,
+                        etudiantName: user.name,
+                      })
+                    }
+                    style={[styles.todayCircle, { backgroundColor: "#48bee6" }]}
+                  >
+                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                      Passer
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -122,28 +159,27 @@ export default function TodayExamsScreen({navigation}) {
   );
 }
 
-
 const styles = StyleSheet.create({
   passedContainer: {
     paddingHorizontal: 5,
     paddingBottom: 16,
-    backgroundColor:'#f3f4f6',
-    flex:1,
+    backgroundColor: "#f3f4f6",
+    flex: 1,
   },
   row: {
-    marginTop:'2%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    marginTop: "2%",
+    flexDirection: "row",
+    justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 16,
-    borderLeftWidth:0,
-    borderRightWidth:0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
     borderBottomWidth: 2,
-    borderColor:'#FFF',
-    borderBottomColor: '#eeeeee',
-    borderWidth:1,
+    borderColor: "#FFF",
+    borderBottomColor: "#eeeeee",
+    borderWidth: 1,
     marginBottom: 8,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     borderRadius: 8,
     shadowColor: "#111952",
     shadowOffset: {
@@ -155,40 +191,39 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   name: {
-    flexDirection: 'row',
-    marginBottom:5,
-    alignItems: 'baseline',
+    flexDirection: "row",
+    marginBottom: 5,
+    alignItems: "baseline",
   },
   subject: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
-    color: '#302ea6',
+    color: "#302ea6",
   },
   date: {
-    color: '#000',
+    color: "#000",
     fontSize: 16,
-    marginBottom:10
+    marginBottom: 10,
   },
   container: {
     flex: 1,
-    backgroundColor:'#F6FEFF',
-    width:'100%',
-    justifyContent:'center',
-
+    backgroundColor: "#F6FEFF",
+    width: "100%",
+    justifyContent: "center",
   },
   circle: {
     borderRadius: 50,
     width: 50,
-    height:50,
-    justifyContent: 'center',
-    alignItems: 'center'
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
   },
   todayCircle: {
     borderRadius: 5,
     width: "100%",
-    paddingVertical:10,
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingVertical: 10,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   container: {
@@ -208,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#FFFF",
   },
-  
+
   topIcons: {
     marginTop: 50,
     flexDirection: "row",
@@ -218,13 +253,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   header: {
-    borderTopLeftRadius:0,
-    borderTopRightRadius:0,
-    borderRadius:25,
-    paddingBottom:30,
-    marginBottom:10,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    borderRadius: 25,
+    paddingBottom: 30,
+    marginBottom: 10,
     backgroundColor: "#302ea6",
     width: "100%",
   },
-  
 });
