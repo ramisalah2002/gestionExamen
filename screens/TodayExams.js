@@ -56,7 +56,7 @@ export default function TodayExamsScreen({navigation}) {
   const [upcomingExams, setUpcomingExams] = useState([]);
 
   useEffect(() => {
-    fetch("http://10.0.2.2:8000/api/today-exams-filiere/1")
+    fetch("http://10.0.2.2:8000/api/today-exams-filiere/4")
       .then((response) => response.json())
       .then((data) => {
         setUpcomingExams(data);
@@ -109,7 +109,7 @@ export default function TodayExamsScreen({navigation}) {
                     <CountdownTimer time={timeDiffInSeconds} />
                   </View>
                 ) : (
-                  <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen",{examId : exam.id,examMatiere : exam.matiere_nom})} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
+                  <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen",{examId : exam.id,examMatiere : exam.matiere_nom, etudiantName: user.name})} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
                     <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
                   </TouchableOpacity>
                 )}

@@ -18,7 +18,7 @@ import {
 
 
 export default function passerExam({navigation}) {
-  const [remainingTime, setRemainingTime] = useState(0);
+  const [remainingTime, setRemainingTime] = useState("");
   const [examData, setExamData] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -64,9 +64,13 @@ export default function passerExam({navigation}) {
     const timer = setInterval(() => {
       setRemainingTime(prevTime => prevTime - 60 * 1000); // Decrease remaining time by 1 minute
     }, 60 * 1000); // Update every minute
-
+  
     return () => clearInterval(timer); // Clean up the timer on unmount
   }, []);
+  
+ 
+
+
 
   const hourNumber = Math.floor(remainingTime / (60 * 60 * 1000));
   const minuteNumber = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
@@ -79,7 +83,11 @@ export default function passerExam({navigation}) {
   }
 
   
-
+  useEffect(() => {
+    if (remainingTime === 0) {
+      navigation.navigate('HomeScreen');
+    }
+  }, [remainingTime]);
   
 
   const handleContinuePress = () => {
@@ -154,7 +162,7 @@ export default function passerExam({navigation}) {
             color="white"
           />
         </TouchableOpacity>
-        <Text style={styles.headerText}>{examData.questions.length}</Text>
+        <Text style={styles.headerText}>{navigation.getParam("etudiantName")}</Text>
       </View>
       <View style={{width:'100%',marginBottom:10}}>
         <Text style={styles.titleTop}>Examen : {examData.matiere.nom}</Text>
