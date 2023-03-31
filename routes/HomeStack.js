@@ -10,6 +10,7 @@ import ExamCorrectionScreen from "../screens/ExamCorrection";
 import RecentExamsScreen from "../screens/recentExams";
 import openAppScreen from "../screens/openApp";
 import TodayExamsScreen from "../screens/TodayExams";
+import MyScreen from "../screens/MyScreen";
 
 const screens = {
   openAppScreen: {
