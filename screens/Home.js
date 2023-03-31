@@ -2,7 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../src/context/AuthContext";
-import moment from 'moment';
+import moment from "moment";
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -13,14 +13,13 @@ import { useAuth } from "../src/context/AuthContext";
 export default function HomeScreen({ navigation, route }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showResults, setShowResults] = useState(false);
-  const [exams, setExams] = useState([]);
+  // const [exams, setExams] = useState([]);
   const [filteredExams, setFilteredExams] = useState([]);
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [activeFilter, setActiveFilter] = useState("");
   const { user } = useContext(AuthContext);
   const { userName } = useContext(AuthContext);
   const [UpcomingExams, setUpcomingExams] = useState([]);
-  
 
   const [examens, setExamens] = useState([]);
   const [notes, setNotes] = useState([]);
@@ -29,7 +28,7 @@ export default function HomeScreen({ navigation, route }) {
     const [currentTime, setCurrentTime] = useState(time);
     const [timerStarted, setTimerStarted] = useState(false);
     const [timerFinished, setTimerFinished] = useState(false);
-  
+
     useEffect(() => {
       const intervalId = setInterval(() => {
         setCurrentTime((prevTime) => {
@@ -42,7 +41,7 @@ export default function HomeScreen({ navigation, route }) {
       }, 1000);
       return () => clearInterval(intervalId);
     }, [time]);
-  
+
     const formatTime = (timeInSeconds) => {
       const pad = (num, size) => `0${num}`.slice(size * -1);
       const time = parseFloat(timeInSeconds).toFixed(3);
@@ -51,9 +50,11 @@ export default function HomeScreen({ navigation, route }) {
       const seconds = Math.floor(time - minutes * 60);
       return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
     };
-  
+
     return (
-      <Text style={{fontSize:20,fontWeight:'bold'}}>{formatTime(currentTime)}</Text>
+      <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+        {formatTime(currentTime)}
+      </Text>
     );
   };
 
@@ -79,11 +80,10 @@ export default function HomeScreen({ navigation, route }) {
     fetchExamens();
   }, [user.id]);
 
-  const link = "http://10.0.2.2:8000/api/upcoming-exams/"+user.filiere_id+"";
+  const link =
+    "http://10.0.2.2:8000/api/upcoming-exams/" + user.filiere_id + "";
 
   const [remainingTime, setRemainingTime] = useState("");
-
-  
 
   useEffect(() => {
     const fetchUpcomingExams = async () => {
@@ -92,7 +92,7 @@ export default function HomeScreen({ navigation, route }) {
         const examData = await response.json();
         setUpcomingExams(examData);
         const duration = parseInt(examData.duree) * 60 * 1000;
-        setRemainingTime(duration)
+        setRemainingTime(duration);
         console.log(duration);
       } catch (error) {
         console.error(error);
@@ -101,16 +101,16 @@ export default function HomeScreen({ navigation, route }) {
     fetchUpcomingExams();
   }, []);
 
-
   const [examList, setExamList] = useState([]);
-  const todayLink ="http://10.0.2.2:8000/api/today-exams-filiere/"+user.filiere_id+"";
+  const todayLink =
+    "http://10.0.2.2:8000/api/today-exams-filiere/" + user.filiere_id + "";
   const [TodayExamsList, setTodayExamsList] = useState([]);
 
   useEffect(() => {
     const fetchExams = async () => {
       const response = await fetch(todayLink);
       const TodayExams = await response.json();
-      setTodayExamsList(TodayExams);      
+      setTodayExamsList(TodayExams);
     };
     fetchExams();
   }, []);
@@ -131,37 +131,11 @@ export default function HomeScreen({ navigation, route }) {
     navigation.navigate("InformationsScreen", {
       name: user.name,
       email: user.email,
-      filiereId : user.filiere_id,
+      filiereId: user.filiere_id,
       token: user.token,
     });
   };
-  const filterExams = (searchText, filter) => {
-    const filtered = exams.filter((exam) => {
-      const examDate = new Date(exam.date);
-      const today = new Date();
-      const isToday = examDate.toDateString() === today.toDateString();
-      const isUpcoming = examDate >= today;
-      const isPassed = examDate < today;
-
-      switch (filter) {
-        case "PassedExam":
-          if (!isPassed) return false;
-          break;
-        case "UpcommingExam":
-          if (!isUpcoming) return false;
-          break;
-        case "TodayExam":
-          if (!isToday) return false;
-          break;
-        default:
-          break;
-      }
-
-      return exam.title.toLowerCase().startsWith(searchText.toLowerCase());
-    });
-
-    return filtered;
-  };
+  
 
   const FilterDropdown = ({ onSelect }) => {
     return (
@@ -188,24 +162,85 @@ export default function HomeScreen({ navigation, route }) {
     );
   };
 
-  useEffect(() => {
-    const dummyExams = [
-      { id: 1, title: "PHP MySQL", score: "17/20", date: "2023-03-22" },
-      { id: 2, title: "SQL Oracle", score: "14/20", date: "2023-03-24" },
-      { id: 3, title: "JavaScript", score: "18/20", date: "2023-03-20" },
-      { id: 4, title: "React Native", score: "16/20", date: "2023-03-21" },
-      { id: 5, title: "Angular", score: "19/20", date: "2023-03-25" },
-      { id: 6, title: "Vue.js", score: "15/20", date: "2023-03-23" },
-      { id: 7, title: "Python", score: "20/20", date: "2023-03-26" },
-      { id: 8, title: "Ruby on Rails", score: "13/20", date: "2023-03-27" },
-      { id: 9, title: "Java", score: "17/20", date: "2023-03-28" },
-      { id: 10, title: "C++", score: "14/20", date: "2023-03-29" },
-    ];
+  // useEffect(() => {
+  //   const dummyExams = [
+  //     { id: 1, title: "PHP MySQL", score: "17/20", date: "2023-03-22" },
+  //     { id: 2, title: "SQL Oracle", score: "14/20", date: "2023-03-24" },
+  //     { id: 3, title: "JavaScript", score: "18/20", date: "2023-03-20" },
+  //     { id: 4, title: "React Native", score: "16/20", date: "2023-03-21" },
+  //     { id: 5, title: "Angular", score: "19/20", date: "2023-03-25" },
+  //     { id: 6, title: "Vue.js", score: "15/20", date: "2023-03-23" },
+  //     { id: 7, title: "Python", score: "20/20", date: "2023-03-26" },
+  //     { id: 8, title: "Ruby on Rails", score: "13/20", date: "2023-03-27" },
+  //     { id: 9, title: "Java", score: "17/20", date: "2023-03-28" },
+  //     { id: 10, title: "C++", score: "14/20", date: "2023-03-29" },
+  //   ];
 
-    setExams(dummyExams);
-    setFilteredExams(dummyExams);
+  //   setExams(dummyExams);
+  //   setFilteredExams(dummyExams);
+  // }, []);
+  const [exams, setExams] = useState([]);
+  const [matieres, setMatieres] = useState([]);
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      try {
+        const response = await axios.get("http://10.0.2.2:8000/api/examens");
+        const examsWithMatieres = await Promise.all(
+          response.data.map(async (examen) => {
+            const matiereResponse = await axios.get(
+              `http://10.0.2.2:8000/api/matieres/${examen.matiere_id}`
+            );
+            const matiere = matiereResponse.data;
+            return { ...examen, matiere: matiere.nom };
+          })
+        );
+        setExams(examsWithMatieres);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchMatieres = async () => {
+      try {
+        const response = await axios.get("http://10.0.2.2:8000/api/matieres");
+        setMatieres(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchExams();
+    fetchMatieres();
   }, []);
 
+  const filterExams = (searchText, filter) => {
+    const filtered = exams.filter((exam) => {
+      const examDate = new Date(exam.date);
+      const today = new Date();
+      const isToday = examDate.toDateString() === today.toDateString();
+      const isUpcoming = examDate >= today;
+      const isPassed = examDate < today;
+
+      switch (filter) {
+        case "PassedExam":
+          if (!isPassed) return false;
+          break;
+        case "UpcommingExam":
+          if (!isUpcoming) return false;
+          break;
+        case "TodayExam":
+          if (!isToday) return false;
+          break;
+        default:
+          break;
+      }
+
+      return exam.matiere.toLowerCase().startsWith(searchText.toLowerCase());
+    });
+
+    return filtered;
+  };
   const handleSearch = (text) => {
     setSearchTerm(text);
     setFilteredExams(filterExams(text, activeFilter));
@@ -214,7 +249,7 @@ export default function HomeScreen({ navigation, route }) {
   useEffect(() => {
     if (searchTerm) {
       const results = exams.filter((exam) =>
-        exam.title.toLowerCase().startsWith(searchTerm.toLowerCase())
+        exam.matiere.toLowerCase().startsWith(searchTerm.toLowerCase())
       );
       setFilteredExams(results);
     } else {
@@ -276,70 +311,70 @@ export default function HomeScreen({ navigation, route }) {
         {!showResults && (
           <>
             <View style={styles.body} resizeMode="cover">
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={styles.bodyFirstText}>Examens Récents</Text>
-                  <View style={styles.seeAllBox}>
-                    <TouchableOpacity onPress={pressHandlerRecent}>
-                      <Text style={styles.seeAll}>voir plus</Text>
-                    </TouchableOpacity>
-                  </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.bodyFirstText}>Examens Récents</Text>
+                <View style={styles.seeAllBox}>
+                  <TouchableOpacity onPress={pressHandlerRecent}>
+                    <Text style={styles.seeAll}>voir plus</Text>
+                  </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  {examens.map((examen, index) => (
-                    <View key={index} style={styles.examPrevious}>
-                      <View style={styles.languageBox}>
-                        <Text style={styles.language}>
-                          {examen.nom.toUpperCase()}
-                        </Text>
-                      </View>
-                      <View style={styles.noteBox}>
-                        <Text style={styles.note}>17/20</Text>
-                      </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                {examens.map((examen, index) => (
+                  <View key={index} style={styles.examPrevious}>
+                    <View style={styles.languageBox}>
+                      <Text style={styles.language}>
+                        {examen.nom.toUpperCase()}
+                      </Text>
                     </View>
-                  ))}
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Text style={styles.bodyFirstText}>Examens À Venir</Text>
-                  <View style={styles.seeAllBox}>
-                    <TouchableOpacity onPress={pressHandlerRecent}>
-                      <Text style={styles.seeAll}>voir plus</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  {examens.map((examen, index) => (
-                    <View key={index} style={styles.examPrevious}>
-                      <View style={styles.languageBox}>
-                        <Text style={styles.language}>
-                          {examen.nom.toUpperCase()}
-                        </Text>
-                      </View>
-                      <View style={styles.noteBox}>
-                        <Text style={styles.note}>07/20</Text>
-                      </View>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>17/20</Text>
                     </View>
-                  ))}
+                  </View>
+                ))}
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Text style={styles.bodyFirstText}>Examens À Venir</Text>
+                <View style={styles.seeAllBox}>
+                  <TouchableOpacity onPress={pressHandlerRecent}>
+                    <Text style={styles.seeAll}>voir plus</Text>
+                  </TouchableOpacity>
                 </View>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                {examens.map((examen, index) => (
+                  <View key={index} style={styles.examPrevious}>
+                    <View style={styles.languageBox}>
+                      <Text style={styles.language}>
+                        {examen.nom.toUpperCase()}
+                      </Text>
+                    </View>
+                    <View style={styles.noteBox}>
+                      <Text style={styles.note}>07/20</Text>
+                    </View>
+                  </View>
+                ))}
+              </View>
               <View>
                 <View
                   style={{
@@ -370,15 +405,16 @@ export default function HomeScreen({ navigation, route }) {
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                   >
-
                     {TodayExamsList.map((todayExam, index) => (
                       <View key={index} style={styles.todayExam}>
                         <View style={styles.languageBoxToday}>
-                          <Text style={styles.language}>{todayExam.matiere_nom.toUpperCase()}</Text>
+                          <Text style={styles.language}>
+                            {todayExam.matiere_nom.toUpperCase()}
+                          </Text>
                         </View>
                         <View style={styles.todayExamInformation}>
                           <Text style={styles.todayExamInformationText1}>
-                          {todayExam.matiere_nom}
+                            {todayExam.matiere_nom}
                           </Text>
                           <Text style={styles.todayExamInformationText2}>
                             commence : {todayExam.heure}
@@ -390,7 +426,6 @@ export default function HomeScreen({ navigation, route }) {
                         <View style={styles.verticalLine} />
                       </View>
                     ))}
-                    
                   </ScrollView>
                 </View>
                 <View
@@ -417,7 +452,7 @@ export default function HomeScreen({ navigation, route }) {
           <View>
             {filteredExams.map((exam, index) => (
               <View key={index} style={styles.searchResult}>
-                <Text style={styles.searchResultTitle}>{exam.title}</Text>
+                <Text style={styles.searchResultTitle}>{exam.matiere}</Text>
                 <Text style={styles.searchResultDate}>{exam.date}</Text>
               </View>
             ))}
