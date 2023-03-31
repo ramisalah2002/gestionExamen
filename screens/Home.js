@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import { AuthContext } from "../src/context/AuthContext";
+import moment from 'moment';
 import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -18,9 +19,43 @@ export default function HomeScreen({ navigation, route }) {
   const [activeFilter, setActiveFilter] = useState("");
   const { user } = useContext(AuthContext);
   const { userName } = useContext(AuthContext);
+  const [UpcomingExams, setUpcomingExams] = useState([]);
+  
 
   const [examens, setExamens] = useState([]);
   const [notes, setNotes] = useState([]);
+
+  const CountdownTimer = ({ time }) => {
+    const [currentTime, setCurrentTime] = useState(time);
+    const [timerStarted, setTimerStarted] = useState(false);
+    const [timerFinished, setTimerFinished] = useState(false);
+  
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setCurrentTime((prevTime) => {
+          if (prevTime <= 0) {
+            clearInterval(intervalId);
+            return 0;
+          }
+          return prevTime - 1;
+        });
+      }, 1000);
+      return () => clearInterval(intervalId);
+    }, [time]);
+  
+    const formatTime = (timeInSeconds) => {
+      const pad = (num, size) => `0${num}`.slice(size * -1);
+      const time = parseFloat(timeInSeconds).toFixed(3);
+      const hours = Math.floor(time / 60 / 60);
+      const minutes = Math.floor(time / 60) % 60;
+      const seconds = Math.floor(time - minutes * 60);
+      return `${pad(hours, 2)}:${pad(minutes, 2)}:${pad(seconds, 2)}`;
+    };
+  
+    return (
+      <Text style={{fontSize:20,fontWeight:'bold'}}>{formatTime(currentTime)}</Text>
+    );
+  };
 
   useEffect(() => {
     const fetchExamens = async () => {
@@ -41,9 +76,44 @@ export default function HomeScreen({ navigation, route }) {
         console.error("Erreur lors de la récupération des examens:", error);
       }
     };
-
     fetchExamens();
   }, [user.id]);
+
+  const link = "http://10.0.2.2:8000/api/upcoming-exams/"+user.filiere_id+"";
+
+  const [remainingTime, setRemainingTime] = useState("");
+
+  
+
+  useEffect(() => {
+    const fetchUpcomingExams = async () => {
+      try {
+        const response = await fetch(link);
+        const examData = await response.json();
+        setUpcomingExams(examData);
+        const duration = parseInt(examData.duree) * 60 * 1000;
+        setRemainingTime(duration)
+        console.log(duration);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUpcomingExams();
+  }, []);
+
+
+  const [examList, setExamList] = useState([]);
+  const todayLink ="http://10.0.2.2:8000/api/today-exams-filiere/"+user.filiere_id+"";
+  const [TodayExamsList, setTodayExamsList] = useState([]);
+
+  useEffect(() => {
+    const fetchExams = async () => {
+      const response = await fetch(todayLink);
+      const TodayExams = await response.json();
+      setTodayExamsList(TodayExams);      
+    };
+    fetchExams();
+  }, []);
 
   const pressHandlerLogout = () => {
     // ndiro logout
@@ -53,6 +123,9 @@ export default function HomeScreen({ navigation, route }) {
   };
   const pressHandlerToday = () => {
     navigation.navigate("SignupScreen", { user });
+  };
+  const pressHandlerUpcoming = () => {
+    navigation.navigate("UpcomingExamsScreen", { user });
   };
   const pressHandlerInfo = () => {
     navigation.navigate("InformationsScreen", {
@@ -203,7 +276,6 @@ export default function HomeScreen({ navigation, route }) {
         {!showResults && (
           <>
             <View style={styles.body} resizeMode="cover">
-              <View>
                 <View
                   style={{
                     flexDirection: "row",
@@ -236,7 +308,38 @@ export default function HomeScreen({ navigation, route }) {
                     </View>
                   ))}
                 </View>
-              </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text style={styles.bodyFirstText}>Examens À Venir</Text>
+                  <View style={styles.seeAllBox}>
+                    <TouchableOpacity onPress={pressHandlerRecent}>
+                      <Text style={styles.seeAll}>voir plus</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  {examens.map((examen, index) => (
+                    <View key={index} style={styles.examPrevious}>
+                      <View style={styles.languageBox}>
+                        <Text style={styles.language}>
+                          {examen.nom.toUpperCase()}
+                        </Text>
+                      </View>
+                      <View style={styles.noteBox}>
+                        <Text style={styles.note}>07/20</Text>
+                      </View>
+                    </View>
+                  ))}
+                </View>
               <View>
                 <View
                   style={{
@@ -267,42 +370,27 @@ export default function HomeScreen({ navigation, route }) {
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
                   >
-                    <View style={styles.todayExam}>
-                      <View style={styles.languageBoxToday}>
-                        <Text style={styles.language}> Java</Text>
-                      </View>
-                      <View style={styles.todayExamInformation}>
-                        <Text style={styles.todayExamInformationText1}>
-                          Programmation Java
-                        </Text>
-                        <Text style={styles.todayExamInformationText2}>
-                          commence : 16:30
-                        </Text>
-                        <Text style={styles.todayExamInformationText3}>
-                          reste : 10h 30min
-                        </Text>
-                      </View>
-                      <View style={styles.verticalLine} />
-                    </View>
-                    <View style={styles.todayExam}>
-                      <TouchableOpacity>
+
+                    {TodayExamsList.map((todayExam, index) => (
+                      <View key={index} style={styles.todayExam}>
                         <View style={styles.languageBoxToday}>
-                          <Text style={styles.language}>Français</Text>
+                          <Text style={styles.language}>{todayExam.matiere_nom.toUpperCase()}</Text>
                         </View>
-                      </TouchableOpacity>
-                      <View style={styles.todayExamInformation}>
-                        <Text style={styles.todayExamInformationText1}>
-                          La langue Française
-                        </Text>
-                        <Text style={styles.todayExamInformationText2}>
-                          commence : 12:30
-                        </Text>
-                        <Text style={styles.todayExamInformationText3}>
-                          reste : 6h 30min
-                        </Text>
+                        <View style={styles.todayExamInformation}>
+                          <Text style={styles.todayExamInformationText1}>
+                          {todayExam.matiere_nom}
+                          </Text>
+                          <Text style={styles.todayExamInformationText2}>
+                            commence : {todayExam.heure}
+                          </Text>
+                          <Text style={styles.todayExamInformationText3}>
+                            reste : 10h 30min
+                          </Text>
+                        </View>
+                        <View style={styles.verticalLine} />
                       </View>
-                      <View style={styles.verticalLine} />
-                    </View>
+                    ))}
+                    
                   </ScrollView>
                 </View>
                 <View

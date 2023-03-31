@@ -94,7 +94,7 @@ export default function passerExam({navigation}) {
     if (currentQuestionIndex < examData.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       const response = {
-        etudiant_id: 330,
+        etudiant_id: navigation.getParam("etudiantId"),
         question_id: currentQuestion.id,
         proposition_id: selectedAnswer,
       };
@@ -116,7 +116,7 @@ export default function passerExam({navigation}) {
         });
     }else{
       const response = {
-        etudiant_id: 330,
+        etudiant_id: navigation.getParam("etudiantId"),
         question_id: currentQuestion.id,
         proposition_id: selectedAnswer,
       };
@@ -131,6 +131,7 @@ export default function passerExam({navigation}) {
         .then(response => response.json())
         .then(data => {
           console.log(data);
+          navigation.navigate("HomeScreen")
         })
         .catch(error => {
           console.error(error);
@@ -201,9 +202,9 @@ export default function passerExam({navigation}) {
                 </View>
             </View>
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>{currentQuestion.libelle} ?</Text>
+        <Text style={styles.questionText}>{currentQuestion.libelle}</Text>
       </View>
-      <View style={styles.propositionsContainer}>
+      <ScrollView style={styles.propositionsContainer}>
         {currentQuestion.propositions.map(proposition => (
           <TouchableOpacity
             key={proposition.id}
@@ -216,7 +217,7 @@ export default function passerExam({navigation}) {
             <Text style={styles.propositionButtonText}>{proposition.libelle}</Text>
           </TouchableOpacity>
         ))}
-      </View>
+      </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={[
@@ -495,7 +496,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   questionContainer: {
-    margin: 20,
+    marginHorizontal: 20,
+    marginTop:5
   },
   questionText: {
     fontSize: 24,
@@ -503,13 +505,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   propositionsContainer: {
-    margin: 20,
+    marginHorizontal: 20,
+    height:'100%',
     width: '90%',
   },
   propositionButton: {
     backgroundColor: '#ddd',
     padding: 10,
-    marginVertical: 10,
+    marginVertical: 2,
     borderRadius: 5,
   },
   propositionButtonSelected: {
@@ -520,10 +523,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonContainer: {
-    position: 'absolute',
-    bottom: 20,
     width: '100%',
     alignItems: 'center',
+    marginBottom:5
   },
   button: {
     backgroundColor: '#0080ff',

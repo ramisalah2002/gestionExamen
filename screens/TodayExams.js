@@ -65,9 +65,10 @@ const Tab = createMaterialTopTabNavigator();
 export default function TodayExamsScreen({ navigation }) {
   const { user } = useContext(AuthContext);
   const [upcomingExams, setUpcomingExams] = useState([]);
+  const TodayExamslink = 'http://10.0.2.2:8000/api/today-exams-filiere/'+user.filiere_id+"";
 
   useEffect(() => {
-    fetch("http://10.0.2.2:8000/api/today-exams-filiere/1")
+    fetch(TodayExamslink)
       .then((response) => response.json())
       .then((data) => {
         setUpcomingExams(data);
@@ -77,6 +78,8 @@ export default function TodayExamsScreen({ navigation }) {
         console.error(error);
       });
   }, []);
+
+  
 
   return (
     <View style={styles.container}>
@@ -136,19 +139,8 @@ export default function TodayExamsScreen({ navigation }) {
                     <CountdownTimer time={timeDiffInSeconds} />
                   </View>
                 ) : (
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("passerExamScreen", {
-                        examId: exam.id,
-                        examMatiere: exam.matiere_nom,
-                        etudiantName: user.name,
-                      })
-                    }
-                    style={[styles.todayCircle, { backgroundColor: "#48bee6" }]}
-                  >
-                    <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                      Passer
-                    </Text>
+                  <TouchableOpacity onPress={()=>navigation.navigate("passerExamScreen",{examId : exam.id,examMatiere : exam.matiere_nom, etudiantName: user.name,etudiantId : user.id})} style={[styles.todayCircle, { backgroundColor: '#48bee6' }]}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Passer</Text>
                   </TouchableOpacity>
                 )}
               </View>
