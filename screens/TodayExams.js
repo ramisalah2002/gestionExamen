@@ -105,7 +105,8 @@ export default function TodayExamsScreen({ navigation }) {
           const examTimeInSeconds = moment(
             `${exam.date}T${exam.heure}`,
             "YYYY-MM-DDTHH:mm:ss"
-          ).diff(moment(), "seconds");
+          ).diff(moment(), "second");
+          console.log(examTimeInSeconds);
           const timeDiffInSeconds =
             examTimeInSeconds > 0 ? examTimeInSeconds : 0;
 
